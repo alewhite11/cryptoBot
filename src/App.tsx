@@ -57,7 +57,7 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%' }}>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%' }}>
         <MainContent page={currentPage} user={user} score={score} handleClick={handleClick}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
