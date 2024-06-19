@@ -49,6 +49,7 @@ body, html {
   justify-content: space-between;
   padding: 0px;
   margin: 0px;
+  margin-bottom: 3px;
   width: 100%;
 }
 
@@ -59,7 +60,7 @@ body, html {
 }
 
 .item-details {
-  width: 50%
+  width: 60%
 }
 
 .item-intext-image img {
@@ -69,16 +70,18 @@ body, html {
 
 .item-info {
   display: flex; 
-  align-items: center; 
   margin-left: 5px;
-  justify-content: space-between; 
+  justify-content: left;
 }
 
 .item-name {
   color: black;
   font-size: medium;
+  font-weight: bold;
   margin-right: 5px; 
-  justify-content: left;
+  flex: 70%;
+  text-align: left;
+  justify-content: flex-start;
 }
 
 .item-time {
