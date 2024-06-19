@@ -16,7 +16,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [user, setUser] = useState<WebAppUser | null>(null)
   const [cloudStorage, setCloudStorage] = useState<CloudStorage | null>(null)
-  const [currentPage, setCurrentPage] = useState(0); //Used to track the active tabe, 
+  const [currentPage, setCurrentPage] = useState(0); //Used to track the active tab
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
@@ -30,7 +30,10 @@ function App() {
     }
 
     const cs: CloudStorage = window.Telegram.WebApp.CloudStorage;
-    setCloudStorage(cs);
+    if(cs != undefined){
+      setCloudStorage(cs);
+    }
+  
   }, []);
 
   useEffect(() => {
@@ -48,7 +51,9 @@ function App() {
   const handleClick = () => {
     setScore(prevScore => {
       const newScore = prevScore + 1;
-      cloudStorage?.setItem("score", newScore.toString(), (error: any, stored: boolean) => {});
+      if(cloudStorage !== null){
+        cloudStorage.setItem("score", newScore.toString(), (error: any, stored: boolean) => {});
+      }
       return newScore;
     });
   };

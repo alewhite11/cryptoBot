@@ -4,7 +4,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #59330E;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -18,4 +18,9 @@ button {
   font-size: 1.5rem;
   padding: 10px 20px;
   margin-top: 20px;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
 }

@@ -1,17 +1,17 @@
 import React from 'react';
 
-interface TasksTabProps {
+interface InviteTabProps {
     
 }
 
-const TasksTab: React.FC<TasksTabProps> = ({  }) => {
+const InviteTab: React.FC<InviteTabProps> = ({  }) => {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>Tasks:</h1>
+          <h1>Invite:</h1>
         </header>
       </div>
     );
   };
   
-  export default TasksTab;
+  export default InviteTab;

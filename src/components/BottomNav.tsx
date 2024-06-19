@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import shopIcon from './../img/shop.png';
+import inviteIcon from './../img/invite.png';
+import moneyIcon from './../img/money.png';
+import sproutIcon from './../img/sprout.png';
 
 interface BottomNavProps {
     currentPage: number;
@@ -12,7 +13,7 @@ interface BottomNavProps {
   
   const BottomNav: React.FC<BottomNavProps> = ({ currentPage, setCurrentPage }) => {
     return (
-      <div className="App">
+      <div style={{ position: 'relative', width: '100%', outline: 'none' }}>
         
           <BottomNavigation
             value={currentPage}
@@ -20,10 +21,40 @@ interface BottomNavProps {
             setCurrentPage(newValue);
             }}
             showLabels
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              margin: '0 auto',
+              marginBottom: '5px',
+              borderRadius: '16px 16px 16px 16px', 
+              boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.2)',
+              backgroundColor: '#219345', 
+              zIndex: 1000,
+              "&& .Mui-selected": {
+                backgroundColor: "#0a3d02",
+                color: '#FFFFFF',
+                borderRadius: '16px 16px 16px 16px'
+              }
+            }}
           >
-            <BottomNavigationAction label="Farm" icon={<LocalFloristIcon />} />
-            <BottomNavigationAction label="Tasks" icon={<AssignmentIcon />} />
-            <BottomNavigationAction label="Wallet" icon={<AccountBalanceWalletIcon />} />
+            <BottomNavigationAction
+              label="Home"
+              icon={<img src={sproutIcon} alt="Home" style={{ width: 24, height: 24 }} />}
+            />
+            <BottomNavigationAction
+              label="Shop"
+              icon={<img src={shopIcon} alt="Shop" style={{ width: 24, height: 24 }} />}
+            />
+            <BottomNavigationAction
+              label="Earn"
+              icon={<img src={moneyIcon} alt="Earn" style={{ width: 24, height: 24 }} />}
+            />
+            <BottomNavigationAction
+              label="Friends"
+              icon={<img src={inviteIcon} alt="Friends" style={{ width: 24, height: 24 }} />}
+            />
           </BottomNavigation>
         
       </div>
