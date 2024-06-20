@@ -53,7 +53,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item }) => {
       <div className="item-details">
         <div className="item-info">
           <span className="item-name" style={{ fontFamily: 'Jura, sans-serif' }}>{item.name}</span>
-          <div style={{ display: 'flex', flex: '40%', alignContent: 'center' }}>
+          <div style={{ display: 'flex', flex: '50%', alignContent: 'center' }}>
             <div className="item-intext-image">
               <img src={hourglassImg} alt={item.name} />
             </div>

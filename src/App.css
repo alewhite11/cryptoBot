@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Jura';
+  src: url('./assets/Jura.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .App {
   text-align: center;
   width: 100%;
@@ -25,13 +32,95 @@ body, html {
   padding: 0;
 }
 
-/* SHOP PAGE */
-@font-face {
-  font-family: 'Jura';
-  src: url('./assets/Jura.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+/* MAIN PAGE */
+.main-balance {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
+
+.main-balance-icon {
+  width: 35px;
+  height: 35px;
+}
+
+.main-balance-text {
+  font-size: larger;
+  margin-left: 5px;
+}
+
+.main-coins {
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  width: 40%;
+  justify-content: space-between;
+}
+
+.main-add-icon {
+  max-width: 20px;
+  max-height: 20px;
+  margin-right: 3px;
+  flex: 15%;
+}
+.main-coins-text {
+  font-size: larger;
+  margin-left: 5px;
+  color: black;
+  font-weight: bold;
+  flex: 80%;
+}
+
+.main-field {
+  margin-top: 20px;
+  width: 80%;
+  min-height: 50vh;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.slider {
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider-items {
+  display: flex;
+  transition: transform 0.5s ease;
+  flex: 80%
+}
+
+.slider-item {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+button.prev,
+button.next {
+  border: none;
+  padding: 10px;
+  font-size: 20px;
+  z-index: 1;
+}
+
+button.prev {
+  left: 10px;
+  flex: 10%;
+}
+
+button.next {
+  right: 10px;
+  flex: 10%;;
+}
+
+
+/* SHOP PAGE */
 
 .shop-items {
   display: flex;
@@ -39,6 +128,7 @@ body, html {
   align-items: center;
   padding: 0px;
   width: 90%;
+  margin-bottom: 60px;
 }
 
 .shop-item {
@@ -80,7 +170,7 @@ body, html {
   font-size: medium;
   font-weight: bold;
   margin-right: 5px; 
-  flex: 60%;
+  flex: 50%;
   text-align: left;
   justify-content: flex-start;
 }

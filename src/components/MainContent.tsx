@@ -8,15 +8,16 @@ import ShopTab from './tabs/ShopTab';
 
 interface MainContentProps {
   page: number;
+  setCurrentPage: (page: number) => void;
   user: WebAppUser | null;
   score: number;
   handleClick: () => void;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ page, user, score, handleClick }) => {
+const MainContent: React.FC<MainContentProps> = ({ page, setCurrentPage, user, score, handleClick }) => {
   return (
     <div className="App" >
-      {page === 0 && <MainTab user={user} score={score} handleClick={handleClick} />}
+      {page === 0 && <MainTab user={user} score={score} handleClick={handleClick} setCurrentPage={setCurrentPage} />}
       {page === 1 && <ShopTab />}
       {page === 2 && <TasksTab />}
       {page === 3 && <InviteTab />}
