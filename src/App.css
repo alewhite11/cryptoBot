@@ -25,6 +25,7 @@ body, html {
   padding: 0;
 }
 
+/* SHOP PAGE */
 @font-face {
   font-family: 'Jura';
   src: url('./assets/Jura.ttf') format('truetype');
@@ -37,7 +38,7 @@ body, html {
   flex-direction: column;
   align-items: center;
   padding: 0px;
-  width: 95%;
+  width: 90%;
 }
 
 .shop-item {
@@ -79,7 +80,7 @@ body, html {
   font-size: medium;
   font-weight: bold;
   margin-right: 5px; 
-  flex: 70%;
+  flex: 60%;
   text-align: left;
   justify-content: flex-start;
 }
@@ -118,4 +119,55 @@ body, html {
 
 .item-button:hover {
   background-color: #45a049;
+}
+
+/* LOADING PAGE */
+.Loading-component {
+  background-image: url(img/loadingBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; /* Remove quotes from 'cover' */
+  height: 100vh;
+  width: 100%;
+  display: flex; /* Add flex display to center content */
+  flex-direction: column; /* Set flex direction to column */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+}
+
+.Loading-title {
+  color: white;
+  font-weight: bold;
+  font-size: 4rem; /* Increase the font size */
+  text-align: center; /* Center align text */
+  margin: 0; /* Remove default margin */
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.Loading-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 1500px;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-size: large;
+  font-weight: bold;
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.Custom-spinner {
+  width: 100px;  /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  margin: auto;
 }

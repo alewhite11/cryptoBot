@@ -21,7 +21,7 @@ const items : Plant[] = [
     { name: 'Carrot', time: '40 min', cost: 150, reward: 300, image: asparagusImg  },
     { name: 'Tomatoe', time: '50 min', cost: 200, reward: 400, image: asparagusImg  },
     { name: 'Courgette', time: '1 hr', cost: 250, reward: 500, image: asparagusImg  },
-    { name: 'Pepper', time: '1 hr 10 min', cost: 300, reward: 600, image: asparagusImg  },
+    { name: 'Pepper', time: '1 hr', cost: 300, reward: 600, image: asparagusImg  },
     { name: 'Asparagus', time: '4 hr', cost: 1250, reward: 2500, image: asparagusImg  }
 ];
 
@@ -53,7 +53,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item }) => {
       <div className="item-details">
         <div className="item-info">
           <span className="item-name" style={{ fontFamily: 'Jura, sans-serif' }}>{item.name}</span>
-          <div style={{ display: 'flex', flex: '30%', alignContent: 'center' }}>
+          <div style={{ display: 'flex', flex: '40%', alignContent: 'center' }}>
             <div className="item-intext-image">
               <img src={hourglassImg} alt={item.name} />
             </div>
