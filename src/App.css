@@ -195,6 +195,17 @@ button.next {
   flex: 20%;
 }
 
+.main-plant-button-disabled {
+  background-color: #535653;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  cursor: pointer;
+  flex: 20%;
+}
 /* SHOP PAGE */
 
 .shop-items {

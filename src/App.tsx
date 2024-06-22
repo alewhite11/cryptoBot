@@ -5,6 +5,8 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
+import { getFieldsCallback, getScoreCallback } from './db/cloudStorageFunctions';
+import { Field } from './interfaces/Field';
 
 declare global {
   interface Window {
@@ -14,13 +16,16 @@ declare global {
 }
 
 function App() {
-  const [score, setScore] = useState(0);
   const [user, setUser] = useState<WebAppUser | null>(null)
   const [cloudStorage, setCloudStorage] = useState<CloudStorage | null>(null)
   const [currentPage, setCurrentPage] = useState(0); //Used to track the active tab
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true) //Used to display Loading page
 
-  //Used to understand which of the two tasks finishes before (2s timeout or data loading)
+  //Application data states
+  const [score, setScore] = useState(0);
+  const [fields, setFields] = useState<Field[]>([])
+
+  //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
   const [timeoutExpired, setTimeoutExpired] = useState(false); //Set to true when timeout expired
 
@@ -45,12 +50,21 @@ function App() {
   useEffect(() => {
     if (cloudStorage) {
       try {
-        cloudStorage.getItem("score", (error, value) => {
+        /*cloudStorage.getItem("score", (error, value) => {
           if (value !== undefined && !isNaN(parseInt(value, 10))) {
             setScore(parseInt(value, 10));
           }  
           setDataLoaded(true)
-        });
+        });*/
+        const fetchData = () => {
+          if (!cloudStorage) return; // Ensure cloudStorage is initialized
+    
+          getScoreCallback(cloudStorage, setScore);
+          getFieldsCallback(cloudStorage, setFields, setDataLoaded)
+        };
+    
+        fetchData();
+      
       } catch (e) {
         setDataLoaded(true)
       }
@@ -59,6 +73,7 @@ function App() {
     }
   }, [cloudStorage]);
 
+  //Used to make loading page displayed for at least 3s
   useEffect(() => {
     const delayPromise = new Promise((resolve) => {
       setTimeout(resolve, 3000);
@@ -69,6 +84,7 @@ function App() {
     });
   }, []);
 
+  //Disable loading page if 3s elapsed and data retrieval succeded
   useEffect(() => {
     if (dataLoaded && timeoutExpired) {
       setLoading(false);
@@ -92,7 +108,7 @@ function App() {
     {!loading &&
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%' }}>
       <div style={{ flex: 1, overflowY: 'auto', width: '100%' }}>
-        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score}/>
+        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} cs={cloudStorage}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>

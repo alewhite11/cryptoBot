@@ -1,22 +1,28 @@
-import { useState} from 'react';
+import { useState, useEffect } from 'react';
 import moneyImg from './../../img/shopItems/dollar.png'
 import addImg from './../../img/mainPage/add.png'
 import emptyField from './../../img/mainPage/emptyField.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
+import carrotImg from './../../img/shopItems/carrot.png'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
-
-const fields : number[] = [0,1,2,3];
+import { Field } from '../../interfaces/Field';
+import { plants } from '../../db/vegetable';
+import { setFieldsCallback } from '../../db/cloudStorageFunctions';
+import { CloudStorage } from '../../interfaces/telegramInterfaces';
 
 interface MainTabProps {
   score: number;
   setCurrentPage: (page: number) => void;
+  fields: Field[];
+  setFields: (fields: Field[]) => void;
+  setScore: (score: number) => void;
+  activeField: number;
+  setActiveField: (field: number) => void;
+  cs: CloudStorage | null; 
 }
 
-const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage }) => {
-
-  const [activeField, setActiveField] = useState(0)  //for the slider
+const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFields, setScore, activeField, setActiveField, cs }) => {
 
   const goToNextField = () => {
     const newIndex = activeField + 1;
@@ -55,7 +61,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage }) => {
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
                 <div key={index} className="slider-item">
-                  {activeField === item && <FieldElement setCurrentPage={setCurrentPage}/>}
+                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} cs={cs}/>}
                 </div>
               ))}
             </div>
@@ -74,26 +80,89 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage }) => {
 
 interface FieldItemProps {
   setCurrentPage: (page: number) => void;
+  fields: Field[];
+  setFields: (fields: Field[]) => void;
+  index: number;
+  score: number;
+  setScore: (score: number) => void;
+  cs: CloudStorage | null;
 }
 
-const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage}) => {
+const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, cs}) => {
+  const initialTime = Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
+  const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
+  
   const handlePlantClick = () => {
     setCurrentPage(1); //Navigate to Shop page
+  };
+
+  const handleClaimClick = () => {
+    const newField: Field = {
+      vegetable: "",
+      plantedAt: new Date(), // This initializes plantedAt with the current date and time
+      duration: 0
+    };
+
+    const updatedFields = [...fields];
+    updatedFields[index] = newField
+    setFields(updatedFields)
+    setFieldsCallback(cs, updatedFields)
+
+    const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
+    const newScore = score + plantedVegetable!!.reward
+  
+    setScore(newScore)
   };
 
   return(
     <div className="countdown-container">
       <div className="main-countdown">
         <img src={hourglassImg} alt="hourglass" />
-        <span className="main-time">27 min</span>
+        <span className="main-time"><CountdownTimer timeRemaining={timeRemaining} setTimeRemaining={setTimeRemaining}/></span>
       </div>
       <div className="main-field-icon">
-        <img src={emptyField} alt="empty field" />
+        {(fields[index].vegetable == "" || fields[index].vegetable == "locked") && <img src={emptyField} alt="empty field" />}
+        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={carrotImg} alt="carrot"/>}
       </div>
-      <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>
+      {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
+      {(timeRemaining > 0 && fields[index].vegetable != "") && <button className='main-plant-button-disabled' disabled={true}>Claim</button>}
+      {(timeRemaining == 0 && fields[index].vegetable != "") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
     </div>
 
   );
 }
+
+interface TimerProps {
+  timeRemaining: number;
+  setTimeRemaining: (time: number | ((prevTime: number) => number)) => void;
+}
+
+const CountdownTimer: React.FC<TimerProps> = ({ timeRemaining, setTimeRemaining }) => {
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimeRemaining((prevTime: number) => {
+        if (prevTime === 0) {
+          clearInterval(timerInterval);
+          console.log('Countdown complete!');
+          return 0;
+        } else {
+          return prevTime - 1;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, [setTimeRemaining]);
+
+  const hours = Math.floor(timeRemaining / 3600);
+  const minutes = Math.floor((timeRemaining % 3600) / 60);
+  const seconds = timeRemaining % 60;
+
+  return (
+    <div>
+      <p>{`${hours}h ${minutes}m ${seconds}s`}</p>
+    </div>
+  );
+};
 
 export default MainTab;
