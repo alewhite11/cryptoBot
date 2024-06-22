@@ -1,5 +1,11 @@
 import React from 'react';
 import lettuceImg from './../../img/shopItems/lettuce.png';
+import tomatoImg from './../../img/shopItems/tomato.png';
+import pepperImg from './../../img/shopItems/pepper.png';
+import radishImg from './../../img/shopItems/radish.png';
+import courgetteImg from './../../img/shopItems/courgette.png';
+import carrotImg from './../../img/shopItems/carrot.png';
+import orangeImg from './../../img/shopItems/orange.png';
 import moneyImg from './../../img/shopItems/dollar.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
 import asparagusImg from './../../img/shopItems/asparagus.png'
@@ -15,14 +21,14 @@ interface Plant {
 }
 
 const items : Plant[] = [    
-    { name: 'Radish', time: '10 min', cost: 25, reward: 50, image: asparagusImg  },
-    { name: 'Lettuce', time: '20 min', cost: 75, reward: 150, image: lettuceImg  },
-    { name: 'Spinach', time: '30 min', cost: 125, reward: 250, image: asparagusImg  },
-    { name: 'Carrot', time: '40 min', cost: 150, reward: 300, image: asparagusImg  },
-    { name: 'Tomatoe', time: '50 min', cost: 200, reward: 400, image: asparagusImg  },
-    { name: 'Courgette', time: '1 hr', cost: 250, reward: 500, image: asparagusImg  },
-    { name: 'Pepper', time: '1 hr', cost: 300, reward: 600, image: asparagusImg  },
-    { name: 'Asparagus', time: '4 hr', cost: 1250, reward: 2500, image: asparagusImg  }
+    { name: 'Radish', time: '10 min', cost: 20, reward: 40, image: radishImg  },
+    { name: 'Lettuce', time: '20 min', cost: 60, reward: 120, image: lettuceImg  },
+    { name: 'Spinach', time: '30 min', cost: 100, reward: 200, image: asparagusImg  },
+    { name: 'Carrot', time: '40 min', cost: 120, reward: 240, image: carrotImg  },
+    { name: 'Tomato', time: '50 min', cost: 160, reward: 320, image: tomatoImg  },
+    { name: 'Courgette', time: '1 hr', cost: 200, reward: 400, image: courgetteImg  },
+    { name: 'Pepper', time: '1 hr', cost: 240, reward: 480, image: pepperImg  },
+    { name: 'Asparagus', time: '4 hr', cost: 1000, reward: 2000, image: asparagusImg  }
 ];
 
 const ShopTab = () => {
