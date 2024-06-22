@@ -11,7 +11,9 @@
 }
 
 .App-header {
-  background-color: #59330E;
+  background-image: url(img/mainBg.png);
+  background-repeat: no-repeat;
+  background-size: cover; 
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -33,15 +35,28 @@ body, html {
 }
 
 /* MAIN PAGE */
+.main-title {
+  color: white;
+  font-weight: bold;
+  font-size: 3rem; /* Increase the font size */
+  text-align: center; /* Center align text */
+  margin: 0; /* Remove default margin */
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
 .main-balance {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .main-balance-icon {
-  width: 35px;
-  height: 35px;
+  width: 60px;
+  height: 60px;
 }
 
 .main-balance-text {
@@ -56,6 +71,7 @@ body, html {
   align-items: center;
   width: 40%;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .main-add-icon {
@@ -75,11 +91,16 @@ body, html {
 .main-field {
   margin-top: 20px;
   width: 80%;
-  min-height: 50vh;
   background-color: #f0f0f0;
   display: flex;
   justify-content: center; 
   align-items: center;
+  border-radius: 20px;
+  overflow: hidden; 
+}
+
+.main-field-icon {
+  margin: 3%;
 }
 
 .slider {
@@ -104,9 +125,10 @@ body, html {
 button.prev,
 button.next {
   border: none;
-  padding: 10px;
+  padding: 0px;
   font-size: 20px;
   z-index: 1;
+  flex: 10%;
 }
 
 button.prev {
@@ -119,6 +141,59 @@ button.next {
   flex: 10%;;
 }
 
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Ensure space is used effectively */
+  width: 100%; 
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.main-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 20%;
+}
+
+.main-countdown img {
+  width: 20px;
+  height: 20px;
+}
+
+.main-time {
+  color: black;
+  font-size: medium;
+  margin-left: 5px;
+  font-family: 'Jura, sans-serif';
+}
+
+.main-field-icon {
+  flex: 60%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.main-field-icon img {
+  max-width: 100%; /* Ensure it doesn't overflow the container */
+  max-height: 100%; /* Ensure it scales properly */
+}
+
+.main-plant-button {
+  background-color: #4CAF50;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  cursor: pointer;
+  flex: 20%;
+}
 
 /* SHOP PAGE */
 

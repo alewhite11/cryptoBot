@@ -1,7 +1,8 @@
 import { useState} from 'react';
-import { WebAppUser } from '../../interfaces/telegramInterfaces';
 import moneyImg from './../../img/shopItems/dollar.png'
 import addImg from './../../img/mainPage/add.png'
+import emptyField from './../../img/mainPage/emptyField.png'
+import hourglassImg from './../../img/shopItems/hourglass.png'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
@@ -9,13 +10,11 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const fields : number[] = [0,1,2,3];
 
 interface MainTabProps {
-  user: WebAppUser | null;
   score: number;
-  handleClick: () => void;
   setCurrentPage: (page: number) => void;
 }
 
-const MainTab: React.FC<MainTabProps> = ({ user, score, handleClick, setCurrentPage }) => {
+const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage }) => {
 
   const [activeField, setActiveField] = useState(0)  //for the slider
 
@@ -29,21 +28,21 @@ const MainTab: React.FC<MainTabProps> = ({ user, score, handleClick, setCurrentP
     setActiveField(newIndex);
   };
 
-  const handleImageClick = () => {
+  const handleAddClick = () => {
     setCurrentPage(2); //Navigate to Task page
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>PLANT</h1>
+        <h1 className='main-title'>PLANT</h1>
         <div className='main-balance'>
           <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
           <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
         </div>
         <div className='main-coins'>
           <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{score}</span>
-          <img className='main-add-icon' onClick={handleImageClick} src={addImg} alt={"add"} />
+          <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
         </div>
         <div className='main-field'>
           <div className="slider">
@@ -56,7 +55,7 @@ const MainTab: React.FC<MainTabProps> = ({ user, score, handleClick, setCurrentP
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
                 <div key={index} className="slider-item">
-                  {activeField === item && <FieldElement />}
+                  {activeField === item && <FieldElement setCurrentPage={setCurrentPage}/>}
                 </div>
               ))}
             </div>
@@ -74,14 +73,26 @@ const MainTab: React.FC<MainTabProps> = ({ user, score, handleClick, setCurrentP
 };
 
 interface FieldItemProps {
-
+  setCurrentPage: (page: number) => void;
 }
 
-const FieldElement: React.FC<FieldItemProps> = () => {
+const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage}) => {
+  const handlePlantClick = () => {
+    setCurrentPage(1); //Navigate to Shop page
+  };
+
   return(
-    <>
-      <p style={{color: 'black'}}>Field</p>
-    </>
+    <div className="countdown-container">
+      <div className="main-countdown">
+        <img src={hourglassImg} alt="hourglass" />
+        <span className="main-time">27 min</span>
+      </div>
+      <div className="main-field-icon">
+        <img src={emptyField} alt="empty field" />
+      </div>
+      <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>
+    </div>
+
   );
 }
 
