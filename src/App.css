@@ -91,7 +91,6 @@ body, html {
 .main-field {
   margin-top: 20px;
   width: 80%;
-  background-color: #f0f0f0;
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -114,7 +113,7 @@ body, html {
 .slider-items {
   display: flex;
   transition: transform 0.5s ease;
-  flex: 80%
+  flex: 80%;
 }
 
 .slider-item {
@@ -129,16 +128,15 @@ button.next {
   font-size: 20px;
   z-index: 1;
   flex: 10%;
+  background-color: transparent;
 }
 
 button.prev {
   left: 10px;
-  flex: 10%;
 }
 
 button.next {
   right: 10px;
-  flex: 10%;;
 }
 
 .countdown-container {

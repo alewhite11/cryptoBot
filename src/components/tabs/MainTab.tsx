@@ -5,6 +5,7 @@ import emptyField from './../../img/mainPage/emptyField.png'
 import lockedField from './../../img/mainPage/lockedField.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
 import carrotImg from './../../img/shopItems/carrot.png'
+import tomatoImg from './../../img/shopItems/tomato.png'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Field } from '../../interfaces/Field';
@@ -56,7 +57,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             {activeField !== 0 && <button className="prev" onClick={goToPrevField}>
               <ArrowBackIosNewIcon />
             </button>}
-            {activeField == 0 &&<button className="prev" style={{color: '#f0f0f0'}}>
+            {activeField == 0 &&<button className="prev" style={{color: 'transparent'}}>
               <ArrowBackIosNewIcon />
             </button>}
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
@@ -69,7 +70,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             {activeField < fields.length - 1 &&<button className="next" onClick={goToNextField}>
               <ArrowForwardIosIcon />
             </button>}
-            {activeField == fields.length - 1 &&<button className="next" style={{color: '#f0f0f0'}}>
+            {activeField == fields.length - 1 &&<button className="next" style={{color: 'transparent'}}>
               <ArrowForwardIosIcon />
             </button>}
           </div>
@@ -154,7 +155,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       <div className="main-field-icon">
         {(fields[index].vegetable == "") && <img src={emptyField} alt="empty field" />}
         {(fields[index].vegetable == "locked") && <img src={lockedField} alt="locked field" />}
-        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={carrotImg} alt="carrot"/>}
+        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={tomatoImg} alt="carrot"/>}
       </div>
       {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
       {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button-disabled' disabled>Claim</button>}
