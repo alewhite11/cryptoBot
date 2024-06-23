@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import moneyImg from './../../img/shopItems/dollar.png'
-import addImg from './../../img/mainPage/add.png'
 import emptyField from './../../img/mainPage/emptyField.png'
 import lockedField from './../../img/mainPage/lockedField.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
@@ -35,22 +34,9 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
     setActiveField(newIndex);
   };
 
-  const handleAddClick = () => {
-    setCurrentPage(2); //Navigate to Task page
-  };
-
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className='main-title'>PLANT</h1>
-        <div className='main-balance'>
-          <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
-          <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
-        </div>
-        <div className='main-coins'>
-          <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{score}</span>
-          <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
-        </div>
         <div className='main-field'>
           <div className="slider">
             {activeField !== 0 && <button className="prev" onClick={goToPrevField}>

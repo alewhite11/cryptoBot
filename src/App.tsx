@@ -7,6 +7,9 @@ import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
 import { getFieldsCallback, getScoreCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
+import addImg from './img/mainPage/add.png'
+import moneyImg from './img/shopItems/dollar.png'
+
 
 declare global {
   interface Window {
@@ -84,23 +87,28 @@ function App() {
     }
   }, [dataLoaded, timeoutExpired]);
 
-  const handleClick = () => {
-    setScore(prevScore => {
-      const newScore = prevScore + 1;
-      if(cloudStorage !== null){
-        cloudStorage.setItem("score", newScore.toString(), (error: any, stored: boolean) => {});
-      }
-      return newScore;
-    });
+  const handleAddClick = () => {
+    setCurrentPage(2); //Navigate to Task page
   };
-
-
 
   return (
     <>
     {!loading &&
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%' }}>
-      <div style={{ flex: 1, overflowY: 'auto', width: '100%', height: '85%'}}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
+      <div className='App-common-header'>
+        <h1 className='main-title' style={{width: '40%', justifySelf: 'flex-end', marginLeft: '10px'}}>PLANT</h1>
+        <div style={{width: '60%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
+          <div className='main-balance'>
+            <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
+            <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+          </div>
+          <div className='main-coins'>
+            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{score}</span>
+            <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
+          </div>
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%', height: '100%'}}>
         <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} cs={cloudStorage}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
