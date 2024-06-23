@@ -4,8 +4,7 @@ import addImg from './../../img/mainPage/add.png'
 import emptyField from './../../img/mainPage/emptyField.png'
 import lockedField from './../../img/mainPage/lockedField.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
-import carrotImg from './../../img/shopItems/carrot.png'
-import tomatoImg from './../../img/shopItems/tomato.png'
+import tomatoImg from './../../img/mainPage/tomato.png'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Field } from '../../interfaces/Field';

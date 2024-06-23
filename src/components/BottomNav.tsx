@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import shopIcon from './../img/shop.png';
-import inviteIcon from './../img/invite.png';
-import moneyIcon from './../img/money.png';
-import sproutIcon from './../img/sprout.png';
+import shopIcon from './../img/buttonBar/shop.png';
+import inviteIcon from './../img/buttonBar/invite.png';
+import moneyIcon from './../img/buttonBar/money.png';
+import sproutIcon from './../img/buttonBar/sprout.png';
 
 interface BottomNavProps {
     currentPage: number;
