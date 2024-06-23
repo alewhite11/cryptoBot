@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import moneyImg from './../../img/shopItems/dollar.png'
 import addImg from './../../img/mainPage/add.png'
 import emptyField from './../../img/mainPage/emptyField.png'
+import lockedField from './../../img/mainPage/lockedField.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
 import carrotImg from './../../img/shopItems/carrot.png'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Field } from '../../interfaces/Field';
 import { plants } from '../../db/vegetable';
-import { setFieldsCallback } from '../../db/cloudStorageFunctions';
+import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 
 interface MainTabProps {
@@ -112,21 +113,54 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
     const newScore = score + plantedVegetable!!.reward
   
     setScore(newScore)
+    setScoreCallback(cs, newScore)
   };
+
+  const handleUnlockClick = () => {
+    var newScore = score - (2500*(2 ** index))
+
+    setScore(newScore)
+    setScoreCallback(cs, newScore)
+
+    const newField: Field = {
+      vegetable: "",
+      plantedAt: new Date(), 
+      duration: 0
+    };
+
+    const newLockedField: Field = {
+      vegetable: "locked",
+      plantedAt: new Date(), 
+      duration: 0
+    };
+
+    const updatedFields = [...fields];
+    updatedFields[index] = newField
+    updatedFields.push(newLockedField)    
+    setFields(updatedFields)
+    setFieldsCallback(cs, updatedFields)    
+  }
 
   return(
     <div className="countdown-container">
-      <div className="main-countdown">
+      {fields[index].vegetable !== "locked" && <div className="main-countdown">
         <img src={hourglassImg} alt="hourglass" />
         <span className="main-time"><CountdownTimer timeRemaining={timeRemaining} setTimeRemaining={setTimeRemaining}/></span>
-      </div>
+      </div>}
+      {fields[index].vegetable === "locked" && <div className="main-countdown">
+        <img src={moneyImg} alt="hourglass" />
+        <span className="main-time">{2500*(2 ** index)}</span>
+      </div>}
       <div className="main-field-icon">
-        {(fields[index].vegetable == "" || fields[index].vegetable == "locked") && <img src={emptyField} alt="empty field" />}
+        {(fields[index].vegetable == "") && <img src={emptyField} alt="empty field" />}
+        {(fields[index].vegetable == "locked") && <img src={lockedField} alt="locked field" />}
         {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={carrotImg} alt="carrot"/>}
       </div>
       {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
-      {(timeRemaining > 0 && fields[index].vegetable != "") && <button className='main-plant-button-disabled' disabled={true}>Claim</button>}
-      {(timeRemaining == 0 && fields[index].vegetable != "") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
+      {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button-disabled' disabled>Claim</button>}
+      {(timeRemaining == 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
+      {(fields[index].vegetable == "locked" && score >= (2500*(2 ** index))) && <button className='main-plant-button' onClick={handleUnlockClick}>Unlock</button>}
+      {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && <button className='main-plant-button-disabled' disabled>Unlock</button>}
     </div>
 
   );

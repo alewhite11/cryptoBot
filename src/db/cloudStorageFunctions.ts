@@ -21,6 +21,8 @@ import { Field } from '../interfaces/Field';
       if (value !== undefined && !isNaN(parseInt(value, 10))) {
         // Update state
         setScore(parseInt(value, 10));
+      }else{
+        setScore(50)
       }
     });
   };

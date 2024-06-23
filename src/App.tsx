@@ -5,7 +5,7 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getFieldsCallback, getScoreCallback } from './db/cloudStorageFunctions';
+import { getFieldsCallback, getScoreCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 
 declare global {
@@ -50,15 +50,8 @@ function App() {
   useEffect(() => {
     if (cloudStorage) {
       try {
-        /*cloudStorage.getItem("score", (error, value) => {
-          if (value !== undefined && !isNaN(parseInt(value, 10))) {
-            setScore(parseInt(value, 10));
-          }  
-          setDataLoaded(true)
-        });*/
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
-    
           getScoreCallback(cloudStorage, setScore);
           getFieldsCallback(cloudStorage, setFields, setDataLoaded)
         };
@@ -107,7 +100,7 @@ function App() {
     <>
     {!loading &&
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%' }}>
-      <div style={{ flex: 1, overflowY: 'auto', width: '100%' }}>
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%', height: '85%'}}>
         <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} cs={cloudStorage}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />

@@ -71,7 +71,7 @@ body, html {
   align-items: center;
   width: 40%;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .main-add-icon {
@@ -191,8 +191,8 @@ button.next {
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
-  cursor: pointer;
   flex: 20%;
+  outline: none;
 }
 
 .main-plant-button-disabled {
@@ -203,8 +203,8 @@ button.next {
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
-  cursor: pointer;
   flex: 20%;
+  outline: none;
 }
 /* SHOP PAGE */
 
@@ -290,7 +290,18 @@ button.next {
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
-  cursor: pointer;
+  outline: none;
+}
+
+.item-button-disabled {
+  background-color: #535653;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  outline: none;
 }
 
 .item-button:hover {

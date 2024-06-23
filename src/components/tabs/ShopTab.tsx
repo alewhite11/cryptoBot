@@ -59,14 +59,14 @@ interface PlantItemProps {
 }
 
 const PlantItem: React.FC<PlantItemProps> = ({ item, key, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField }) => {
-  const handleClick = () => {
+  const handlePlantClick = () => {
     const newField : Field = {vegetable: item.name, plantedAt: new Date(), duration: item.duration}
     const updatedFields = [...fields];
 
     // Replace or modify the element at the specified index (key)
     var changed = -1
     updatedFields.forEach((field, index) => {
-      if(field.vegetable == ""){
+      if(field.vegetable === "" && changed === -1){
         updatedFields[index] = newField;
         changed = index
       }
@@ -78,7 +78,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, score, setScore, setCu
     var newScore = score - item.cost;
     setScore(newScore)
     setScoreCallback(cs, newScore)
-    setCurrentPage(0) //move to plants
+    setCurrentPage(0) //move to fields
     setActiveField(changed)
   }
   };
@@ -110,7 +110,8 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, score, setScore, setCu
           <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward}</span>
         </div>
       </div>
-      <button className="item-button" onClick={handleClick}>Plant</button>
+      {score >= item.cost && <button className="item-button" onClick={handlePlantClick}>Plant</button>}
+      {score < item.cost && <button className="item-button-disabled" disabled>Plant</button>}
     </div>
   );
 };
