@@ -36,7 +36,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header-main">
         <div className='main-field'>
           <div className="slider">
             {activeField !== 0 && <button className="prev" onClick={goToPrevField}>

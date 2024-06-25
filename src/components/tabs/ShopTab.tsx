@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import lettuceImg from './../../img/shopItems/lettuce.png';
 import tomatoImg from './../../img/shopItems/tomato.png';
 import pepperImg from './../../img/shopItems/pepper.png';
@@ -15,7 +15,7 @@ import { Plant } from '../../interfaces/Plant';
 import { Field } from '../../interfaces/Field';
 import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
-import { plants } from '../../db/vegetable';
+import { plants, plants2, plants3 } from '../../db/vegetable';
 
 
 
@@ -31,18 +31,43 @@ interface ShopTabProps {
 }
 
 const ShopTab: React.FC<ShopTabProps> = ({ score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField }) => {
-    return (
-        <div className="App">
-            <header className="App-header">
-                <h1>Plants:</h1>
-                <div className="shop-items">
-                  {plants.map((item, index) => (
-                    <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
-                  ))}
-                </div>
-            </header>
+  const [activeTab, setActiveTab] = useState(0);
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>Shop:</h1>
+        <div className="tab-buttons">
+          <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Plants</button>
+          <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>Plants 2</button>
+          <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>Plants 3</button>
         </div>
-    );
+        <div className="shop-items">
+          {activeTab === 0 && (
+            <>
+              {plants.map((item, index) => (
+                <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
+              ))}
+            </>
+          )}
+          {activeTab === 1 && (
+            <>
+              {plants2.map((item, index) => (
+                <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
+              ))}
+            </>
+          )}
+          {activeTab === 2 && (
+            <>
+              {plants3.map((item, index) => (
+                <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
+              ))}
+            </>
+          )}
+        </div>
+      </header>
+    </div>
+  );
 };
 
 interface PlantItemProps {
@@ -80,6 +105,9 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, score, setScore, setCu
     setScoreCallback(cs, newScore)
     setCurrentPage(0) //move to fields
     setActiveField(changed)
+  }else{
+    setCurrentPage(0) //move to fields
+    setActiveField(fields.length - 1)
   }
   };
 

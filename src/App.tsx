@@ -36,6 +36,8 @@ function App() {
     window.Telegram.WebApp.ready();
     window.Telegram.WebApp.expand();
 
+    //window.Telegram.WebApp.enableClosingConfirmation()
+
     const webappinit: WebAppInitData = window.Telegram.WebApp.initDataUnsafe;
     const u: WebAppUser | undefined = webappinit.user;
 
