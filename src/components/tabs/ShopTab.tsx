@@ -36,34 +36,38 @@ const ShopTab: React.FC<ShopTabProps> = ({ score, setScore, setCurrentPage, fiel
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Shop:</h1>
-        <div className="tab-buttons">
-          <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Plants</button>
-          <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>Plants 2</button>
-          <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>Plants 3</button>
-        </div>
-        <div className="shop-items">
-          {activeTab === 0 && (
-            <>
-              {plants.map((item, index) => (
-                <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
-              ))}
-            </>
-          )}
-          {activeTab === 1 && (
-            <>
-              {plants2.map((item, index) => (
-                <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
-              ))}
-            </>
-          )}
-          {activeTab === 2 && (
-            <>
-              {plants3.map((item, index) => (
-                <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
-              ))}
-            </>
-          )}
+        {/* Used to avoid content under the top bar */}
+        <div style={{marginTop: '65px'}}></div> 
+        {/*<h1 className='title'>Shop:</h1>*/}
+        <div className='bacheca'>
+          <div className="tab-buttons">
+            <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Plants</button>
+            <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>Plants 2</button>
+            <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>Plants 3</button>
+          </div>
+          <div className="shop-items">
+            {activeTab === 0 && (
+              <>
+                {plants.map((item, index) => (
+                  <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
+                ))}
+              </>
+            )}
+            {activeTab === 1 && (
+              <>
+                {plants2.map((item, index) => (
+                  <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
+                ))}
+              </>
+            )}
+            {activeTab === 2 && (
+              <>
+                {plants3.map((item, index) => (
+                  <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </header>
     </div>
@@ -119,7 +123,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, score, setScore, setCu
       <div className="item-details">
         <div className="item-info">
           <span className="item-name" style={{ fontFamily: 'Jura, sans-serif' }}>{item.name}</span>
-          <div style={{ display: 'flex', flex: '50%', alignContent: 'center' }}>
+          <div style={{ display: 'flex', flex: '60%', alignContent: 'center' }}>
             <div className="item-intext-image">
               <img src={hourglassImg} alt={item.name} />
             </div>
@@ -130,12 +134,14 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, score, setScore, setCu
           <div className="item-intext-image">
             <img src={moneyImg} alt={item.name} />
           </div>
-          <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost}</span>
+          {item.cost < 1000 && <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost}</span>}
+          {item.cost >= 1000 && <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost/1000}k</span>}
           <EastIcon style={{ color: 'black', marginRight: '10px'}}/>
           <div className="item-intext-image">
             <img src={moneyImg} alt={item.name} />
           </div>
-          <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward}</span>
+          {item.reward < 1000 && <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward}</span>}
+          {item.reward >= 1000 && <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward/1000}k</span>}
         </div>
       </div>
       {score >= item.cost && <button className="item-button" onClick={handlePlantClick}>Plant</button>}

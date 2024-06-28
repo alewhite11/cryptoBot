@@ -96,7 +96,7 @@ function App() {
   return (
     <>
     {!loading &&
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
+    <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
       <div className='App-common-header'>
         <h1 className='main-title' style={{width: '40%', justifySelf: 'flex-end', marginLeft: '10px'}}>PLANT</h1>
         <div style={{width: '60%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
@@ -110,7 +110,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, overflowY: 'auto', width: '100%', height: '100%'}}>
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%' }}>
         <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} cs={cloudStorage}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />

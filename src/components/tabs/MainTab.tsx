@@ -4,12 +4,36 @@ import emptyField from './../../img/mainPage/emptyField.png'
 import lockedField from './../../img/mainPage/lockedField.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
 import tomatoImg from './../../img/mainPage/tomato.png'
+import appleImg from './../../img/mainPage/apple.png'
+import asparagusImg from './../../img/mainPage/asparagus.png'
+import carrotImg from './../../img/mainPage/carrot.png'
+import cherryImg from './../../img/mainPage/cherry.png'
+import courgetteImg from './../../img/mainPage/courgette.png'
+import pepperImg from './../../img/mainPage/pepper.png'
+import poireImg from './../../img/mainPage/poire.png'
+import radishImg from './../../img/mainPage/radish.png'
+import saladImg from './../../img/mainPage/salad.png'
+import spinachImg from './../../img/mainPage/spinach.png'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Field } from '../../interfaces/Field';
 import { plants } from '../../db/vegetable';
 import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
+
+const vegetableImages: { [key: string]: string } = {
+  Tomato: tomatoImg,
+  Apple: appleImg,
+  Asparagus: asparagusImg,
+  Carrot: carrotImg,
+  Cherry: cherryImg,
+  Courgette: courgetteImg,
+  Pepper: pepperImg,
+  Poire: poireImg,
+  Radish: radishImg,
+  Lettuce: saladImg,
+  Spinach: spinachImg,
+};
 
 interface MainTabProps {
   score: number;
@@ -140,7 +164,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       <div className="main-field-icon">
         {(fields[index].vegetable == "") && <img src={emptyField} alt="empty field" />}
         {(fields[index].vegetable == "locked") && <img src={lockedField} alt="locked field" />}
-        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={tomatoImg} alt="carrot"/>}
+        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={vegetableImages[fields[index].vegetable]} alt="vegetable"/>}
       </div>
       {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
       {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button-disabled' disabled>Claim</button>}
