@@ -14,12 +14,12 @@ import poireImg from './../../img/mainPage/poire.png'
 import radishImg from './../../img/mainPage/radish.png'
 import saladImg from './../../img/mainPage/salad.png'
 import spinachImg from './../../img/mainPage/spinach.png'
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Field } from '../../interfaces/Field';
 import { plants } from '../../db/vegetable';
 import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
+import arrowLeft from './../../img/mainPage/arrowLeft.png'
+import arrowRight from './../../img/mainPage/arrowRight.png'
 
 const vegetableImages: { [key: string]: string } = {
   Tomato: tomatoImg,
@@ -64,10 +64,10 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
         <div className='main-field'>
           <div className="slider">
             {activeField !== 0 && <button className="prev" onClick={goToPrevField}>
-              <ArrowBackIosNewIcon />
+              <img src={arrowLeft} alt="arrow" style={{width: '40px', height: '40px'}}/>
             </button>}
             {activeField == 0 &&<button className="prev" style={{color: 'transparent'}}>
-              <ArrowBackIosNewIcon />
+              <img src={arrowLeft} alt="arrow" style={{width: '40px', height: '40px', visibility: 'hidden'}}/>
             </button>}
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
@@ -77,10 +77,10 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
               ))}
             </div>
             {activeField < fields.length - 1 &&<button className="next" onClick={goToNextField}>
-              <ArrowForwardIosIcon />
+              <img src={arrowRight} alt="arrow" style={{width: '40px', height: '40px'}}/>
             </button>}
             {activeField == fields.length - 1 &&<button className="next" style={{color: 'transparent'}}>
-              <ArrowForwardIosIcon />
+              <img src={arrowRight} alt="arrow" style={{width: '40px', height: '40px', visibility: 'hidden'}}/>
             </button>}
           </div>
         </div>

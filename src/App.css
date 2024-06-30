@@ -164,7 +164,6 @@ button.prev,
 button.next {
   border: none;
   padding: 0px;
-  font-size: 20px;
   z-index: 1;
   flex: 10%;
   background-color: transparent;
@@ -217,47 +216,64 @@ button.next {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
 }
 
 .main-field-icon img {
-  height: 40vh;
+  max-height: 36vh;
+  max-width: 30vh;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .main-plant-button {
   background-color: #4CAF50;
   color: white;
-  font-size: small;
-  border: none;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
   outline: none;
+  border: 2px solid black; 
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
 }
 
 .main-plant-button-disabled {
   background-color: #535653;
   color: white;
-  font-size: small;
-  border: none;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border: 2px solid black; 
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
   flex: 20%;
   outline: none;
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
 }
 /* SHOP PAGE */
 .bacheca {
-  background-image: url(img/woodenBg.jpg);
+  background-image: url(img/taskPage/bachecaBg.png);
   background-repeat: no-repeat;
   background-size: cover;
-  width: 90%;
+  width: 95%;
+  height: calc(var(--tg-viewport-height)*0.65);
   align-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  margin-bottom: 70px;
+  margin-bottom: 80px;
   border-radius: 1rem;
   margin-top: 20px;
 }
@@ -276,7 +292,7 @@ button.next {
   display: flex;
   justify-content: center;
   margin-bottom: 5px;
-  margin-top: 5px;
+  margin-top: 20px;
   border-radius: 15px;
 }
 
@@ -302,22 +318,27 @@ button.next {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: calc(var(--tg-viewport-height)*0.7);
   width: 90%;
-  height: 100%;
-  margin-bottom: 5px
+  margin-bottom: 5px;
+  overflow-y: auto;
 }
 
 .shop-item {
-  background-color: #FFF176;
-  border: 1px solid #000000;
+  background-image: url(img/shopItems/woodenBar.png);
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px;
-  margin: 0px;
+  padding-top: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
   margin-bottom: 3px;
-  width: 100%;
+  width: 95%;
 }
 
 .item-image img {
@@ -406,22 +427,28 @@ button.next {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px;
   width: 90%;
   margin-bottom: 5px;
+  padding-bottom: 5px;
+  height: calc(var(--tg-viewport-height)*0.56);
+  overflow-y: auto;
 }
 
 .task-item {
-  background-color: #a2fe45;
-  border: 1px solid #000000;
+  background-image: url(img/shopItems/woodenBar.png);
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px;
-  margin: 0px;
+  padding-top: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
   margin-bottom: 3px;
-  width: 100%;
+  width: 95%;
 }
 
 .task-text {

@@ -5,7 +5,7 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getFieldsCallback, getScoreCallback, setScoreCallback } from './db/cloudStorageFunctions';
+import { getClaimableCallback, getFieldsCallback, getScoreCallback, getTasksCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
@@ -27,6 +27,8 @@ function App() {
   //Application data states
   const [score, setScore] = useState(0);
   const [fields, setFields] = useState<Field[]>([])
+  const [tasks, setTasks] = useState<boolean[]>([])
+  const [claimableTasks, setClaimableTasks] = useState<boolean[]>([])
 
   //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
@@ -58,7 +60,9 @@ function App() {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
           getScoreCallback(cloudStorage, setScore);
-          getFieldsCallback(cloudStorage, setFields, setDataLoaded)
+          getTasksCallback(cloudStorage, setTasks);
+          getClaimableCallback(cloudStorage, setClaimableTasks)
+          getFieldsCallback(cloudStorage, setFields, setDataLoaded);
         };
     
         fetchData();
@@ -110,8 +114,8 @@ function App() {
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, overflowY: 'auto', width: '100%' }}>
-        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} cs={cloudStorage}/>
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
+        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>

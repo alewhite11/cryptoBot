@@ -99,75 +99,101 @@ import { Field } from '../interfaces/Field';
         setDataLoaded(true);
     });
 };
-  // Save an item to CloudStorage
-  /*const saveItem = async (item: CloudStorageItem): Promise<boolean> => {
-    if (!isCloudStorageAvailable()) {
-      console.error("CloudStorage is not available");
-      return false;
-    }
   
-    try {
-      await window.Telegram.WebApp.CloudStorage.setItem(item.key, item.value);
-      return true;
-    } catch (error) {
-      console.error("Failed to save item to CloudStorage", error);
-      return false;
-    }
-  };
+//Save tasks data into db
+export const setTasksCallback = (cs: CloudStorage | null, tasks: boolean[]): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  cs?.setItem("tasks", JSON.stringify(tasks), (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+  });
+}
+
+//Retrieve tasks from the db
+export const getTasksCallback = (
+  cs: CloudStorage | null,
+  setTasks: React.Dispatch<React.SetStateAction<boolean[]>>
+): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  //setTasks([])
+  //cs?.setItem("tasks", JSON.stringify([]))
   
-  // Get an item from CloudStorage
-  const getItem = async (key: string): Promise<string | null> => {
-    if (!isCloudStorageAvailable()) {
-      console.error("CloudStorage is not available");
-      return null;
-    }
-  
-    try {
-      const value = await window.Telegram.WebApp.CloudStorage.getItem(key);
-      return value;
-    } catch (error) {
-      console.error("Failed to get item from CloudStorage", error);
-      return null;
-    }
-  };
-  
-  // Remove an item from CloudStorage
-  const removeItem = async (key: string): Promise<boolean> => {
-    if (!isCloudStorageAvailable()) {
-      console.error("CloudStorage is not available");
-      return false;
-    }
-  
-    try {
-      await window.Telegram.WebApp.CloudStorage.removeItem(key);
-      return true;
-    } catch (error) {
-      console.error("Failed to remove item from CloudStorage", error);
-      return false;
-    }
-  };
-  
-  // Get all items from CloudStorage
-  const getAllItems = async (): Promise<CloudStorageItem[]> => {
-    if (!isCloudStorageAvailable()) {
-      console.error("CloudStorage is not available");
-      return [];
-    }
-  
-    try {
-      const keys = await window.Telegram.WebApp.CloudStorage.keys();
-      const items = await Promise.all(
-        keys.map(async (key: string) => {
-          const value = await window.Telegram.WebApp.CloudStorage.getItem(key);
-          return { key, value } as CloudStorageItem;
-        })
-      );
-      return items;
-    } catch (error) {
-      console.error("Failed to get all items from CloudStorage", error);
-      return [];
-    }
-  };
-  
-  export { saveItem, getItem, removeItem, getAllItems };*/
-  
+  cs?.getItem("tasks", (error: any, value: string | undefined) => {
+      if (error) {
+          console.error("Error fetching fields:", error);
+          // Handle error (e.g., show error message)
+          return;
+      }
+
+      if (value) {
+          try {
+              // Parse JSON string to array of boolean objects
+              const parsedTasks: boolean[] = JSON.parse(value);
+
+              // Update state with fetched booleans
+              setTasks(parsedTasks);
+          } catch (parseError) {
+              console.error("Error parsing fields JSON:", parseError);
+              // Handle parsing error (e.g., show error message)
+          }
+      } else {
+        setTasks([])
+      }
+  });
+};
+
+//Save tasks data into db
+export const setClaimableCallback = (cs: CloudStorage | null, claimableTasks: boolean[]): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  cs?.setItem("claimTask", JSON.stringify(claimableTasks), (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+  });
+}
+
+//Retrieve tasks from the db
+export const getClaimableCallback = (
+  cs: CloudStorage | null,
+  setClaimableTasks: React.Dispatch<React.SetStateAction<boolean[]>>
+): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  //setClaimableTasks([])
+  //cs?.setItem("claimTask", JSON.stringify([]))
+
+  cs?.getItem("claimTask", (error: any, value: string | undefined) => {
+      if (error) {
+          console.error("Error fetching fields:", error);
+          // Handle error (e.g., show error message)
+          return;
+      }
+
+      if (value) {
+          try {
+              // Parse JSON string to array of boolean objects
+              const parsedClaimableTasks: boolean[] = JSON.parse(value);
+
+              // Update state with fetched booleans
+              setClaimableTasks(parsedClaimableTasks);
+          } catch (parseError) {
+              console.error("Error parsing fields JSON:", parseError);
+              // Handle parsing error (e.g., show error message)
+          }
+      } else {
+        setClaimableTasks([])
+      }
+  });
+};

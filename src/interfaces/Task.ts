@@ -4,4 +4,7 @@ export interface Task {
     revenue: number;
     image: string;
     link: string;
+    channelId : string;
+    type: string;
+    id: number;
   }
