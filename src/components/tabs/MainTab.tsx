@@ -20,6 +20,7 @@ import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFuncti
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import arrowLeft from './../../img/mainPage/arrowLeft.png'
 import arrowRight from './../../img/mainPage/arrowRight.png'
+import carrotGif from './../../gif/carrot.gif'
 
 const vegetableImages: { [key: string]: string } = {
   Tomato: tomatoImg,
@@ -164,7 +165,8 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       <div className="main-field-icon">
         {(fields[index].vegetable == "") && <img src={emptyField} alt="empty field" />}
         {(fields[index].vegetable == "locked") && <img src={lockedField} alt="locked field" />}
-        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && <img src={vegetableImages[fields[index].vegetable]} alt="vegetable"/>}
+        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining > 0 && <img src={vegetableImages[fields[index].vegetable]} alt="vegetable"/>}
+        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining === 0 && <img src={carrotGif} alt="gif"/>}
       </div>
       {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
       {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button-disabled' disabled>Claim</button>}
