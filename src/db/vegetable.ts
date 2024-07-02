@@ -16,7 +16,7 @@ export const plants : Plant[] = [
     { name: 'Carrot', time: '40 min', cost: 120, reward: 240, image: carrotImg, duration: 60*40  },
     { name: 'Tomato', time: '50 min', cost: 160, reward: 320, image: tomatoImg, duration: 60*50  },
     { name: 'Courgette', time: '1 hr', cost: 200, reward: 400, image: courgetteImg, duration: 60*60  },
-    { name: 'Pepper', time: '1 hr', cost: 240, reward: 480, image: pepperImg, duration: 60*60  },
+    { name: 'Pepper', time: '2 hr', cost: 300, reward: 600, image: pepperImg, duration: 60*60*2  },
     { name: 'Asparagus', time: '4 hr', cost: 1000, reward: 2000, image: asparagusImg, duration: 60*60*4  }
 ];
 

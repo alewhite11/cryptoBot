@@ -21,6 +21,13 @@ import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import arrowLeft from './../../img/mainPage/arrowLeft.png'
 import arrowRight from './../../img/mainPage/arrowRight.png'
 import carrotGif from './../../gif/carrot.gif'
+import saladGif from './../../gif/salad.gif'
+import radishGif from './../../gif/radish.gif'
+import pepperGif from './../../gif/pepper.gif'
+import tomatoGif from './../../gif/tomato.gif'
+import asparagusGif from './../../gif/asparagus.gif'
+import courgetteGif from './../../gif/courgette.gif'
+import spinachGif from './../../gif/spinach.gif'
 
 const vegetableImages: { [key: string]: string } = {
   Tomato: tomatoImg,
@@ -34,6 +41,20 @@ const vegetableImages: { [key: string]: string } = {
   Radish: radishImg,
   Lettuce: saladImg,
   Spinach: spinachImg,
+};
+
+const vegetableGifs: { [key: string]: string } = {
+  Tomato: tomatoGif,
+  Apple: appleImg,
+  Asparagus: asparagusGif,
+  Carrot: carrotGif,
+  Cherry: cherryImg,
+  Courgette: courgetteGif,
+  Pepper: pepperGif,
+  Poire: poireImg,
+  Radish: radishGif,
+  Lettuce: saladGif,
+  Spinach: spinachGif,
 };
 
 interface MainTabProps {
@@ -159,14 +180,14 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
         <span className="main-time"><CountdownTimer timeRemaining={timeRemaining} setTimeRemaining={setTimeRemaining}/></span>
       </div>}
       {fields[index].vegetable === "locked" && <div className="main-countdown">
-        <img src={moneyImg} alt="hourglass" />
+        <img src={moneyImg} alt="money" />
         <span className="main-time">{2500*(2 ** index)}</span>
       </div>}
       <div className="main-field-icon">
         {(fields[index].vegetable == "") && <img src={emptyField} alt="empty field" />}
         {(fields[index].vegetable == "locked") && <img src={lockedField} alt="locked field" />}
         {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining > 0 && <img src={vegetableImages[fields[index].vegetable]} alt="vegetable"/>}
-        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining === 0 && <img src={carrotGif} alt="gif"/>}
+        {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining === 0 && <img src={vegetableGifs[fields[index].vegetable]} alt="gif" onClick={handleClaimClick}/>}
       </div>
       {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
       {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button-disabled' disabled>Claim</button>}

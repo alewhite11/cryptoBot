@@ -189,6 +189,7 @@ button.next {
 
 .main-countdown {
   display: flex;
+  align-self: top;
   align-items: center;
   justify-content: center;
   background-color: white;
@@ -227,6 +228,7 @@ button.next {
 
 .main-plant-button {
   background-color: #4CAF50;
+  align-self: bottom;
   color: white;
   font-size: medium;
   font-weight: bold; 
@@ -363,7 +365,7 @@ button.next {
 }
 
 .item-name {
-  color: black;
+  color: white;
   font-size: medium;
   font-weight: bold;
   margin-right: 5px; 
@@ -373,7 +375,7 @@ button.next {
 }
 
 .item-time {
-  color: black;
+  color: white;
   font-size: medium;
   font-weight: bold;
   margin-left: 5px; 
@@ -387,7 +389,7 @@ button.next {
 
 .item-cost,
 .item-reward {
-  color: black;
+  color: white;
   font-size: medium;
   font-weight: bold;
   display: flex; 
@@ -400,7 +402,7 @@ button.next {
   color: white;
   font-size: small;
   font-weight: bold;
-  border: none;
+  border: 1px solid white;
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
@@ -411,15 +413,11 @@ button.next {
   background-color: #535653;
   color: white;
   font-size: small;
-  border: none;
+  border: 1px solid white;
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
   outline: none;
-}
-
-.item-button:hover {
-  background-color: #45a049;
 }
 
 /* TASKS PAGE */
@@ -452,7 +450,7 @@ button.next {
 }
 
 .task-text {
-  color: black;
+  color: white;
   font-weight: bold;
   font-size: large;
   font-family: 'Jura', sans-serif;
@@ -464,6 +462,7 @@ button.next {
   width: 40px;
   height: 40px;
   padding: 10px;
+  margin-right: 5px;
 }
 
 .modal-overlay {
