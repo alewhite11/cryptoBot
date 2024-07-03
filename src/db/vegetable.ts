@@ -5,11 +5,13 @@ import pepperImg from './../img/shopItems/pepper.png';
 import radishImg from './../img/shopItems/radish.png';
 import courgetteImg from './../img/shopItems/courgette.png';
 import carrotImg from './../img/shopItems/carrot.png';
-import orangeImg from './../img/shopItems/orange.png';
 import asparagusImg from './../img/shopItems/asparagus.png'
 import spinachImg from './../img/shopItems/spinach.png'
+import appleImg from './../img/shopItems/apple.png'
+import pearImg from './../img/shopItems/pear.png'
+import cherryImg from './../img/shopItems/cherry.png'
 
-export const plants : Plant[] = [    
+export const vegetables : Plant[] = [    
     { name: 'Radish', time: '10 min', cost: 20, reward: 40, image: radishImg, duration: 60*10 },
     { name: 'Lettuce', time: '20 min', cost: 60, reward: 120, image: lettuceImg, duration: 60*20  },
     { name: 'Spinach', time: '30 min', cost: 100, reward: 200, image: spinachImg, duration: 60*30  },
@@ -20,10 +22,10 @@ export const plants : Plant[] = [
     { name: 'Asparagus', time: '4 hr', cost: 1000, reward: 2000, image: asparagusImg, duration: 60*60*4  }
 ];
 
-export const plants2 : Plant[] = [    
-    { name: 'Radish', time: '10 min', cost: 20, reward: 40, image: radishImg, duration: 60*10 },
-    { name: 'Lettuce', time: '20 min', cost: 60, reward: 120, image: lettuceImg, duration: 60*20  },
-    { name: 'Spinach', time: '30 min', cost: 100, reward: 200, image: asparagusImg, duration: 60*30  }
+export const plants : Plant[] = [    
+    { name: 'Apple', time: '10 min', cost: 20, reward: 40, image: appleImg, duration: 60*10 },
+    { name: 'Pear', time: '20 min', cost: 60, reward: 120, image: pearImg, duration: 60*20  },
+    { name: 'Cherry', time: '30 min', cost: 100, reward: 200, image: cherryImg, duration: 60*30  }
 ];
 
 export const plants3 : Plant[] = [    

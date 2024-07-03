@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { vegetables, plants, plants3 } from '../../db/vegetable';
 import moneyImg from './../../img/shopItems/dollar.png'
 import emptyField from './../../img/mainPage/emptyField.png'
 import lockedField from './../../img/mainPage/lockedField.png'
@@ -10,12 +11,11 @@ import carrotImg from './../../img/mainPage/carrot.png'
 import cherryImg from './../../img/mainPage/cherry.png'
 import courgetteImg from './../../img/mainPage/courgette.png'
 import pepperImg from './../../img/mainPage/pepper.png'
-import poireImg from './../../img/mainPage/poire.png'
+import pearImg from './../../img/mainPage/pear.png'
 import radishImg from './../../img/mainPage/radish.png'
 import saladImg from './../../img/mainPage/salad.png'
 import spinachImg from './../../img/mainPage/spinach.png'
 import { Field } from '../../interfaces/Field';
-import { plants } from '../../db/vegetable';
 import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import arrowLeft from './../../img/mainPage/arrowLeft.png'
@@ -37,7 +37,7 @@ const vegetableImages: { [key: string]: string } = {
   Cherry: cherryImg,
   Courgette: courgetteImg,
   Pepper: pepperImg,
-  Poire: poireImg,
+  Pear: pearImg,
   Radish: radishImg,
   Lettuce: saladImg,
   Spinach: spinachImg,
@@ -51,7 +51,7 @@ const vegetableGifs: { [key: string]: string } = {
   Cherry: cherryImg,
   Courgette: courgetteGif,
   Pepper: pepperGif,
-  Poire: poireImg,
+  Pear: pearImg,
   Radish: radishGif,
   Lettuce: saladGif,
   Spinach: spinachGif,
@@ -130,22 +130,43 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
   };
 
   const handleClaimClick = () => {
-    const newField: Field = {
-      vegetable: "",
-      plantedAt: new Date(), // This initializes plantedAt with the current date and time
-      duration: 0
-    };
-
-    const updatedFields = [...fields];
-    updatedFields[index] = newField
-    setFields(updatedFields)
-    setFieldsCallback(cs, updatedFields)
-
-    const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
-    const newScore = score + plantedVegetable!!.reward
+    if(plants.some(plant => plant.name === fields[index].vegetable)){
+      //This plant has not to be removed from the field
+      const newField: Field = {
+        vegetable: fields[index].vegetable,
+        plantedAt: new Date(), // This initializes plantedAt with the current date and time
+        duration: fields[index].duration
+      };
   
-    setScore(newScore)
-    setScoreCallback(cs, newScore)
+      const updatedFields = [...fields];
+      updatedFields[index] = newField
+      setFields(updatedFields)
+      setFieldsCallback(cs, updatedFields)
+  
+      const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
+      const newScore = score + plantedVegetable!!.reward
+    
+      setScore(newScore)
+      setScoreCallback(cs, newScore)
+    }else{
+      //This vegetable has to be removed
+      const newField: Field = {
+        vegetable: "",
+        plantedAt: new Date(), // This initializes plantedAt with the current date and time
+        duration: 0
+      };
+  
+      const updatedFields = [...fields];
+      updatedFields[index] = newField
+      setFields(updatedFields)
+      setFieldsCallback(cs, updatedFields)
+  
+      const plantedVegetable = vegetables.find(plant => plant.name === fields[index].vegetable);
+      const newScore = score + plantedVegetable!!.reward
+    
+      setScore(newScore)
+      setScoreCallback(cs, newScore)
+    }
   };
 
   const handleUnlockClick = () => {

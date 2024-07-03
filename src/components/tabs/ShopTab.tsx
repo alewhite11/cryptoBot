@@ -1,23 +1,13 @@
 import React, { useState } from 'react';
-import lettuceImg from './../../img/shopItems/lettuce.png';
-import tomatoImg from './../../img/shopItems/tomato.png';
-import pepperImg from './../../img/shopItems/pepper.png';
-import radishImg from './../../img/shopItems/radish.png';
-import courgetteImg from './../../img/shopItems/courgette.png';
-import carrotImg from './../../img/shopItems/carrot.png';
-import orangeImg from './../../img/shopItems/orange.png';
 import moneyImg from './../../img/shopItems/dollar.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
-import asparagusImg from './../../img/shopItems/asparagus.png'
 import './../../App.css';
 import EastIcon from '@mui/icons-material/East';
 import { Plant } from '../../interfaces/Plant';
 import { Field } from '../../interfaces/Field';
 import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
-import { plants, plants2, plants3 } from '../../db/vegetable';
-
-
+import { vegetables, plants, plants3 } from '../../db/vegetable';
 
 interface ShopTabProps {
   score: number;
@@ -41,21 +31,21 @@ const ShopTab: React.FC<ShopTabProps> = ({ score, setScore, setCurrentPage, fiel
         {/*<h1 className='title'>Shop:</h1>*/}
         <div className='bacheca'>
           <div className="tab-buttons">
-            <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Plants</button>
-            <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>Plants 2</button>
+            <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Vegetables</button>
+            <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>Plants</button>
             <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>Plants 3</button>
           </div>
           <div className="shop-items">
             {activeTab === 0 && (
               <>
-                {plants.map((item, index) => (
+                {vegetables.map((item, index) => (
                   <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
                 ))}
               </>
             )}
             {activeTab === 1 && (
               <>
-                {plants2.map((item, index) => (
+                {plants.map((item, index) => (
                   <PlantItem item={item} key={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField}/>
                 ))}
               </>
