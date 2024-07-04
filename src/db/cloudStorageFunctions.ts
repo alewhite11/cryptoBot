@@ -5,7 +5,51 @@ import { Field } from '../interfaces/Field';
   const isCloudStorageAvailable = (cs: CloudStorage | null): boolean => {
     return typeof cs !== null;
   };
+
+  //Store the number of planted vegetables 
+  export const setPlantedVegetablesCallback = (cs: CloudStorage | null, map: Map<string, number>): void => {
+    if (!isCloudStorageAvailable(cs)) {
+        return;
+    }
+
+    const mapArray = Array.from(map.entries());
+    cs?.setItem("plantedVegetables", JSON.stringify(mapArray), (error: any, stored: boolean) => {
+        if (error) {
+            return;
+        }
+    });
+  }
   
+  //Retrieve the number of planted vegetables
+  export const getPlantedVegetablesCallback = (cs: CloudStorage | null, setPlantedVegetables: React.Dispatch<React.SetStateAction<Map<string, number>>>): void => {
+    if (!isCloudStorageAvailable(cs)) {
+        return;
+    }
+
+    cs?.getItem("plantedVegetables", (error, value) => {
+        if (error) {
+            return;
+        }
+
+        if (value !== undefined) {
+            try {
+                const mapArray: [string, number][] = JSON.parse(value);
+                const parsedMap = new Map<string, number>(mapArray);
+                // Update state
+                setPlantedVegetables(parsedMap);
+            } catch (e) {
+                // Handle JSON parse error
+                var newMap = new Map<string, number>();
+                newMap.set('Radish', 3);
+                setPlantedVegetables(newMap);
+            }
+        } else {
+          var newMap = new Map<string, number>();
+          newMap.set('Radish', 3);
+          setPlantedVegetables(newMap);
+        }
+    });
+  };
 
   //Retrieve score from db
   export const getScoreCallback = (cs: CloudStorage | null, setScore: React.Dispatch<React.SetStateAction<number>>): void => {

@@ -130,71 +130,73 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
   };
 
   const handleClaimClick = () => {
-    if(plants.some(plant => plant.name === fields[index].vegetable)){
-      //This plant has not to be removed from the field
-      const newField: Field = {
+    if (plants.some(plant => plant.name === fields[index].vegetable)) {
+      // Update the field with a planted vegetable
+      const newField = {
         vegetable: fields[index].vegetable,
-        plantedAt: new Date(), // This initializes plantedAt with the current date and time
+        plantedAt: new Date(),
         duration: fields[index].duration
       };
-  
-      const updatedFields = [...fields];
-      updatedFields[index] = newField
-      setFields(updatedFields)
-      setFieldsCallback(cs, updatedFields)
-  
-      const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
-      const newScore = score + plantedVegetable!!.reward
-    
-      setScore(newScore)
-      setScoreCallback(cs, newScore)
 
-      setTimeRemaining(Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000)))
-    }else{
-      //This vegetable has to be removed
-      const newField: Field = {
+      const updatedFields = [...fields];
+      updatedFields[index] = newField;
+      setFields(updatedFields);
+
+      // Update score
+      const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
+      const newScore = score + (plantedVegetable?.reward || 0);
+      setScore(newScore);
+    } else {
+      // Update the field when vegetable has to be removed
+      const newField = {
         vegetable: "",
-        plantedAt: new Date(), // This initializes plantedAt with the current date and time
+        plantedAt: new Date(),
         duration: 0
       };
-  
+
       const updatedFields = [...fields];
-      updatedFields[index] = newField
-      setFields(updatedFields)
-      setFieldsCallback(cs, updatedFields)
-  
-      const plantedVegetable = vegetables.find(plant => plant.name === fields[index].vegetable);
-      const newScore = score + plantedVegetable!!.reward
-    
-      setScore(newScore)
-      setScoreCallback(cs, newScore)
+      updatedFields[index] = newField;
+      setFields(updatedFields);
     }
   };
 
   const handleUnlockClick = () => {
-    var newScore = score - (2500*(2 ** index))
+    const newScore = score - (2500 * (2 ** index));
+    setScore(newScore);
 
-    setScore(newScore)
-    setScoreCallback(cs, newScore)
-
-    const newField: Field = {
+    const newField = {
       vegetable: "",
-      plantedAt: new Date(), 
+      plantedAt: new Date(),
       duration: 0
     };
 
-    const newLockedField: Field = {
+    const newLockedField = {
       vegetable: "locked",
-      plantedAt: new Date(), 
+      plantedAt: new Date(),
       duration: 0
     };
 
     const updatedFields = [...fields];
-    updatedFields[index] = newField
-    updatedFields.push(newLockedField)    
-    setFields(updatedFields)
-    setFieldsCallback(cs, updatedFields)    
-  }
+    updatedFields[index] = newField;
+    updatedFields.push(newLockedField);
+    setFields(updatedFields);
+  };
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimeRemaining(prevTime => {
+        if (prevTime === 0) {
+          clearInterval(timerInterval);
+          console.log('Countdown complete!');
+          return 0;
+        } else {
+          return Math.max(0, prevTime - 1);
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, []);
 
   return(
     <div className="countdown-container">

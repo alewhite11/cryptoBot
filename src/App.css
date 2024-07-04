@@ -327,6 +327,7 @@ button.next {
 }
 
 .shop-item {
+  position: relative;
   background-image: url(img/shopItems/woodenBar.png);
   background-repeat: no-repeat;
   background-size: cover;
@@ -341,6 +342,21 @@ button.next {
   margin-right: 5px;
   margin-bottom: 3px;
   width: 95%;
+}
+
+.shop-overlay {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  font-size: 1.2em;
+  font-family: 'Jura, sans-serif';
+  border-radius: 10px;
 }
 
 .item-image img {

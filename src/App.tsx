@@ -5,7 +5,7 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getClaimableCallback, getFieldsCallback, getScoreCallback, getTasksCallback, setScoreCallback } from './db/cloudStorageFunctions';
+import { getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, getScoreCallback, getTasksCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
@@ -29,6 +29,7 @@ function App() {
   const [fields, setFields] = useState<Field[]>([])
   const [tasks, setTasks] = useState<boolean[]>([])
   const [claimableTasks, setClaimableTasks] = useState<boolean[]>([])
+  const [plantedVegetables, setPlantedVegetables] = useState<Map<string, number>>(new Map<string, number>())
 
   //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
@@ -62,6 +63,7 @@ function App() {
           getScoreCallback(cloudStorage, setScore);
           getTasksCallback(cloudStorage, setTasks);
           getClaimableCallback(cloudStorage, setClaimableTasks)
+          getPlantedVegetablesCallback(cloudStorage, setPlantedVegetables)
           getFieldsCallback(cloudStorage, setFields, setDataLoaded);
         };
     
@@ -115,7 +117,7 @@ function App() {
         </div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage}/>
+        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
