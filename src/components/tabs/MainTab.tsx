@@ -148,6 +148,8 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
     
       setScore(newScore)
       setScoreCallback(cs, newScore)
+
+      setTimeRemaining(Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000)))
     }else{
       //This vegetable has to be removed
       const newField: Field = {
@@ -240,7 +242,7 @@ const CountdownTimer: React.FC<TimerProps> = ({ timeRemaining, setTimeRemaining 
     }, 1000);
 
     return () => clearInterval(timerInterval);
-  }, [setTimeRemaining]);
+  }, [timeRemaining]);
 
   const hours = Math.floor(timeRemaining / 3600);
   const minutes = Math.floor((timeRemaining % 3600) / 60);
