@@ -9,6 +9,7 @@ import { getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, 
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
+import { loadAssets } from './db/loadImages';
 
 
 declare global {
@@ -34,6 +35,7 @@ function App() {
   //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
   const [timeoutExpired, setTimeoutExpired] = useState(false); //Set to true when timeout expired
+  const [imagesLoaded, setImagesLoaded] = useState(false); //Set true when assets have been loaded
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
@@ -60,6 +62,9 @@ function App() {
       try {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
+          loadAssets(() => {
+            setImagesLoaded(true);
+          })
           getScoreCallback(cloudStorage, setScore);
           getTasksCallback(cloudStorage, setTasks);
           getClaimableCallback(cloudStorage, setClaimableTasks)
@@ -90,10 +95,10 @@ function App() {
 
   //Disable loading page if 3s elapsed and data retrieval succeded
   useEffect(() => {
-    if (dataLoaded && timeoutExpired) {
+    if (dataLoaded && timeoutExpired && imagesLoaded) {
       setLoading(false);
     }
-  }, [dataLoaded, timeoutExpired]);
+  }, [dataLoaded, timeoutExpired, imagesLoaded]);
 
   const handleAddClick = () => {
     setCurrentPage(2); //Navigate to Task page
