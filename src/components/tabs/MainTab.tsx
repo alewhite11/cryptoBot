@@ -28,6 +28,7 @@ import tomatoGif from './../../gif/tomato.gif'
 import asparagusGif from './../../gif/asparagus.gif'
 import courgetteGif from './../../gif/courgette.gif'
 import spinachGif from './../../gif/spinach.gif'
+import appleGif from './../../gif/apple.gif'
 
 const vegetableImages: { [key: string]: string } = {
   Tomato: tomatoImg,
@@ -45,7 +46,7 @@ const vegetableImages: { [key: string]: string } = {
 
 const vegetableGifs: { [key: string]: string } = {
   Tomato: tomatoGif,
-  Apple: appleImg,
+  Apple: appleGif,
   Asparagus: asparagusGif,
   Carrot: carrotGif,
   Cherry: cherryImg,
@@ -130,73 +131,72 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
   };
 
   const handleClaimClick = () => {
-    if (plants.some(plant => plant.name === fields[index].vegetable)) {
-      // Update the field with a planted vegetable
-      const newField = {
+    if(plants.some(plant => plant.name === fields[index].vegetable)){
+      //This plant has not to be removed from the field
+      const newField: Field = {
         vegetable: fields[index].vegetable,
-        plantedAt: new Date(),
+        plantedAt: new Date(), // This initializes plantedAt with the current date and time
         duration: fields[index].duration
       };
-
+  
       const updatedFields = [...fields];
-      updatedFields[index] = newField;
-      setFields(updatedFields);
+      updatedFields[index] = newField
+      setFields(updatedFields)
 
-      // Update score
+      setTimeRemaining(Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
+  
       const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
-      const newScore = score + (plantedVegetable?.reward || 0);
-      setScore(newScore);
-    } else {
-      // Update the field when vegetable has to be removed
-      const newField = {
+      const newScore = score + plantedVegetable!!.reward
+      setScore(newScore)
+
+      setFieldsCallback(cs, updatedFields)
+      setScoreCallback(cs, newScore)
+    }else{
+      //This vegetable has to be removed
+      const newField: Field = {
         vegetable: "",
-        plantedAt: new Date(),
+        plantedAt: new Date(), // This initializes plantedAt with the current date and time
         duration: 0
       };
-
+  
       const updatedFields = [...fields];
-      updatedFields[index] = newField;
-      setFields(updatedFields);
+      updatedFields[index] = newField
+      setFields(updatedFields)
+      
+      const plantedVegetable = vegetables.find(plant => plant.name === fields[index].vegetable);
+      const newScore = score + plantedVegetable!!.reward
+    
+      setScore(newScore)
+
+      setFieldsCallback(cs, updatedFields)
+      setScoreCallback(cs, newScore)
     }
   };
 
   const handleUnlockClick = () => {
-    const newScore = score - (2500 * (2 ** index));
-    setScore(newScore);
+    var newScore = score - (2500*(2 ** index))
 
-    const newField = {
+    setScore(newScore)
+    setScoreCallback(cs, newScore)
+
+    const newField: Field = {
       vegetable: "",
-      plantedAt: new Date(),
+      plantedAt: new Date(), 
       duration: 0
     };
 
-    const newLockedField = {
+    const newLockedField: Field = {
       vegetable: "locked",
-      plantedAt: new Date(),
+      plantedAt: new Date(), 
       duration: 0
     };
 
     const updatedFields = [...fields];
-    updatedFields[index] = newField;
-    updatedFields.push(newLockedField);
-    setFields(updatedFields);
-  };
-
-  useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setTimeRemaining(prevTime => {
-        if (prevTime === 0) {
-          clearInterval(timerInterval);
-          console.log('Countdown complete!');
-          return 0;
-        } else {
-          return Math.max(0, prevTime - 1);
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, []);
+    updatedFields[index] = newField
+    updatedFields.push(newLockedField)    
+    setFields(updatedFields)
+    setFieldsCallback(cs, updatedFields)    
+  }
 
   return(
     <div className="countdown-container">
