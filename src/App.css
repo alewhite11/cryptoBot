@@ -351,10 +351,11 @@ button.next {
   height: 100%;
   color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 1;
-  font-size: 1.2em;
+  font-size: small;
   font-family: 'Jura, sans-serif';
   border-radius: 10px;
 }

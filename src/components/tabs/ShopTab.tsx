@@ -8,6 +8,7 @@ import { Field } from '../../interfaces/Field';
 import { setFieldsCallback, setPlantedVegetablesCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import { vegetables, plants, plants3 } from '../../db/vegetable';
+import LockIcon from '@mui/icons-material/Lock';
 
 interface ShopTabProps {
   score: number;
@@ -126,6 +127,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
     <div className="shop-item">
       {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && (
         <div className="shop-overlay">
+          <LockIcon />
           <span>Plant {3 - ((index > 0 ? plantedVegetables.get(vegetables[index - 1].name) : 0) || 0)} more times {index > 0 ? vegetables[index - 1].name : item.name} to unlock</span>
         </div>
       )}
