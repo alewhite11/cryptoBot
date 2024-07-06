@@ -206,7 +206,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       </div>}
       {fields[index].vegetable === "locked" && <div className="main-countdown">
         <img src={moneyImg} alt="money" />
-        <span className="main-time">{2500*(2 ** index)}</span>
+        <span className="main-time"><UnlockedField index={index}/></span>
       </div>}
       <div className="main-field-icon">
         {(fields[index].vegetable == "") && <img src={emptyField} alt="empty field" />}
@@ -253,6 +253,19 @@ const CountdownTimer: React.FC<TimerProps> = ({ timeRemaining, setTimeRemaining 
   return (
     <div>
       <p>{`${hours}h ${minutes}m ${seconds}s`}</p>
+    </div>
+  );
+};
+
+interface  UnlockedFieldProps{
+  index: number;
+}
+
+const UnlockedField : React.FC<UnlockedFieldProps> = ({ index }) => {
+
+  return (
+    <div>
+      <p>{2500*(2 ** index)}</p>
     </div>
   );
 };

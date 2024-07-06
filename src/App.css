@@ -142,8 +142,8 @@ body, html {
 
 .slider {
   overflow: hidden;
-  width: 100%;
-  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -152,12 +152,14 @@ body, html {
 .slider-items {
   display: flex;
   transition: transform 0.5s ease;
+  min-height: 100%;
   flex: 80%;
 }
 
 .slider-item {
   flex: 0 0 100%;
   max-width: 100%;
+  min-height: 100%;
 }
 
 button.prev,
@@ -182,7 +184,8 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: space-between; /* Ensure space is used effectively */
-  width: 100%; 
+  min-width: 100%; 
+  min-height: 100%;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -220,8 +223,8 @@ button.next {
 }
 
 .main-field-icon img {
-  max-height: 36vh;
-  max-width: 30vh;
+  height: 50vw;
+  width: auto;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -434,6 +437,98 @@ button.next {
   border-radius: 10px;
   margin: 10px;
   vertical-align: center;
+  outline: none;
+}
+
+.shop-modal-overlay {
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shop-modal-box {
+  display: block;
+  background-image: url(img/woodenBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 60%;
+  height: fit-content;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.shop-popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.shop-popup-title {
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  font-family: 'Jura', sans-serif;
+}
+
+.shop-popup-reward {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shop-money-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+.shop-reward-text {
+  color: white;
+  font-family: 'Jura', sans-serif;
+}
+
+.shop-popup-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: bottom;
+}
+
+.shop-popup-buttons-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.shop-popup-button {
+  background-color: #4CAF50;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  flex: 20%;
+  outline: none;
+}
+
+.shop-popup-button-disabled {
+  background-color: #535653;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  flex: 20%;
   outline: none;
 }
 

@@ -85,6 +85,9 @@ interface PlantItemProps {
 }
 
 const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
+  const [shopPopupOpened, setShopPopupOpened] = useState<boolean>(false)
+  const [errorPlanting, setErrorPlanting] = useState(false)
+
   const handlePlantClick = () => {
     const newField : Field = {vegetable: item.name, plantedAt: new Date(), duration: item.duration}
     const updatedFields = [...fields];
@@ -96,34 +99,34 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
         updatedFields[index] = newField;
         changed = index
       }
-  });
+    });
 
-  if(changed != -1){
-    setFields(updatedFields)
-    setFieldsCallback(cs, updatedFields)
-    var newScore = score - item.cost;
-    setScore(newScore)
-    setScoreCallback(cs, newScore)
-    var times = plantedVegetables.get(item.name)
-    var newPlantedVegetables = plantedVegetables
-    if(times !== undefined){
-      times = times + 1
-      newPlantedVegetables.set(item.name, times)
+    if(changed != -1){
+      setFields(updatedFields)
+      setFieldsCallback(cs, updatedFields)
+      var newScore = score - item.cost;
+      setScore(newScore)
+      setScoreCallback(cs, newScore)
+      var times = plantedVegetables.get(item.name)
+      var newPlantedVegetables = plantedVegetables
+      if(times !== undefined){
+        times = times + 1
+        newPlantedVegetables.set(item.name, times)
+      }else{
+        times = 1
+        newPlantedVegetables.set(item.name, times)
+      }
+      setPlantedVegetables(newPlantedVegetables)
+      setPlantedVegetablesCallback(cs, newPlantedVegetables)
+      setCurrentPage(0) //move to fields
+      setActiveField(changed)
     }else{
-      times = 1
-      newPlantedVegetables.set(item.name, times)
+      setErrorPlanting(true)
     }
-    setPlantedVegetables(newPlantedVegetables)
-    setPlantedVegetablesCallback(cs, newPlantedVegetables)
-    setCurrentPage(0) //move to fields
-    setActiveField(changed)
-  }else{
-    setCurrentPage(0) //move to fields
-    setActiveField(fields.length - 1)
-  }
   };
 
   return (
+    <>
     <div className="shop-item">
       {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && (
         <div className="shop-overlay">
@@ -158,9 +161,11 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
           {item.reward >= 1000 && <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward/1000}k</span>}
         </div>
       </div>
-      {score >= item.cost && isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && <button className="item-button" onClick={handlePlantClick}>Plant</button>}
-      {(score < item.cost || !isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name)) && <button className="item-button-disabled" disabled>Plant</button>}
+      {isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && <button className="item-button" onClick={() => {setShopPopupOpened(true)}}>Plant</button>}
+      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && <button className="item-button-disabled" disabled>Plant</button>}
     </div>
+    {shopPopupOpened && <ShopPopUp item={item} handlePlantClick={handlePlantClick} setShopPopupOpened={setShopPopupOpened} score={score} errorPlanting={errorPlanting} setErrorPlanting={setErrorPlanting}/>}
+    </>
   );
 };
 
@@ -182,6 +187,9 @@ interface PlantItemTreeProps {
 }
 
 const PlantItemTree: React.FC<PlantItemTreeProps> = ({ item, key, index, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
+  const [shopPopupOpened, setShopPopupOpened] = useState<boolean>(false)
+  const [errorPlanting, setErrorPlanting] = useState(false)
+
   const handlePlantClick = () => {
     const newField : Field = {vegetable: item.name, plantedAt: new Date(), duration: item.duration}
     const updatedFields = [...fields];
@@ -193,39 +201,39 @@ const PlantItemTree: React.FC<PlantItemTreeProps> = ({ item, key, index, score, 
         updatedFields[index] = newField;
         changed = index
       }
-  });
+    });
 
-  if(changed != -1){
-    setFields(updatedFields)
-    setFieldsCallback(cs, updatedFields)
-    var newScore = score - item.cost;
-    setScore(newScore)
-    setScoreCallback(cs, newScore)
-    var times = plantedVegetables.get(item.name)
-    var newPlantedVegetables = plantedVegetables
-    if(times !== undefined){
-      times = times + 1
-      newPlantedVegetables.set(item.name, times)
+    if(changed != -1){
+      setFields(updatedFields)
+      setFieldsCallback(cs, updatedFields)
+      var newScore = score - item.cost;
+      setScore(newScore)
+      setScoreCallback(cs, newScore)
+      var times = plantedVegetables.get(item.name)
+      var newPlantedVegetables = plantedVegetables
+      if(times !== undefined){
+        times = times + 1
+        newPlantedVegetables.set(item.name, times)
+      }else{
+        times = 1
+        newPlantedVegetables.set(item.name, times)
+      }
+      setPlantedVegetables(newPlantedVegetables)
+      setPlantedVegetablesCallback(cs, newPlantedVegetables)
+      setCurrentPage(0) //move to fields
+      setActiveField(changed)
     }else{
-      times = 1
-      newPlantedVegetables.set(item.name, times)
+      setErrorPlanting(true)
     }
-    setPlantedVegetables(newPlantedVegetables)
-    setPlantedVegetablesCallback(cs, newPlantedVegetables)
-    setCurrentPage(0) //move to fields
-    setActiveField(changed)
-  }else{
-    setCurrentPage(0) //move to fields
-    setActiveField(fields.length - 1)
-  }
   };
 
   return (
+    <>
     <div className="shop-item">
-      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : plants[plants.length - 1].name) && (
+      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name) && (
         <div className="shop-overlay">
         <LockIcon />
-        <span>Plant {3 - ((index > 0 ? plantedVegetables.get(vegetables[index - 1].name) : 0) || 0)} more times {index > 0 ? vegetables[index - 1].name : item.name} to unlock</span>
+        <span>Plant {3 - ((index > 0 ? plantedVegetables.get(plants[index - 1].name) || 0 : plantedVegetables.get(vegetables[vegetables.length - 1].name)) || 0)} more times { index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name} to unlock</span>
       </div>
       )}
       <div className="item-image">
@@ -255,11 +263,80 @@ const PlantItemTree: React.FC<PlantItemTreeProps> = ({ item, key, index, score, 
           {item.reward >= 1000 && <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward/1000}k</span>}
         </div>
       </div>
-      {score >= item.cost && isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name) && <button className="item-button" onClick={handlePlantClick}>Plant</button>}
-      {(score < item.cost || !isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name)) && <button className="item-button-disabled" disabled>Plant</button>}
+      {isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name) && <button className="item-button" onClick={() => {setShopPopupOpened(true)}}>Plant</button>}
+      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name) && <button className="item-button-disabled" disabled>Plant</button>}
     </div>
+    {shopPopupOpened && <ShopPopUp item={item} handlePlantClick={handlePlantClick} setShopPopupOpened={setShopPopupOpened} score={score} errorPlanting={errorPlanting} setErrorPlanting={setErrorPlanting}/>}
+    </>
   );
 };
+
+interface ShopPopUpProps {
+  setShopPopupOpened: (opened: boolean) => void;
+  item: Plant;
+  handlePlantClick : () => void;
+  score: number;
+  errorPlanting: boolean;
+  setErrorPlanting: (error: boolean) => void;
+}
+
+const ShopPopUp: React.FC<ShopPopUpProps> = ({ handlePlantClick, setShopPopupOpened, item, score, errorPlanting, setErrorPlanting }) => {
+  const handleOverlayClick = () => {
+    setShopPopupOpened(false)
+    setErrorPlanting(false)
+  };
+
+  const handlePopUpClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    setShopPopupOpened(true)
+  };
+  
+  const handleRegularPlantClicked = () => {
+    handlePlantClick()
+    setShopPopupOpened(false)
+  };
+
+  return (
+    <>
+        <div className="shop-modal-overlay" onClick={handleOverlayClick} >
+          <div  className="shop-modal-box" onClick={handlePopUpClick}>
+            <div className='shop-popup-content'>
+              <div className='shop-popup-title'>{item.name}</div>
+              <div className='shop-popup-reward'>
+                <img className='shop-money-icon' src={moneyImg} alt={"money"}/>                
+                <div className='shop-reward-text'>
+                  <p>You will receive {item.reward}</p>
+                </div>
+              </div> 
+              <div className='shop-popup-buttons'>
+                <div className='shop-popup-buttons-inner'>
+                  <div className="item-pricing">
+                    <div className="item-intext-image">
+                      <img src={moneyImg} alt={item.name} />
+                    </div>
+                    {item.cost < 1000 && <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost}</span>}
+                    {item.cost >= 1000 && <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost/1000}k</span>}
+                  </div>
+                  {score >= item.cost && <button className='shop-popup-button' onClick={handleRegularPlantClicked}>PLANT</button>}
+                  {score < item.cost && <button className='shop-popup-button-disabled' disabled>PLANT</button>}
+                </div>
+                  <div className='shop-popup-buttons-inner'>
+                    <div className="item-pricing">
+                      <div className="item-intext-image">
+                        <img src={moneyImg} alt={item.name} />
+                      </div>
+                      <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>Free</span>
+                    </div>
+                    <button className='shop-popup-button-disabled' onClick={() => {}} disabled>PLANT</button>
+                  </div>
+              </div>   
+              {errorPlanting && <p style={{color: 'red', fontWeight: 'bold'}}>No empty pot available!</p>}         
+            </div>
+          </div>
+        </div>
+    </>
+  );
+}
 
 const isVegetablePlantedEnough = (map: Map<string, number>, key: string): boolean => {
   const value = map.get(key);

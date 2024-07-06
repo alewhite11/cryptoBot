@@ -101,7 +101,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ item, key, score, setScore, cs, tas
   );
 };
 
-interface TaskPopUp {
+interface TaskPopUpProps {
   item: Task;
   key: number;
   score: number;
@@ -114,7 +114,7 @@ interface TaskPopUp {
   setClaimableTasks: (tasks: boolean[]) => void;
 }
 
-const TaskPopUp: React.FC<TaskPopUp> = ({ item, key, score, setScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
+const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
 

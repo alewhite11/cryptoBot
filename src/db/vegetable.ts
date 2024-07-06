@@ -22,10 +22,10 @@ export const vegetables : Plant[] = [
     { name: 'Asparagus', time: '4 hr', cost: 1000, reward: 2000, image: asparagusImg, duration: 60*60*4  }
 ];
 
-export const plants : Plant[] = [    
-    { name: 'Apple', time: '10 min', cost: 20, reward: 40, image: appleImg, duration: 60*10 },
-    { name: 'Pear', time: '20 min', cost: 60, reward: 120, image: pearImg, duration: 60*20  },
-    { name: 'Cherry', time: '30 min', cost: 100, reward: 200, image: cherryImg, duration: 60*30  }
+export const plants : Plant[] = [  
+    { name: 'Cherry', time: '4 hr', cost: 15000, reward: 750, image: cherryImg, duration: 60*60*4 },
+    { name: 'Pear', time: '6 hr', cost: 20000, reward: 1000, image: pearImg, duration: 60*60*6 },
+    { name: 'Apple', time: '8 hr', cost: 25000, reward: 1250, image: appleImg, duration: 60*60*8 }
 ];
 
 export const plants3 : Plant[] = [    
