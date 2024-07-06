@@ -224,8 +224,9 @@ const PlantItemTree: React.FC<PlantItemTreeProps> = ({ item, key, index, score, 
     <div className="shop-item">
       {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? plants[index - 1].name : plants[plants.length - 1].name) && (
         <div className="shop-overlay">
-          <span>Plant {3 - ((index > 0 ? plantedVegetables.get(plants[index - 1].name) : plantedVegetables.get(vegetables[vegetables.length - 1].name)) || 0)} more times {index > 0 ? plants[index - 1].name : vegetables[vegetables.length - 1].name} to unlock</span>
-        </div>
+        <LockIcon />
+        <span>Plant {3 - ((index > 0 ? plantedVegetables.get(vegetables[index - 1].name) : 0) || 0)} more times {index > 0 ? vegetables[index - 1].name : item.name} to unlock</span>
+      </div>
       )}
       <div className="item-image">
         <img src={`${item.image}`} alt={item.name} />

@@ -60,59 +60,20 @@ function loadAsset(path: string): Promise<string> {
 }
 
 export async function loadAssets(callback: () => void): Promise<void> {
-  try {
-    await loadAsset(loadingImg);
-    await loadAsset(mainBg);
-    await loadAsset(woodenBg);
-    await loadAsset(inviteImg);
-    await loadAsset(moneyImg);
-    await loadAsset(shopImg);
-    await loadAsset(sproutImg);
-    await loadAsset(addImg);
-    await loadAsset(appleImg);
-    await loadAsset(arrowLeftImg);
-    await loadAsset(arrowRightImg);
-    await loadAsset(asparagusImg);
-    await loadAsset(carrotImg);
-    await loadAsset(cherryImg);
-    await loadAsset(courgetteImg);
-    await loadAsset(emptyFieldImg);
-    await loadAsset(lockedFieldImg);
-    await loadAsset(pearImg);
-    await loadAsset(pepperImg);
-    await loadAsset(radishImg);
-    await loadAsset(saladImg);
-    await loadAsset(spinachImg);
-    await loadAsset(tomatoImg);
-    await loadAsset(appleShopImg);
-    await loadAsset(asparagusShopImg);
-    await loadAsset(carrotShopImg);
-    await loadAsset(cherryShopImg);
-    await loadAsset(courgetteShopImg);
-    await loadAsset(dollarShopImg);
-    await loadAsset(hourglassShopImg);
-    await loadAsset(lettuceShopImg);
-    await loadAsset(orangeShopImg);
-    await loadAsset(pearShopImg);
-    await loadAsset(pepperShopImg);
-    await loadAsset(radishShopImg);
-    await loadAsset(spinachShopImg);
-    await loadAsset(tabButtonsShopImg);
-    await loadAsset(tomatoShopImg);
-    await loadAsset(woodenBarShopImg);
-    await loadAsset(arrowTaskImg);
-    await loadAsset(bachecaBgTaskImg);
-    await loadAsset(telegramTaskImg);
-    await loadAsset(appleGif);
-    await loadAsset(asparagusGif);
-    await loadAsset(carrotGif);
-    await loadAsset(courgetteGif);
-    await loadAsset(pepperGif);
-    await loadAsset(radishGif);
-    await loadAsset(saladGif);
-    await loadAsset(spinachGif);
-    await loadAsset(tomatoGif);
+  const assets = [
+    loadingImg, mainBg, woodenBg, inviteImg, moneyImg, shopImg, sproutImg,
+    addImg, appleImg, arrowLeftImg, arrowRightImg, asparagusImg, carrotImg,
+    cherryImg, courgetteImg, emptyFieldImg, lockedFieldImg, pearImg, pepperImg,
+    radishImg, saladImg, spinachImg, tomatoImg, appleShopImg, asparagusShopImg,
+    carrotShopImg, cherryShopImg, courgetteShopImg, dollarShopImg, hourglassShopImg,
+    lettuceShopImg, orangeShopImg, pearShopImg, pepperShopImg, radishShopImg,
+    spinachShopImg, tabButtonsShopImg, tomatoShopImg, woodenBarShopImg,
+    arrowTaskImg, bachecaBgTaskImg, telegramTaskImg, appleGif, asparagusGif,
+    carrotGif, courgetteGif, pepperGif, radishGif, saladGif, spinachGif, tomatoGif
+  ];
 
+  try {
+    await Promise.all(assets.map(loadAsset));
     callback();
   } catch (error) {
     console.error('An error occurred while loading assets:', error);
