@@ -288,7 +288,6 @@ const ShopPopUp: React.FC<ShopPopUpProps> = ({ handlePlantClick, setShopPopupOpe
 
   const handlePopUpClick = (event: React.MouseEvent) => {
     event.stopPropagation()
-    setShopPopupOpened(true)
   };
   
   const handleRegularPlantClicked = () => {
@@ -300,6 +299,7 @@ const ShopPopUp: React.FC<ShopPopUpProps> = ({ handlePlantClick, setShopPopupOpe
     <>
         <div className="shop-modal-overlay" onClick={handleOverlayClick} >
           <div  className="shop-modal-box" onClick={handlePopUpClick}>
+            <button className="shop-popup-close-button" onClick={handleOverlayClick}>X</button>
             <div className='shop-popup-content'>
               <div className='shop-popup-title'>{item.name}</div>
               <div className='shop-popup-reward'>

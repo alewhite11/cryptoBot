@@ -124,7 +124,6 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
 
   const handlePopUpClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    setTaskOpened(true);
   };
 
   const handleClaimClick = async () => {
@@ -170,6 +169,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
     <>
         <div className="modal-overlay" onClick={handleOverlayClick} >
           <div  className="modal-box" onClick={handlePopUpClick}>
+            <button className="main-popup-close-button" onClick={handleOverlayClick}>X</button>
             <div className='popup-content'>
               <div className='popup-title'>{item.text}</div>
               <div className='task-reward'>

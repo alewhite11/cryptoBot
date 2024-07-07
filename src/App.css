@@ -314,6 +314,7 @@ button.next {
   height: fit-content;
   padding: 1rem;
   border-radius: 1rem;
+  position: relative;
 }
 
 .main-popup-content {
@@ -321,6 +322,7 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding-top: 10px;
 }
 
 .main-popup-title {
@@ -389,6 +391,17 @@ button.next {
      1px -1px 0 #000,
     -1px  1px 0 #000,
      1px  1px 0 #000;
+}
+
+.main-popup-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
 }
 
 /* SHOP PAGE */
@@ -586,6 +599,7 @@ button.next {
   height: fit-content;
   padding: 1rem;
   border-radius: 1rem;
+  position: relative;
 }
 
 .shop-popup-content {
@@ -593,6 +607,7 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding-top: 10px;
 }
 
 .shop-popup-title {
@@ -655,6 +670,17 @@ button.next {
   vertical-align: center;
   flex: 20%;
   outline: none;
+}
+
+.shop-popup-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
 }
 
 /* TASKS PAGE */
@@ -723,6 +749,7 @@ button.next {
   min-height: 40%;
   padding: 1rem;
   border-radius: 1rem;
+  position: relative;
 }
 
 .popup-content {
@@ -730,6 +757,7 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding-top: 10px;
 }
 
 .popup-title {
@@ -786,6 +814,17 @@ button.next {
   vertical-align: center;
   flex: 20%;
   outline: none;
+}
+
+.main-popup-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
 }
 
 /* LOADING PAGE */

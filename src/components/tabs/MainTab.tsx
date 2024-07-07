@@ -277,6 +277,7 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
     <>
       <div className="main-modal-overlay" onClick={handleOverlayClick} >
         <div  className="main-modal-box" onClick={handlePopUpClick}>
+          <button className="main-popup-close-button" onClick={handleCancelClick}>X</button>
           <div className='main-popup-content'>
             <div className='main-popup-title'>Warning</div>
             <div className='shop-reward-text'>
