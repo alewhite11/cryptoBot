@@ -70,6 +70,13 @@ interface MainTabProps {
 }
 
 const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFields, setScore, activeField, setActiveField, cs }) => {
+  const [mainPopupOpened, setMainPopupOpened] = useState<boolean>(false);
+  const [selectedCallback, setSelectedCallback] = useState<() => void>(() => {});
+  const [selectedField, setSelectedField] = useState<Field>({
+    vegetable: "",
+    plantedAt: new Date(), // This initializes plantedAt with the current date and time
+    duration: 0
+  })
 
   const goToNextField = () => {
     const newIndex = activeField + 1;
@@ -95,7 +102,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
                 <div key={index} className="slider-item">
-                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} cs={cs}/>}
+                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened}/>}
                 </div>
               ))}
             </div>
@@ -107,6 +114,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             </button>}
           </div>
         </div>
+        {mainPopupOpened && <MainPopUp item={selectedField} handleRemoveClick={selectedCallback} setMainPopupOpened={setMainPopupOpened} />}
       </header>
     </div>
   );
@@ -120,11 +128,31 @@ interface FieldItemProps {
   score: number;
   setScore: (score: number) => void;
   cs: CloudStorage | null;
+  setSelectedField: (field: Field) => void;
+  setSelectedCallback: (callback: () => void) => void;
+  setMainPopupOpened: (opened: boolean) => void;
 }
 
-const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, cs}) => {
+const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
   const initialTime = Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
   const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
+
+  const handleRemoveClick = () => {
+    const newField: Field = {
+      vegetable: "",
+      plantedAt: new Date(), // This initializes plantedAt with the current date and time
+      duration: 0
+    };
+
+    const updatedFields = [...fields];
+    updatedFields[index] = newField
+    setFields(updatedFields)
+
+    setTimeRemaining(Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
+
+    setFieldsCallback(cs, updatedFields)
+    setMainPopupOpened(false)
+  }
   
   const handlePlantClick = () => {
     setCurrentPage(1); //Navigate to Shop page
@@ -214,13 +242,54 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
         {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining > 0 && <img src={vegetableImages[fields[index].vegetable]} alt="vegetable"/>}
         {fields[index].vegetable != "" && fields[index].vegetable != "locked" && timeRemaining === 0 && <img src={vegetableGifs[fields[index].vegetable]} alt="gif" onClick={handleClaimClick}/>}
       </div>
-      {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
-      {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button-disabled' disabled>Claim</button>}
-      {(timeRemaining == 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
-      {(fields[index].vegetable == "locked" && score >= (2500*(2 ** index))) && <button className='main-plant-button' onClick={handleUnlockClick}>Unlock</button>}
-      {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && <button className='main-plant-button-disabled' disabled>Unlock</button>}
+      <div className='main-buttons'>
+        {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
+        {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && !containsPlantName(fields[index].vegetable) && <button className='main-plant-button-disabled' disabled>Claim</button>}
+        {(timeRemaining == 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
+        {(fields[index].vegetable == "locked" && score >= (2500*(2 ** index))) && <button className='main-plant-button' onClick={handleUnlockClick}>Unlock</button>}
+        {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && <button className='main-plant-button-disabled' disabled>Unlock</button>}
+        {containsPlantName(fields[index].vegetable) && timeRemaining > 0 &&  <button className='main-remove-button' onClick={() => {setSelectedCallback(() => handleRemoveClick); setSelectedField(fields[index]); setMainPopupOpened(true)}}>Remove</button>}
+      </div> 
     </div>
+  );
+}
 
+interface MainPopUpProps {
+  setMainPopupOpened: (opened: boolean) => void;
+  item: Field;
+  handleRemoveClick : () => void;
+}
+
+const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleRemoveClick }) => {
+  const handleOverlayClick = () => {
+    setMainPopupOpened(false)
+  };
+
+  const handleCancelClick = () => {
+    setMainPopupOpened(false)
+  }
+
+  const handlePopUpClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+  };
+
+  return (
+    <>
+      <div className="main-modal-overlay" onClick={handleOverlayClick} >
+        <div  className="main-modal-box" onClick={handlePopUpClick}>
+          <div className='main-popup-content'>
+            <div className='main-popup-title'>Warning</div>
+            <div className='shop-reward-text'>
+              <p>This action is not reversible, you will definetively remove the {item.vegetable} plant. Do you confirm the action?</p>
+            </div>
+            <div className='main-popup-buttons'>
+              <button className='main-popup-remove-button' onClick={handleRemoveClick}>Remove</button>
+              <button className='main-popup-plant-button' onClick={handleCancelClick}>Cancel</button>
+            </div>
+          </div>           
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -269,5 +338,9 @@ const UnlockedField : React.FC<UnlockedFieldProps> = ({ index }) => {
     </div>
   );
 };
+
+function containsPlantName(name: string): boolean {
+  return plants.some(plant => plant.name === name);
+}
 
 export default MainTab;
