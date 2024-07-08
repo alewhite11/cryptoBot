@@ -292,7 +292,6 @@ const ShopPopUp: React.FC<ShopPopUpProps> = ({ handlePlantClick, setShopPopupOpe
   
   const handleRegularPlantClicked = () => {
     handlePlantClick()
-    setShopPopupOpened(false)
   };
 
   return (
