@@ -40,7 +40,6 @@ import { Field } from '../interfaces/Field';
             } catch (e) {
                 // Handle JSON parse error
                 var newMap = new Map<string, number>();
-                newMap.set('Radish', 3);
                 setPlantedVegetables(newMap);
             }
         } else {

@@ -128,7 +128,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
   return (
     <>
     <div className="shop-item">
-      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && (
+      {(!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) || index === 0) && (
         <div className="shop-overlay">
           <LockIcon />
           <span>Plant {3 - ((index > 0 ? plantedVegetables.get(vegetables[index - 1].name) : 0) || 0)} more times {index > 0 ? vegetables[index - 1].name : item.name} to unlock</span>
