@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import { Task } from '../../interfaces/Task';
 import { dailyTasks } from '../../db/tasks';
@@ -169,7 +170,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
     <>
         <div className="modal-overlay" onClick={handleOverlayClick} >
           <div  className="modal-box" onClick={handlePopUpClick}>
-            <button className="main-popup-close-button" onClick={handleOverlayClick}>X</button>
+            <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
             <div className='popup-content'>
               <div className='popup-title'>{item.text}</div>
               <div className='task-reward'>

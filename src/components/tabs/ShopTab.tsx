@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import moneyImg from './../../img/shopItems/dollar.png'
 import hourglassImg from './../../img/shopItems/hourglass.png'
 import './../../App.css';
@@ -128,7 +129,7 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
   return (
     <>
     <div className="shop-item">
-      {(!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) || index === 0) && (
+      {(!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && index !== 0) && (
         <div className="shop-overlay">
           <LockIcon />
           <span>Plant {3 - ((index > 0 ? plantedVegetables.get(vegetables[index - 1].name) : 0) || 0)} more times {index > 0 ? vegetables[index - 1].name : item.name} to unlock</span>
@@ -298,7 +299,7 @@ const ShopPopUp: React.FC<ShopPopUpProps> = ({ handlePlantClick, setShopPopupOpe
     <>
         <div className="shop-modal-overlay" onClick={handleOverlayClick} >
           <div  className="shop-modal-box" onClick={handlePopUpClick}>
-            <button className="shop-popup-close-button" onClick={handleOverlayClick}>X</button>
+            <button className="shop-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
             <div className='shop-popup-content'>
               <div className='shop-popup-title'>{item.name}</div>
               <div className='shop-popup-reward'>

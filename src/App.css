@@ -322,7 +322,7 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 10px;
+  margin: 2rem 1rem 1rem 1rem;
 }
 
 .main-popup-title {
@@ -607,7 +607,7 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 10px;
+  margin: 2rem 1rem 1rem 1rem;
 }
 
 .shop-popup-title {
@@ -757,7 +757,7 @@ button.next {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 10px;
+  margin: 2rem 1rem 1rem 1rem;
 }
 
 .popup-title {

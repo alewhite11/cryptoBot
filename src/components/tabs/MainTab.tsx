@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { vegetables, plants, plants3 } from '../../db/vegetable';
 import moneyImg from './../../img/shopItems/dollar.png'
 import emptyField from './../../img/mainPage/emptyField.png'
@@ -277,7 +278,7 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
     <>
       <div className="main-modal-overlay" onClick={handleOverlayClick} >
         <div  className="main-modal-box" onClick={handlePopUpClick}>
-          <button className="main-popup-close-button" onClick={handleCancelClick}>X</button>
+          <button className="main-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
           <div className='main-popup-content'>
             <div className='main-popup-title'>Warning</div>
             <div className='shop-reward-text'>
