@@ -17,6 +17,9 @@ interface InviteTabProps {
 }
 
 const InviteTab: React.FC<InviteTabProps> = ({  }) => {
+  const totalFriends = friendList.length;
+  const pendingFriends = friendList.filter(friend => !friend.pending).length;
+
   return (
     <div className="App">
       <header className="App-header">
@@ -24,15 +27,21 @@ const InviteTab: React.FC<InviteTabProps> = ({  }) => {
         <div style={{marginTop: '65px'}}></div>
         <div className='invite-page'>
           <div className='invite-dialog'>
-            <p className='invite-title'>Invite friends</p>
+            <h2 className='invite-title'>Invite friends</h2>
             <p className='invite-text'>For each friend that join and unlocks the spinach vegetable, you will get 500 coins</p>
             <button className='invite-btn'>Invite</button>
             <p className='invite-warning'>Friend list is updated once a day</p>
           </div>
-          <div className='friend-list'>  
-            {friendList.map((item, key) => (
-              <Friend name={item.name} pending={item.pending} />
-            ))}
+          <div className='friend-list'> 
+            <div className='total-friends'>
+              <p className='invite-text'>Completed friends:</p>
+              <p className='invite-text'>{pendingFriends}/{totalFriends}</p>
+            </div>
+            <div className='friend-list-inner'>
+              {friendList.map((item, key) => (
+                <Friend name={item.name} pending={item.pending} />
+              ))}
+            </div> 
           </div>
         </div> 
       </header>
