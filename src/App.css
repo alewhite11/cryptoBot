@@ -795,7 +795,8 @@ button.next {
 .main-taskpopup-button {
   background-color: #4CAF50;
   color: white;
-  font-size: small;
+  font-size: medium;
+  font-weight: bold;
   border: none;
   border-radius: 10px;
   margin: 10px;
@@ -1027,22 +1028,21 @@ button.next {
 
 /* Chest opening screen */
 .chest-container {
-  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  position: absolute;
   top: 0;
-  right: 0;
-  height: var(--tg-viewport-width, 100vw);
-  width: var(--tg-viewport-width, 100vw);
-  z-index: 1000;
 }
 
 .chest-img img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: var(--tg-viewport-width);
+  height: var(--tg-viewport-height);
+  object-fit: cover;
 }
 
 .chest-vid video{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: var(--tg-viewport-width);
+  height: var(--tg-viewport-height);
+  object-fit: cover;
 }

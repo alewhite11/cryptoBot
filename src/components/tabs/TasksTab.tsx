@@ -220,7 +220,7 @@ interface ChestProps {
   setTaskOpened: (operator: boolean) => void;
 }
 
-const Chest: React.FC<ChestProps> = ({ setShowChest, setTaskOpened }) => {
+export const Chest: React.FC<ChestProps> = ({ setShowChest, setTaskOpened }) => {
   const [imageClicked, setImageClicked] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
