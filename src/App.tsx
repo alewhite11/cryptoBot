@@ -5,10 +5,11 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, getScoreCallback, getTasksCallback, setScoreCallback } from './db/cloudStorageFunctions';
+import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, getScoreCallback, getTasksCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
+import appleImg from './img/shopItems/apple.png'
 import { loadAssets } from './db/loadImages';
 
 
@@ -27,6 +28,7 @@ function App() {
 
   //Application data states
   const [score, setScore] = useState(0);
+  const [appleScore, setAppleScore] = useState(0)
   const [fields, setFields] = useState<Field[]>([])
   const [tasks, setTasks] = useState<boolean[]>([])
   const [claimableTasks, setClaimableTasks] = useState<boolean[]>([])
@@ -65,6 +67,7 @@ function App() {
           loadAssets(() => {
             setImagesLoaded(true);
           })
+          getAppleScoreCallback(cloudStorage, setAppleScore)
           getScoreCallback(cloudStorage, setScore);
           getTasksCallback(cloudStorage, setTasks);
           getClaimableCallback(cloudStorage, setClaimableTasks)
@@ -109,9 +112,17 @@ function App() {
     {!loading &&
     <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
       <div className='App-common-header'>
-        <h1 className='main-title' style={{width: '40%', justifySelf: 'flex-end', marginLeft: '10px'}}>PLANT</h1>
-        <div style={{width: '60%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
+        <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
           <div className='main-balance'>
+            <img className='main-balance-icon' src={appleImg} alt={"apple"} />
+            <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+          </div>
+          <div className='main-coins'>
+            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{appleScore}</span>
+          </div>
+        </div>
+        <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
+          <div className='main-balance' style={{alignItems: 'flex-start'}}>
             <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
             <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
           </div>
@@ -122,7 +133,7 @@ function App() {
         </div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
+        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>

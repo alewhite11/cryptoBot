@@ -65,12 +65,14 @@ interface MainTabProps {
   fields: Field[];
   setFields: (fields: Field[]) => void;
   setScore: (score: number) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
   activeField: number;
   setActiveField: (field: number) => void;
   cs: CloudStorage | null; 
 }
 
-const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFields, setScore, activeField, setActiveField, cs }) => {
+const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFields, setScore, appleScore, setAppleScore, activeField, setActiveField, cs }) => {
   const [mainPopupOpened, setMainPopupOpened] = useState<boolean>(false);
   const [selectedCallback, setSelectedCallback] = useState<() => void>(() => {});
   const [selectedField, setSelectedField] = useState<Field>({

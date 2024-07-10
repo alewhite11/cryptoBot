@@ -6,16 +6,19 @@ import { dailyTasks } from '../../db/tasks';
 import arrowImg from './../../img/taskPage/arrow.png'
 import moneyImg from './../../img/shopItems/dollar.png'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import { setClaimableCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
+import { setAppleScoreCallback, setClaimableCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
 import CircularProgress from '@mui/material/CircularProgress';
 import chestImg from './../../img/chests/closed_Chest.jpg'
 import chestVid from './../../video/chest_opening/Apple.mp4'
+import { chests } from '../../db/chests';
 
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
 interface TasksTabProps {
   score: number;
   setScore: (score: number) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
   cs: CloudStorage | null;
   tasks: boolean[];
   setTasks: (tasks: boolean[]) => void;
@@ -23,7 +26,7 @@ interface TasksTabProps {
   setClaimableTasks: (tasks: boolean[]) => void;
 }
 
-const TasksTab: React.FC<TasksTabProps> = ({ score, setScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TasksTab: React.FC<TasksTabProps> = ({ score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [activeTab, setActiveTab] = useState(0);
   return (
     <div className="App">
@@ -41,7 +44,7 @@ const TasksTab: React.FC<TasksTabProps> = ({ score, setScore, cs, tasks, setTask
             {activeTab === 0 && (
               <>
                 {dailyTasks.map((item, index) => (
-                  <TaskItem item={item} key={index} score={score} setScore={setScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
+                  <TaskItem item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              
               </>
             )}
@@ -67,6 +70,8 @@ interface TaskItemProps {
   key: number;
   score: number;
   setScore: (score: number) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
   cs: CloudStorage | null;
   tasks: boolean[];
   setTasks: (tasks: boolean[]) => void;
@@ -74,7 +79,7 @@ interface TaskItemProps {
   setClaimableTasks: (tasks: boolean[]) => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ item, key, score, setScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [taskOpened, setTaskOpened] = useState<boolean>(false)
   
   const handleTaskClick = () => {
@@ -99,7 +104,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ item, key, score, setScore, cs, tas
         <DoneOutlineIcon/>
       </div>}
     </div>
-    {(taskOpened && tasks[item.id] !== true) && <TaskPopUp item={item} key={key} score={score} setScore={setScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    {(taskOpened && tasks[item.id] !== true) && <TaskPopUp item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
     </>
   );
 };
@@ -109,6 +114,8 @@ interface TaskPopUpProps {
   key: number;
   score: number;
   setScore: (score: number) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
   cs: CloudStorage | null;
   setTaskOpened: (opened: boolean) => void;
   tasks: boolean[];
@@ -117,7 +124,7 @@ interface TaskPopUpProps {
   setClaimableTasks: (tasks: boolean[]) => void;
 }
 
-const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
+const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
   const [showChest, setShowChest] = useState(false)
@@ -140,8 +147,13 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
         const data = await response.json();
     
         if (data.ok && (data.result.status === 'member' || data.result.status === 'administrator' || data.result.status === 'creator')) {
-          setScoreCallback(cs, score + item.revenue)
-          setScore(score + item.revenue)
+          var x = getRandomNumber(1,100000)
+          var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
+          setShowChest(true)
+          setScoreCallback(cs, score + foundChest!!.score)
+          setScore(score + foundChest!!.score)
+          setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
+          setAppleScore(appleScore + foundChest!!.appleScore)
           const updatedTasks = [...tasks];
           updatedTasks[item.id] = true
           setTasksCallback(cs, updatedTasks)
@@ -160,6 +172,10 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
       }
     } else {
       setShowChest(true)
+      var x = getRandomNumber(1,100000)
+      var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
+      setScore(score + foundChest!!.score)
+      setAppleScore(appleScore + foundChest!!.appleScore)
     }
   }
 
@@ -233,5 +249,9 @@ const Chest: React.FC<ChestProps> = ({ setShowChest, setTaskOpened }) => {
     </div>
   );
 };
+
+function getRandomNumber(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
   
 export default TasksTab;

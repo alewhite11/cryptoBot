@@ -83,6 +83,39 @@ import { Field } from '../interfaces/Field';
     });
   }
 
+  //Retrieve apple score from db
+  export const getAppleScoreCallback = (cs: CloudStorage | null, setAppleScore: React.Dispatch<React.SetStateAction<number>>): void => {
+    if (!isCloudStorageAvailable(cs)) {
+      return;
+    }
+  
+    cs?.getItem("appleScore", (error, value) => {
+      if (error) {
+        return;
+      }
+  
+      if (value !== undefined && !isNaN(parseInt(value, 10))) {
+        // Update state
+        setAppleScore(parseInt(value, 10));
+      }else{
+        setAppleScore(0)
+      }
+    });
+  };
+
+  //Save apple score data into db
+  export const setAppleScoreCallback = (cs: CloudStorage | null, appleScore: number): void => {
+    if (!isCloudStorageAvailable(cs)) {
+        return;
+    }
+
+    cs?.setItem("appleScore", appleScore.toString(), (error: any, stored: boolean) => {
+        if(error){
+            return;
+        }
+    });
+  }
+
   //Save fields data into db
   export const setFieldsCallback = (cs: CloudStorage | null, fields: Field[]): void => {
     if (!isCloudStorageAvailable(cs)) {
