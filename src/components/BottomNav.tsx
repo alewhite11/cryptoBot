@@ -31,7 +31,7 @@ interface BottomNavProps {
               borderRadius: '16px 16px 16px 16px', 
               boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.2)',
               backgroundColor: '#219345', 
-              zIndex: 1000,
+              zIndex: 500,
               "&& .Mui-selected": {
                 backgroundColor: "#0a3d02",
                 color: '#FFFFFF',

@@ -8,6 +8,8 @@ import moneyImg from './../../img/shopItems/dollar.png'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { setClaimableCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
 import CircularProgress from '@mui/material/CircularProgress';
+import chestImg from './../../img/chests/closed_Chest.jpg'
+import chestVid from './../../video/chest_opening/Apple.mp4'
 
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
@@ -118,6 +120,7 @@ interface TaskPopUpProps {
 const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
+  const [showChest, setShowChest] = useState(false)
 
   const handleOverlayClick = () => {
     setTaskOpened(false);
@@ -155,6 +158,8 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
         setErrorClaiming(true)
         return false;
       }
+    } else {
+      setShowChest(true)
     }
   }
 
@@ -167,8 +172,9 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
   };
 
   return (
-    <>
-        <div className="modal-overlay" onClick={handleOverlayClick} >
+    <>  
+        {showChest && <Chest setShowChest={setShowChest} setTaskOpened={setTaskOpened}/>}
+        {!showChest && <div className="modal-overlay" onClick={handleOverlayClick} >
           <div  className="modal-box" onClick={handlePopUpClick}>
             <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
             <div className='popup-content'>
@@ -188,9 +194,44 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, cs, s
               {errorClaiming && <p style={{color: 'red', fontWeight: 'bold'}}>Task not completed, please retry!</p>}
             </div>
           </div>
-        </div>
+        </div>}
     </>
   );
 }
+
+interface ChestProps {
+  setShowChest: (operator: boolean) => void;
+  setTaskOpened: (operator: boolean) => void;
+}
+
+const Chest: React.FC<ChestProps> = ({ setShowChest, setTaskOpened }) => {
+  const [imageClicked, setImageClicked] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  const videoClicked = () => {
+    setShowChest(false);
+    setTaskOpened(false);
+  };
+
+  return (
+    <div className='chest-container'>
+      {!imageClicked && (
+        <div className='chest-img'>
+          <img className='chest-img' src={chestImg} alt="chest" onClick={() => setImageClicked(true)}/>
+        </div>
+      )}
+      {imageClicked && !videoLoaded && (
+        <div className='chest-img'>
+          <img className='chest-img' src={chestImg} alt="chest" />
+        </div>
+      )}
+      {imageClicked && (
+        <div className='chest-vid'>
+          <video className='chest-video' src={chestVid} onClick={videoClicked} onCanPlay={() => setVideoLoaded(true)} autoPlay muted style={{ display: videoLoaded ? 'block' : 'none' }}/>
+        </div>
+      )}
+    </div>
+  );
+};
   
 export default TasksTab;
