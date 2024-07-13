@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import chestImg from './../../img/chests/closed_Chest.jpg'
 import chestVid from './../../video/chest_opening/Apple.mp4'
 import { chests } from '../../db/chests';
+import { Chest } from '../../interfaces/Chest';
 
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
@@ -128,6 +129,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
   const [showChest, setShowChest] = useState(false)
+  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
 
   const handleOverlayClick = () => {
     setTaskOpened(false);
@@ -139,6 +141,9 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
 
   const handleClaimClick = async () => {
     setLoading(true);
+    var x = getRandomNumber(1,100000)
+    var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
+    setFoundChest(foundChest!!)
     if(item.type === 'telegram'){
       const endpoint = `${checkChannelMembershipUrl}/getChatMember?chat_id=${item.channelId}&user_id=${window.Telegram.WebApp.initDataUnsafe.user.id}`;
 
@@ -147,8 +152,6 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
         const data = await response.json();
     
         if (data.ok && (data.result.status === 'member' || data.result.status === 'administrator' || data.result.status === 'creator')) {
-          var x = getRandomNumber(1,100000)
-          var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
           setShowChest(true)
           setScoreCallback(cs, score + foundChest!!.score)
           setScore(score + foundChest!!.score)
@@ -172,8 +175,6 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
       }
     } else {
       setShowChest(true)
-      var x = getRandomNumber(1,100000)
-      var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
       setScore(score + foundChest!!.score)
       setAppleScore(appleScore + foundChest!!.appleScore)
     }
@@ -189,7 +190,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
 
   return (
     <>  
-        {showChest && <Chest setShowChest={setShowChest} setTaskOpened={setTaskOpened}/>}
+        {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
         {!showChest && <div className="modal-overlay" onClick={handleOverlayClick} >
           <div  className="modal-box" onClick={handlePopUpClick}>
             <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
@@ -215,12 +216,13 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
   );
 }
 
-interface ChestProps {
+interface ChestItemProps {
   setShowChest: (operator: boolean) => void;
   setTaskOpened: (operator: boolean) => void;
+  foundChest: Chest;
 }
 
-export const Chest: React.FC<ChestProps> = ({ setShowChest, setTaskOpened }) => {
+export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, setTaskOpened, foundChest }) => {
   const [imageClicked, setImageClicked] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
@@ -233,17 +235,17 @@ export const Chest: React.FC<ChestProps> = ({ setShowChest, setTaskOpened }) => 
     <div className='chest-container'>
       {!imageClicked && (
         <div className='chest-img'>
-          <img className='chest-img' src={chestImg} alt="chest" onClick={() => setImageClicked(true)}/>
+          <img className='chest-img' src={foundChest.image} alt="chest" onClick={() => setImageClicked(true)}/>
         </div>
       )}
       {imageClicked && !videoLoaded && (
         <div className='chest-img'>
-          <img className='chest-img' src={chestImg} alt="chest" />
+          <img className='chest-img' src={foundChest.image} alt="chest" />
         </div>
       )}
       {imageClicked && (
         <div className='chest-vid'>
-          <video className='chest-video' src={chestVid} onClick={videoClicked} onCanPlay={() => setVideoLoaded(true)} autoPlay muted style={{ display: videoLoaded ? 'block' : 'none' }}/>
+          <video className='chest-video' src={foundChest.video} onClick={videoClicked} onCanPlay={() => setVideoLoaded(true)} autoPlay muted style={{ display: videoLoaded ? 'block' : 'none' }}/>
         </div>
       )}
     </div>

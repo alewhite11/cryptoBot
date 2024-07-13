@@ -5,12 +5,14 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, getScoreCallback, getTasksCallback, setScoreCallback } from './db/cloudStorageFunctions';
+import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setRegisteredCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
 import appleImg from './img/shopItems/apple.png'
 import { loadAssets } from './db/loadImages';
+import InitialTutorial from './components/InitialTutorial';
+import { addUser } from './db/firebaseConfig';
 
 
 declare global {
@@ -21,10 +23,11 @@ declare global {
 }
 
 function App() {
-  const [user, setUser] = useState<WebAppUser | null>(null)
+  const [user, setUser] = useState<WebAppUser>()
   const [cloudStorage, setCloudStorage] = useState<CloudStorage | null>(null)
   const [currentPage, setCurrentPage] = useState(0); //Used to track the active tab
   const [loading, setLoading] = useState(true) //Used to display Loading page
+  const [registered, setRegistered] = useState(0) //Used to see if it was the first access
 
   //Application data states
   const [score, setScore] = useState(0);
@@ -67,6 +70,7 @@ function App() {
           loadAssets(() => {
             setImagesLoaded(true);
           })
+          getRegisteredCallback(cloudStorage, setRegistered)
           getAppleScoreCallback(cloudStorage, setAppleScore)
           getScoreCallback(cloudStorage, setScore);
           getTasksCallback(cloudStorage, setTasks);
@@ -96,6 +100,28 @@ function App() {
     });
   }, []);
 
+  //Catch the result of the user retrieval from db
+  useEffect(() => {
+    const registerUser = async () => {
+      try {
+        if (registered === 1 && user != undefined) {
+          // Create user account in Firebase
+          const success = await addUser(user.id.toString(), user.first_name, "");
+
+          if(success){
+            setRegisteredCallback(cloudStorage,  2)
+          }
+        }
+      } catch (error) {
+        
+      }
+    };
+    if(registered === 1){
+      //Create user account i firebase
+      registerUser();
+    }
+  }, [registered]);
+
   //Disable loading page if 3s elapsed and data retrieval succeded
   useEffect(() => {
     if (dataLoaded && timeoutExpired && imagesLoaded) {
@@ -109,7 +135,8 @@ function App() {
 
   return (
     <>
-    {!loading &&
+    {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
+    {!loading && (registered === 2) &&
     <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
       <div className='App-common-header'>
         <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>

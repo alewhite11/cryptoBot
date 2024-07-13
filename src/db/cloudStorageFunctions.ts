@@ -6,6 +6,44 @@ import { Field } from '../interfaces/Field';
     return typeof cs !== null;
   };
 
+  //Retrieve registered status from db
+  /* Registered values:
+     -0: used to initialize the state
+     -1: used to signal that user is not registered (first access)
+     -2: user is already registered
+  */
+  export const getRegisteredCallback = (cs: CloudStorage | null, setRegistered: React.Dispatch<React.SetStateAction<number>>): void => {
+    if (!isCloudStorageAvailable(cs)) {
+      return;
+    }
+  
+    cs?.getItem("registered", (error, value) => {
+      if (error) {
+        return;
+      }
+  
+      if (value !== undefined && !isNaN(parseInt(value, 10))) {
+        // Update state
+        setRegistered(parseInt(value, 10));
+      }else{
+        setRegistered(1);
+      }
+    });
+  };
+
+  //Save registered status into db
+  export const setRegisteredCallback = (cs: CloudStorage | null, registered: number): void => {
+    if (!isCloudStorageAvailable(cs)) {
+        return;
+    }
+
+    cs?.setItem("registered", registered.toString(), (error: any, stored: boolean) => {
+        if(error){
+            return;
+        }
+    });
+  }
+
   //Store the number of planted vegetables 
   export const setPlantedVegetablesCallback = (cs: CloudStorage | null, map: Map<string, number>): void => {
     if (!isCloudStorageAvailable(cs)) {
