@@ -53,7 +53,7 @@ function App() {
 
     if (u != undefined) {
       setUser(u);
-    }
+    }    
 
     const cs: CloudStorage = window.Telegram.WebApp.CloudStorage;
     if(cs != undefined){
@@ -67,9 +67,6 @@ function App() {
       try {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
-          loadAssets(() => {
-            setImagesLoaded(true);
-          })
           getRegisteredCallback(cloudStorage, setRegistered)
           getAppleScoreCallback(cloudStorage, setAppleScore)
           getScoreCallback(cloudStorage, setScore);
@@ -77,6 +74,9 @@ function App() {
           getClaimableCallback(cloudStorage, setClaimableTasks)
           getPlantedVegetablesCallback(cloudStorage, setPlantedVegetables)
           getFieldsCallback(cloudStorage, setFields, setDataLoaded);
+          loadAssets(() => {
+            setImagesLoaded(true);
+          })
         };
     
         fetchData();
@@ -116,18 +116,18 @@ function App() {
         
       }
     };
-    if(registered === 1){
+    if(registered === 1 && !loading){
       //Create user account i firebase
       registerUser();
     }
-  }, [registered]);
+  }, [registered, loading]);
 
   //Disable loading page if 3s elapsed and data retrieval succeded
   useEffect(() => {
-    if (dataLoaded && timeoutExpired && imagesLoaded) {
+    if (dataLoaded && timeoutExpired) {
       setLoading(false);
     }
-  }, [dataLoaded, timeoutExpired, imagesLoaded]);
+  }, [dataLoaded, timeoutExpired]);
 
   const handleAddClick = () => {
     setCurrentPage(2); //Navigate to Task page
