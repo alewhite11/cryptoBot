@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import shopIcon from './../img/buttonBar/shop.png';
 import inviteIcon from './../img/buttonBar/invite.png';
 import moneyIcon from './../img/buttonBar/money.png';
 import sproutIcon from './../img/buttonBar/sprout.png';
+import plantIcon from './../img/invitePage/tokenCoin.png'
+import { Badge } from 'antd';
+import { dailyTasks } from '../db/tasks';
 
 interface BottomNavProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
+    tasks: boolean[];
   }
   
-  const BottomNav: React.FC<BottomNavProps> = ({ currentPage, setCurrentPage }) => {
+  const BottomNav: React.FC<BottomNavProps> = ({ currentPage, setCurrentPage, tasks }) => {
+
     return (
       <div style={{ position: 'relative', width: '100%', outline: 'none' }}>
-        
           <BottomNavigation
             value={currentPage}
             onChange={(event, newValue) => {
@@ -48,8 +52,12 @@ interface BottomNavProps {
               icon={<img src={shopIcon} alt="Shop" style={{ width: 24, height: 24 }} />}
             />
             <BottomNavigationAction
+              label="Plant"
+              icon={<img src={plantIcon} alt="Plant" style={{ width: 24, height: 24 }} />}
+            />
+            <BottomNavigationAction
               label="Earn"
-              icon={<img src={moneyIcon} alt="Earn" style={{ width: 24, height: 24 }} />}
+              icon={<img src={moneyIcon} alt="Earn" style={{ width: 24, height: 24 }} />}       
             />
             <BottomNavigationAction
               label="Friends"

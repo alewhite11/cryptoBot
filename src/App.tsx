@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import '@twa-dev/sdk';
 import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramInterfaces';
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getPlantedVegetablesCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setRegisteredCallback, setScoreCallback } from './db/cloudStorageFunctions';
+import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getLastAccessDateCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setLastAccessDateCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
@@ -13,6 +13,11 @@ import appleImg from './img/shopItems/apple.png'
 import { loadAssets } from './db/loadImages';
 import InitialTutorial from './components/InitialTutorial';
 import { addUser } from './db/firebaseConfig';
+import { Friend } from './interfaces/Friend';
+import { notification } from 'antd';
+import type { NotificationArgsProps } from 'antd';
+import React from 'react';
+import { RiPlantFill } from "react-icons/ri";
 
 
 declare global {
@@ -21,6 +26,9 @@ declare global {
   }
 
 }
+
+type NotificationPlacement = NotificationArgsProps['placement'];
+const Context = React.createContext({ name: 'Default' });
 
 function App() {
   const [user, setUser] = useState<WebAppUser>()
@@ -32,15 +40,27 @@ function App() {
   //Application data states
   const [score, setScore] = useState(0);
   const [appleScore, setAppleScore] = useState(0)
+  const [plantScore, setPlantScore] = useState(0)
+  const [plantHourlyIncome, setPlantHourlyIncome] = useState(0)
   const [fields, setFields] = useState<Field[]>([])
   const [tasks, setTasks] = useState<boolean[]>([])
   const [claimableTasks, setClaimableTasks] = useState<boolean[]>([])
   const [plantedVegetables, setPlantedVegetables] = useState<Map<string, number>>(new Map<string, number>())
+  const [poolStatus, setPoolStatus] = useState<Map<string, boolean>>(new Map<string, boolean>())
+  const [firestoreFriendList, setFirestoreFriendList] = useState<Friend[]>([])
 
   //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
   const [timeoutExpired, setTimeoutExpired] = useState(false); //Set to true when timeout expired
   const [imagesLoaded, setImagesLoaded] = useState(false); //Set true when assets have been loaded
+
+  //Used to update the plant balance
+  const [lastAccessDate, setLastAccessDate] = useState<Date>()
+  const contextValue = useMemo(() => ({ name: 'Plant Token' }), []);
+  const [api, contextHolder] = notification.useNotification();
+  const alreadyOpenedRef = useRef(false);
+ 
+
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
@@ -53,8 +73,8 @@ function App() {
 
     if (u != undefined) {
       setUser(u);
-    }    
-
+    }   
+    
     const cs: CloudStorage = window.Telegram.WebApp.CloudStorage;
     if(cs != undefined){
       setCloudStorage(cs);
@@ -68,7 +88,12 @@ function App() {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
           getRegisteredCallback(cloudStorage, setRegistered)
+          getFriendListCallback(cloudStorage,  window.Telegram.WebApp.initDataUnsafe.user.id, setFirestoreFriendList)
           getAppleScoreCallback(cloudStorage, setAppleScore)
+          getPlantScoreCallback(cloudStorage, setPlantScore)
+          getLastAccessDateCallback(cloudStorage, setLastAccessDate)
+          getPlantHourlyIncomeCallback(cloudStorage, setPlantHourlyIncome)
+          getPoolStatusCallback(cloudStorage, setPoolStatus)
           getScoreCallback(cloudStorage, setScore);
           getTasksCallback(cloudStorage, setTasks);
           getClaimableCallback(cloudStorage, setClaimableTasks)
@@ -106,7 +131,13 @@ function App() {
       try {
         if (registered === 1 && user != undefined) {
           // Create user account in Firebase
-          const success = await addUser(user.id.toString(), user.first_name, "");
+          var success = false
+          if(window.Telegram.WebApp.initDataUnsafe.start_param !== undefined){
+            success = await addUser(user.id.toString(), user.first_name, window.Telegram.WebApp.initDataUnsafe.start_param);
+          }else{
+            success = await addUser(user.id.toString(), user.first_name, "");
+          }
+          
 
           if(success){
             setRegisteredCallback(cloudStorage,  2)
@@ -122,23 +153,57 @@ function App() {
     }
   }, [registered, loading]);
 
+  const updatePlantBalance = () => {
+    if(lastAccessDate !== undefined){
+      var actualDate : Date = new Date()
+      setLastAccessDateCallback(cloudStorage, actualDate)
+      var elapsed = actualDate.getTime() - lastAccessDate.getTime();
+      elapsed = elapsed / (1000 * 60 * 60); // Convert milliseconds to hours
+      elapsed = Math.min(elapsed, 4); // Ensure elapsed is at most 4 hours
+      if(!alreadyOpenedRef.current){
+        openNotification('topRight', (plantHourlyIncome*elapsed))
+        alreadyOpenedRef.current = true; // Update ref
+      }
+      var newPlantScore = plantScore + (plantHourlyIncome*elapsed)
+      setPlantScore(newPlantScore)
+      setPlantScoreCallback(cloudStorage, newPlantScore)
+    }
+  }
+
+  const openNotification = (placement: NotificationPlacement, points: number) => {
+    api.info({
+      message: `Welcome back`,
+      description: <Context.Consumer>{() => `You farmed ${points.toFixed(2)}`}</Context.Consumer>,
+      placement,
+      className: 'earning-popup',
+      icon: <RiPlantFill />,
+    });
+  };
+
   //Disable loading page if 3s elapsed and data retrieval succeded
   useEffect(() => {
     if (dataLoaded && timeoutExpired) {
+      updatePlantBalance()
       setLoading(false);
+      const interval = setInterval(() => {
+        updatePlantBalance()
+      }, 10000);
+    
+      return () => clearInterval(interval);
     }
   }, [dataLoaded, timeoutExpired]);
 
   const handleAddClick = () => {
-    setCurrentPage(2); //Navigate to Task page
+    setCurrentPage(3); //Navigate to Task page
   };
 
   return (
-    <>
+    <Context.Provider value={contextValue}>
+      {contextHolder}
     {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
     {!loading && (registered === 2) &&
     <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
-      <div className='App-common-header'>
+      {currentPage !== 2 && <div className='App-common-header'>
         <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
           <div className='main-balance'>
             <img className='main-balance-icon' src={appleImg} alt={"apple"} />
@@ -158,17 +223,17 @@ function App() {
             <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
           </div>
         </div>
-      </div>
+      </div>}
       <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
+        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
       </div>
-      <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
     </div>
     }   
     {loading &&
     <LoadingPage />
     }
-    </>
+    </Context.Provider>
   );
 }
 

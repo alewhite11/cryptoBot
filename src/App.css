@@ -14,6 +14,16 @@
   height: var(--tg-viewport-height);
 }
 
+/* PopUp passive earning */
+.earning-popup {
+  background-image: url(img/plantPage/betullaBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Jura', sans-serif;
+  border-radius: 1rem;
+  font-weight: bold;
+}
+
 .App-common-header {
   background-image: url(img/woodenBg.jpg);
   background-repeat: no-repeat;
@@ -951,8 +961,26 @@ button.next {
      1px  1px 0 #000;
 }
 
+.claim-btn {
+  background-color: #4CAF50;
+  align-self: center;
+  color: white;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  vertical-align: center;
+  outline: none;
+  border: 2px solid black; 
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
 .friend-list {
-  background-image: url(img/taskPage/bachecaBg.png);
+  background-image: url(img/invitePage/inviteBg.png);
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
@@ -1074,4 +1102,191 @@ button.next {
 .slide {
   height: min-content;
   padding-bottom: 50px;
+}
+
+/* Plant page */
+.plant-top-section {
+  background-image: url(img/plantPage/betullaBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: fit-content;
+}
+
+.plant-tab-title {
+  padding-top: 10px;
+  color: black;
+  font-weight: bold;
+  font-size: 2rem; /* Increase the font size */
+  text-align: center; /* Center align text */
+  margin: 0; /* Remove default margin */
+  text-shadow: 
+    -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+
+.plant-tab-balance {
+  background-image: url(img/plantPage/balanceBar.png);
+  background-repeat: no-repeat;
+  background-size: cover; 
+  background-position: center;
+  width: 60%;
+  aspect-ratio: 349/105;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.plant-tab-balance-text {
+  padding-left: 30px;
+  color: black;
+  font-weight: bold;
+  font-size: 2rem; /* Increase the font size */
+  text-align: center; /* Center align text */
+  margin: 0; /* Remove default margin */
+  text-shadow: 
+    -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+
+.plant-bottom-section {
+  background-image: url(img/taskPage/bachecaBg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 95%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.plant-tab-apple {
+  background-image: url(img/plantPage/appleBg.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 30%;
+  aspect-ratio: 120/56;
+  top: -30px;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.plant-tab-apple-balance-text {
+  color: black;
+  font-weight: bold;
+  font-size: x-large; 
+  text-align: center; 
+  margin: 0; 
+  text-shadow: 
+    -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+
+.pool-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  margin-bottom: 65px;
+}
+
+.pool-item {
+  position: relative;
+  background-image: url(img/shopItems/woodenBar.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 3px;
+  aspect-ratio: 350/80;
+  width: 95%;
+}
+
+.pool-content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  line-height: 0px;
+  padding-bottom: 10px;
+}
+
+.pool-name {
+  color: black;
+  font-weight: bold;
+  font-size: large; 
+  margin: 0; 
+  text-shadow: 
+    -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+
+.pool-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: black;
+  font-weight: bold;
+  font-size: small; 
+  text-align: center; 
+  margin: 0; 
+  text-shadow: 
+    -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+
+.pool-btn {
+  background-color: #c4c118;
+  align-self: bottom;
+  color: black;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  vertical-align: center;
+  outline: none;
+}
+
+.pool-btn-disabled {
+  background-color: #5f5f5d;
+  align-self: bottom;
+  color: black;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  vertical-align: center;
+  outline: none;
 }

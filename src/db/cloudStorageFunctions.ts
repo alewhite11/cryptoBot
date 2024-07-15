@@ -1,5 +1,8 @@
 import { CloudStorage } from './../interfaces/telegramInterfaces';
 import { Field } from '../interfaces/Field';
+import { Friend } from '../interfaces/Friend';
+import { getUsersReferredBy, updateUser } from './firebaseConfig';
+import { Pool } from '../interfaces/Pool';
 
   // Check if CloudStorage is available
   const isCloudStorageAvailable = (cs: CloudStorage | null): boolean => {
@@ -311,3 +314,259 @@ export const getClaimableCallback = (
       }
   });
 };
+
+//Get friend list
+export const getFriendListCallback = async (cs : CloudStorage | null, telegramId : number, setFreindList : (friends : Friend[]) => void) : Promise<void> => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.getItem("friendListUpdateDate", async (error, value : string | undefined) => {
+    if (error) {
+      return;
+    }
+
+    if (value) {
+      //User already updated the list before
+      var updateDate : Date = new Date(JSON.parse(value))
+      var currentDate : Date = new Date()
+      
+      if(updateDate > new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)){
+        //Less than 24h ago, retireve from telegram cloudstore
+        cs?.getItem("friendList", (error, friendList : string | undefined) => {
+          if (friendList) {
+            try {
+                // Parse JSON string to array of boolean objects
+                const parsedFriendList: Friend[] = JSON.parse(friendList);
+  
+                // Update state with fetched booleans
+                setFreindList(parsedFriendList);
+            } catch (parseError) {
+                console.error("Error parsing fields JSON:", parseError);
+            }
+          }else{
+            var friends : Friend[] = []
+            cs?.setItem("friendList", JSON.stringify(friends), (error: any, stored: boolean) => {
+              if(error){
+                  return;
+              }
+            });
+          }
+        });
+      }else{
+        //More than 24h ago
+        var friendListFS : Friend[] = []
+        var friends = await getUsersReferredBy(telegramId)
+        friends.forEach(user => {
+          friendListFS.push({id: user.id, name : user.name, isActive: user.isActive})
+        });
+        setFreindList(friendListFS)
+        cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
+          if(error){
+              return;
+          }
+        });
+        cs?.setItem("friendListUpdateDate", JSON.stringify(new Date()), (error: any, stored: boolean) => {
+          if(error){
+              return;
+          }
+        });
+      } 
+    }else{
+      var friendListFS : Friend[] = []
+      var friends = await getUsersReferredBy(telegramId)
+      friends.forEach(user => {
+        friendListFS.push({id: user.id, name : user.name, isActive: user.isActive})
+      });
+      setFreindList(friendListFS)
+      cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
+        if(error){
+            return;
+        }
+      });
+      cs?.setItem("friendListUpdateDate", JSON.stringify(new Date()), (error: any, stored: boolean) => {
+        if(error){
+            return;
+        }
+      });
+    }
+  });
+}
+
+export const updateFriendListCallback = (cs : CloudStorage | null, telegramId : string) : void => {
+  updateUser(telegramId.toString())
+  cs?.getItem("friendList", (error, friendList : string | undefined) => {
+    if (friendList) {
+      try {
+          // Parse JSON string to array of boolean objects
+          const parsedFriendList: Friend[] = JSON.parse(friendList);
+          const friendIndex = parsedFriendList.findIndex(f => f.id === telegramId);
+          if (friendIndex !== -1) {
+            parsedFriendList[friendIndex].isActive = true;
+
+            // Convert the updated array back to JSON string
+            const updatedFriendList = JSON.stringify(parsedFriendList);
+
+            // Store the updated friend list back to storage
+            cs?.setItem("friendList", updatedFriendList, (error) => {
+              if (error) {
+                return;
+              }
+            });
+          } else {
+            console.log("Friend not found");
+          }
+      } catch (parseError) {
+          console.error("Error parsing fields JSON:", parseError);
+      }
+    }
+  });
+}
+
+//Retrieve score from db
+export const getPlantScoreCallback = (cs: CloudStorage | null, setPlantScore: React.Dispatch<React.SetStateAction<number>>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.getItem("plantScore", (error, value) => {
+    if (error) {
+      return;
+    }
+
+    if (value !== undefined && !isNaN(parseFloat(value))) {
+      // Update state
+      setPlantScore(parseFloat(value));
+    }else{
+      setPlantScore(0)
+    }
+  });
+};
+
+//Save score data into db
+export const setPlantScoreCallback = (cs: CloudStorage | null, plantScore: number): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  cs?.setItem("plantScore", plantScore.toString(), (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+  });
+}
+
+//Retrieve score from db
+export const getPlantHourlyIncomeCallback = (cs: CloudStorage | null, setPlantHourlyIncome: React.Dispatch<React.SetStateAction<number>>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.getItem("plantHourlyIncome", (error, value) => {
+    if (error) {
+      return;
+    }
+
+    if (value !== undefined && !isNaN(parseInt(value, 10))) {
+      // Update state
+      setPlantHourlyIncome(parseInt(value, 10));
+    }else{
+      setPlantHourlyIncome(0)
+    }
+  });
+};
+
+//Save score data into db
+export const setPlantHourlyIncomeCallback = (cs: CloudStorage | null, plantHourlyIncome: number): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  cs?.setItem("plantHourlyIncome", plantHourlyIncome.toString(), (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+  });
+}
+
+//Store the status of owned pools
+export const setPoolStatusCallback = (cs: CloudStorage | null, map: Map<string, boolean>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  const mapArray = Array.from(map.entries());
+  cs?.setItem("poolStatus", JSON.stringify(mapArray), (error: any, stored: boolean) => {
+      if (error) {
+          return;
+      }
+  });
+}
+
+//Retrieve the status of owned pools
+export const getPoolStatusCallback = (cs: CloudStorage | null, setPoolStatus: React.Dispatch<React.SetStateAction<Map<string, boolean>>>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  cs?.getItem("poolStatus", (error, value) => {
+      if (error) {
+          return;
+      }
+
+      if (value !== undefined) {
+          try {
+              const mapArray: [string, boolean][] = JSON.parse(value);
+              const parsedMap = new Map<string, boolean>(mapArray);
+              // Update state
+              setPoolStatus(parsedMap);
+          } catch (e) {
+              // Handle JSON parse error
+              var newMap = new Map<string, boolean>();
+              setPoolStatus(newMap);
+          }
+      } else {
+        var newMap = new Map<string, boolean>();
+        setPoolStatus(newMap);
+      }
+  });
+};
+
+export const setLastAccessDateCallback = (cs: CloudStorage | null, lastAccess: Date): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.setItem("lastAccess", lastAccess.toISOString(), (error: any, stored: boolean) => {
+    if(error){
+        return;
+    }
+});
+}
+
+export const getLastAccessDateCallback = (cs: CloudStorage | null, setLastAccessDate: React.Dispatch<React.SetStateAction<Date | undefined>>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.getItem("lastAccess", (error, value) => {
+    if (error) {
+        return;
+    }
+
+    if (value !== undefined) {
+        try {
+          var updateDate : Date = new Date(value)
+            // Update state
+            setLastAccessDate(updateDate);
+        } catch (e) {
+            // Handle JSON parse error
+            var newDate : Date = new Date()
+            setLastAccessDate(newDate);
+        }
+    } else {
+      var newDate : Date = new Date()
+      setLastAccessDate(newDate);
+    }
+});
+}

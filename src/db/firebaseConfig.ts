@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { collection, doc, getFirestore, setDoc } from "firebase/firestore";
+import { collection, doc, getFirestore, setDoc, query, where, getDocs, updateDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -36,5 +36,47 @@ export const addUser = async (userId: string, userName: string, referredById : s
     return true;
   } catch (error) {
     return false;
+  }
+};
+
+//update user status to true
+export const updateUser = async (userId: string) => {
+  try {
+    // Create a reference to the document with the provided userId
+    const userRef = doc(db, "users", userId);
+    
+    // Update the isActive field to true
+    await updateDoc(userRef, {
+      isActive: true
+    });
+    return true;
+  } catch (error) {
+    console.error("Error activating user: ", error);
+    return false;
+  }
+};
+
+export const getUsersReferredBy = async (userId: number) => {
+  try {
+    // Create a reference to the users collection
+    const usersRef = collection(db, "users");
+
+    // Create a query against the collection
+    const q = query(usersRef, where("referredBy", "==", userId.toString()));
+
+    // Execute the query
+    const querySnapshot = await getDocs(q);
+
+    // Process and return the results
+    const referredUsers = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      isActive: doc.data().isActive,
+      name: doc.data().name,
+      referredBy: doc.data().referredBy
+    }));
+    return referredUsers;
+  } catch (error) {
+    console.error("Error retrieving referred users: ", error);
+    return [];
   }
 };

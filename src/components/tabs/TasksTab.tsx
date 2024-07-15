@@ -173,10 +173,6 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
         setErrorClaiming(true)
         return false;
       }
-    } else {
-      setShowChest(true)
-      setScore(score + foundChest!!.score)
-      setAppleScore(appleScore + foundChest!!.appleScore)
     }
   }
 
