@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { vegetables, plants, plants3 } from '../../db/vegetable';
+import { vegetables, plants, appleShop } from '../../db/vegetable';
 import moneyImg from './../../img/shopItems/dollar.png'
 import emptyField from './../../img/mainPage/emptyField.png'
 import lockedField from './../../img/mainPage/lockedField.png'
@@ -30,6 +30,11 @@ import asparagusGif from './../../gif/asparagus.gif'
 import courgetteGif from './../../gif/courgette.gif'
 import spinachGif from './../../gif/spinach.gif'
 import appleGif from './../../gif/apple.gif'
+import tonIcon from './../../img/invitePage/ton.png'
+import { handleTransaction } from '../../db/transactions';
+import { useTonConnectUI } from '@tonconnect/ui-react';
+import { tonPerK, tonPerMinute } from '../../db/tonCosts';
+
 
 const vegetableImages: { [key: string]: string } = {
   Tomato: tomatoImg,
@@ -139,6 +144,7 @@ interface FieldItemProps {
 const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
   const initialTime = Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
   const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
+  const [tonConnectUI, setOptions] = useTonConnectUI();
 
   const handleRemoveClick = () => {
     const newField: Field = {
@@ -174,7 +180,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       updatedFields[index] = newField
       setFields(updatedFields)
 
-      setTimeRemaining(Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
+      setTimeRemaining(0)
   
       const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
       const newScore = score + plantedVegetable!!.reward
@@ -203,6 +209,48 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       setScoreCallback(cs, newScore)
     }
   };
+
+  const handleClaimTonClick = () => {
+    const totalMinutes : number = Math.floor(timeRemaining / 60);
+    var tonPrice : number = totalMinutes*tonPerMinute
+
+    if (tonPrice === 0) {
+      tonPrice = tonPerMinute;
+    }
+
+    handleTransaction(tonConnectUI, Math.floor(tonPrice*1000000000).toString(), handleClaimClick)
+  }
+
+  const handleUnlockTonClick = () => {
+    const numberOfK : number = (2500*(2 ** index))/1000
+    var tonPrice : number = (2500*(2 ** index))*tonPerK
+
+    if (tonPrice === 0) {
+      tonPrice = tonPerK;
+    }
+
+    handleTransaction(tonConnectUI, Math.floor(tonPrice*1000000000).toString(), handleUnlockClickNoScoreChange)
+  }
+
+  const handleUnlockClickNoScoreChange = () => {
+    const newField: Field = {
+      vegetable: "",
+      plantedAt: new Date(), 
+      duration: 0
+    };
+
+    const newLockedField: Field = {
+      vegetable: "locked",
+      plantedAt: new Date(), 
+      duration: 0
+    };
+
+    const updatedFields = [...fields];
+    updatedFields[index] = newField
+    updatedFields.push(newLockedField)    
+    setFields(updatedFields)
+    setFieldsCallback(cs, updatedFields)    
+  }
 
   const handleUnlockClick = () => {
     var newScore = score - (2500*(2 ** index))
@@ -247,11 +295,14 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       </div>
       <div className='main-buttons'>
         {fields[index].vegetable == "" && <button className='main-plant-button' onClick={handlePlantClick}>Plant</button>}
-        {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && !containsPlantName(fields[index].vegetable) && <button className='main-plant-button-disabled' disabled>Claim</button>}
+        {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && !containsPlantName(fields[index].vegetable) && tonConnectUI.connected && <button className='main-plant-button-ton' onClick={handleClaimTonClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Claim</button>}
+        {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && !containsPlantName(fields[index].vegetable) && !tonConnectUI.connected && <button className='main-plant-button-disabled' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} disabled><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Claim</button>}
         {(timeRemaining == 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
         {(fields[index].vegetable == "locked" && score >= (2500*(2 ** index))) && <button className='main-plant-button' onClick={handleUnlockClick}>Unlock</button>}
-        {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && <button className='main-plant-button-disabled' disabled>Unlock</button>}
-        {containsPlantName(fields[index].vegetable) && timeRemaining > 0 &&  <button className='main-remove-button' onClick={() => {setSelectedCallback(() => handleRemoveClick); setSelectedField(fields[index]); setMainPopupOpened(true)}}>Remove</button>}
+        {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && <button className='main-plant-button-ton' onClick={handleUnlockTonClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Unlock</button>}
+        {containsPlantName(fields[index].vegetable) && timeRemaining > 0 &&  <><button className='main-remove-button' onClick={() => {setSelectedCallback(() => handleRemoveClick); setSelectedField(fields[index]); setMainPopupOpened(true)}}>Remove</button>
+                                                                              {tonConnectUI.connected && <button className='main-plant-button-ton' onClick={handleClaimTonClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Claim</button>}
+                                                                              {!tonConnectUI.connected && <button className='main-plant-button-disabled'  style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} disabled><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Claim</button>}</>}
       </div> 
     </div>
   );

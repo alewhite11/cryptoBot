@@ -302,6 +302,25 @@ button.next {
      1px  1px 0 #000;
 }
 
+.main-plant-button-ton {
+  background-color: #0089CD;
+  color: white;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border: 2px solid black; 
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  flex: 20%;
+  outline: none;
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
 .main-modal-overlay {
   z-index: 9999;
   min-width: 100%;
@@ -577,6 +596,18 @@ button.next {
   outline: none;
 }
 
+.item-button-ton {
+  background-color: #0089CD;
+  color: white;
+  font-size: small;
+  font-weight: bold;
+  border: 1px solid white;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  outline: none;
+}
+
 .item-button-disabled {
   background-color: #535653;
   color: white;
@@ -660,6 +691,18 @@ button.next {
 
 .shop-popup-button {
   background-color: #4CAF50;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  flex: 20%;
+  outline: none;
+}
+
+.shop-popup-ton-button {
+  background-color: 	#0089CD;
   color: white;
   font-size: small;
   border: none;
@@ -1141,7 +1184,6 @@ button.next {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 50px;
 }
 
 .plant-tab-balance-text {

@@ -5,6 +5,7 @@ import { setPlantHourlyIncomeCallback, setPoolStatusCallback } from '../../db/cl
 import { CloudStorage } from '../../interfaces/telegramInterfaces'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { pools } from '../../db/pools';
+import { TonConnectButton } from '@tonconnect/ui-react';
 
 
 
@@ -28,6 +29,7 @@ const PlantTab: React.FC<PlantTabProps> = ({ appleScore, plantScore, setPlantSco
           <div className="plant-tab-balance">
             <p className="plant-tab-balance-text">{plantScore.toFixed(2)}</p>
           </div>
+          <TonConnectButton style={{marginBottom: '50px'}}/>
         </div>
         <div className="plant-bottom-section">
           <div className="plant-tab-apple">

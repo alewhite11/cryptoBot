@@ -63,6 +63,10 @@ interface BottomNavProps {
               label="Friends"
               icon={<img src={inviteIcon} alt="Friends" style={{ width: 24, height: 24 }} />}
             />
+            {/*<BottomNavigationAction
+              label="Wallet"
+              icon={<img src={inviteIcon} alt="Friends" style={{ width: 24, height: 24 }} />}
+            />*/}
           </BottomNavigation>
         
       </div>

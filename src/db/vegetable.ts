@@ -10,6 +10,7 @@ import spinachImg from './../img/shopItems/spinach.png'
 import appleImg from './../img/shopItems/apple.png'
 import pearImg from './../img/shopItems/pear.png'
 import cherryImg from './../img/shopItems/cherry.png'
+import { AppleItem } from "../interfaces/AppleItem";
 
 export const vegetables : Plant[] = [    
     { name: 'Radish', time: '10 min', cost: 20, reward: 40, image: radishImg, duration: 60*10 },
@@ -23,9 +24,14 @@ export const vegetables : Plant[] = [
 ];
 
 export const plants : Plant[] = [  
-    { name: 'Cherry', time: '4 hr', cost: 15000, reward: 750, image: cherryImg, duration: 60*60*4 },
-    { name: 'Pear', time: '6 hr', cost: 20000, reward: 1000, image: pearImg, duration: 60*60*6 },
-    { name: 'Apple', time: '8 hr', cost: 25000, reward: 1250, image: appleImg, duration: 60*60*8 }
+    { name: 'Cherry', time: '4 hr', cost: 25000, reward: 750, image: cherryImg, duration: 60*60*4 },
+    { name: 'Pear', time: '6 hr', cost: 50000, reward: 1000, image: pearImg, duration: 60*60*6 },
+    { name: 'Apple', time: '8 hr', cost: 75000, reward: 1250, image: appleImg, duration: 60*60*8 }
 ];
 
-export const plants3 : Plant[] = [];
+export const appleShop : AppleItem[] = [
+    {name: '5 Apples', cost: 0.08, reward: 5, image: appleImg},
+    {name: '10 Apples', cost: 0.15, reward: 10, image: appleImg},
+    {name: '20 Apples', cost: 0.30, reward: 20, image: appleImg},
+    {name: '40 Apples', cost: 0.50, reward: 40, image: appleImg},
+];

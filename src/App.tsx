@@ -59,6 +59,10 @@ function App() {
   const contextValue = useMemo(() => ({ name: 'Plant Token' }), []);
   const [api, contextHolder] = notification.useNotification();
   const alreadyOpenedRef = useRef(false);
+
+  //Shop tab
+  const [activeTab, setActiveTab] = useState(0);
+  const [addClicked, setAddClicked] = useState(false)
  
 
 
@@ -160,7 +164,7 @@ function App() {
       var elapsed = actualDate.getTime() - lastAccessDate.getTime();
       elapsed = elapsed / (1000 * 60 * 60); // Convert milliseconds to hours
       elapsed = Math.min(elapsed, 4); // Ensure elapsed is at most 4 hours
-      if(!alreadyOpenedRef.current){
+      if(!alreadyOpenedRef.current && (plantHourlyIncome*elapsed) > 0){
         openNotification('topRight', (plantHourlyIncome*elapsed))
         alreadyOpenedRef.current = true; // Update ref
       }
@@ -173,7 +177,7 @@ function App() {
   const openNotification = (placement: NotificationPlacement, points: number) => {
     api.info({
       message: `Welcome back`,
-      description: <Context.Consumer>{() => `You farmed ${points.toFixed(2)}`}</Context.Consumer>,
+      description: <Context.Consumer>{() => `You farmed ${points.toFixed(2)} $PLANT`}</Context.Consumer>,
       placement,
       className: 'earning-popup',
       icon: <RiPlantFill />,
@@ -197,6 +201,12 @@ function App() {
     setCurrentPage(3); //Navigate to Task page
   };
 
+  const handleAddAppleClick = () => {
+    setAddClicked(true) //Signal navigation from button
+    setCurrentPage(1); //Navigate to Shop page
+    setActiveTab(2) //Apple shop tab
+  };
+
   return (
     <Context.Provider value={contextValue}>
       {contextHolder}
@@ -211,6 +221,7 @@ function App() {
           </div>
           <div className='main-coins'>
             <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{appleScore}</span>
+            <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
           </div>
         </div>
         <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
@@ -225,7 +236,7 @@ function App() {
         </div>
       </div>}
       <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-        <MainContent page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
+        <MainContent activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
     </div>
