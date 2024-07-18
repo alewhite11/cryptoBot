@@ -6,7 +6,7 @@ import inviteIcon from './../img/buttonBar/invite.png';
 import moneyIcon from './../img/buttonBar/money.png';
 import sproutIcon from './../img/buttonBar/sprout.png';
 import plantIcon from './../img/invitePage/tokenCoin.png'
-import { Badge } from 'antd';
+import Badge from '@mui/material/Badge';
 import { dailyTasks } from '../db/tasks';
 
 interface BottomNavProps {
@@ -16,6 +16,15 @@ interface BottomNavProps {
   }
   
   const BottomNav: React.FC<BottomNavProps> = ({ currentPage, setCurrentPage, tasks }) => {
+    const [showBadge, setShowBadge] = useState(false)
+
+    useEffect(() => {
+      dailyTasks.forEach((task) => {
+        if(tasks[task.id] !== true){
+          setShowBadge(true)
+        }
+      });
+    }, []);
 
     return (
       <div style={{ position: 'relative', width: '100%', outline: 'none' }}>
@@ -23,6 +32,9 @@ interface BottomNavProps {
             value={currentPage}
             onChange={(event, newValue) => {
             setCurrentPage(newValue);
+            if(newValue === 3){
+              setShowBadge(false)
+            }
             }}
             showLabels
             sx={{
@@ -57,16 +69,12 @@ interface BottomNavProps {
             />
             <BottomNavigationAction
               label="Earn"
-              icon={<img src={moneyIcon} alt="Earn" style={{ width: 24, height: 24 }} />}       
+              icon={showBadge ? <Badge color="error" badgeContent=" "><img src={moneyIcon} alt="Earn" style={{ width: 24, height: 24 }} /></Badge> : <img src={moneyIcon} alt="Earn" style={{ width: 24, height: 24 }} />}       
             />
             <BottomNavigationAction
               label="Friends"
               icon={<img src={inviteIcon} alt="Friends" style={{ width: 24, height: 24 }} />}
             />
-            {/*<BottomNavigationAction
-              label="Wallet"
-              icon={<img src={inviteIcon} alt="Friends" style={{ width: 24, height: 24 }} />}
-            />*/}
           </BottomNavigation>
         
       </div>

@@ -5,13 +5,19 @@ import { Task } from '../../interfaces/Task';
 import { dailyTasks } from '../../db/tasks';
 import arrowImg from './../../img/taskPage/arrow.png'
 import moneyImg from './../../img/shopItems/dollar.png'
+import appleImg from './../../img/shopItems/apple.png'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import { setAppleScoreCallback, setClaimableCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
+import { setAppleScoreCallback, setClaimableCallback, setLastDailyClaimCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
 import CircularProgress from '@mui/material/CircularProgress';
 import chestImg from './../../img/chests/closed_Chest.jpg'
 import chestVid from './../../video/chest_opening/Apple.mp4'
 import { chests } from '../../db/chests';
 import { Chest } from '../../interfaces/Chest';
+import tonIcon from './../../img/invitePage/ton.png'
+import { useTonConnectUI } from '@tonconnect/ui-react';
+import { dailyCheckIn } from '../../db/tonCosts';
+import { handleTransaction } from '../../db/transactions';
+import { dailyPrices } from '../../db/dailyClaimPrices'
 
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
@@ -25,9 +31,10 @@ interface TasksTabProps {
   setTasks: (tasks: boolean[]) => void;
   claimableTasks: boolean[];
   setClaimableTasks: (tasks: boolean[]) => void;
+  dailyStreak: number
 }
 
-const TasksTab: React.FC<TasksTabProps> = ({ score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TasksTab: React.FC<TasksTabProps> = ({ dailyStreak, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [activeTab, setActiveTab] = useState(0);
   return (
     <div className="App">
@@ -45,7 +52,7 @@ const TasksTab: React.FC<TasksTabProps> = ({ score, setScore, appleScore, setApp
             {activeTab === 0 && (
               <>
                 {dailyTasks.map((item, index) => (
-                  <TaskItem item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
+                  <TaskItem dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              
               </>
             )}
@@ -78,9 +85,10 @@ interface TaskItemProps {
   setTasks: (tasks: boolean[]) => void;
   claimableTasks: boolean[];
   setClaimableTasks: (tasks: boolean[]) => void;
+  dailyStreak: number;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [taskOpened, setTaskOpened] = useState<boolean>(false)
   
   const handleTaskClick = () => {
@@ -102,10 +110,12 @@ const TaskItem: React.FC<TaskItemProps> = ({ item, key, score, setScore, appleSc
       </div>}
       {tasks[item.id] === true && 
       <div className='task-image'>
-        <DoneOutlineIcon/>
+        <DoneOutlineIcon style={{paddingRight: '10px'}}/>
       </div>}
     </div>
-    {(taskOpened && tasks[item.id] !== true) && <TaskPopUp item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    {(taskOpened && tasks[item.id] !== true && item.type === 'dailyTask') && <DailyTaskPopUp dailyStreak={dailyStreak} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} />}
+
     </>
   );
 };
@@ -205,6 +215,117 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
               {claimableTasks[item.id] !== true && <button className='main-taskpopup-button-disabled' onClick={handleClaimClick} disabled>CLAIM</button>}
               {claimableTasks[item.id] === true && <button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</button>}
               {errorClaiming && <p style={{color: 'red', fontWeight: 'bold'}}>Task not completed, please retry!</p>}
+            </div>
+          </div>
+        </div>}
+    </>
+  );
+}
+
+interface DailyTaskPopUpProps {
+  item: Task;
+  key: number;
+  score: number;
+  setScore: (score: number) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
+  cs: CloudStorage | null;
+  setTaskOpened: (opened: boolean) => void;
+  tasks: boolean[];
+  setTasks: (tasks: boolean[]) => void;
+  dailyStreak: number
+}
+
+const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks }) => {
+  const [showChest, setShowChest] = useState(false)
+  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
+  const [tonConnectUI, setOptions] = useTonConnectUI();
+
+  const handleOverlayClick = () => {
+    setTaskOpened(false);
+  };
+
+  const handlePopUpClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
+  const handleRegularClaimClick = () => {
+    var newScore : number = dailyPrices[(dailyStreak - 1)%7].score
+    setScoreCallback(cs, score + newScore)
+    setScore(score + newScore)
+    var newAppleScore : number = dailyPrices[(dailyStreak - 1)%7].appleScore
+    setAppleScoreCallback(cs, appleScore + newAppleScore)
+    setAppleScore(appleScore + newAppleScore)
+    setLastDailyClaimCallback(cs, new Date())
+    const updatedTasks = [...tasks];
+    updatedTasks[item.id] = true
+    setTasksCallback(cs, updatedTasks)
+    setTasks(updatedTasks)
+    setTaskOpened(false)
+  }
+
+  const handleRegularx3ClaimClick = () => {
+    var newScore : number = (dailyPrices[(dailyStreak - 1)%7].score)*3
+    setScoreCallback(cs, score + newScore)
+    setScore(score + newScore)
+    var newAppleScore : number = (dailyPrices[(dailyStreak - 1)%7].appleScore)*3
+    setAppleScoreCallback(cs, appleScore + newAppleScore)
+    setAppleScore(appleScore + newAppleScore)
+    setLastDailyClaimCallback(cs, new Date())
+    const updatedTasks = [...tasks];
+    updatedTasks[item.id] = true
+    setTasksCallback(cs, updatedTasks)
+    setTasks(updatedTasks)
+    setTaskOpened(false)
+  }
+
+  const handleTonClaimClick = () => {
+    setTaskOpened(false)
+    
+    handleTransaction(tonConnectUI, Math.floor(dailyCheckIn*1000000000).toString(), handleRegularx3ClaimClick)
+  }
+
+  return (
+    <>  
+        {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
+        {!showChest && <div className="modal-overlay" onClick={handleOverlayClick} >
+          <div  className="modal-box" onClick={handlePopUpClick}>
+            <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
+            <div className='popup-content'>
+              <div className='popup-title'>{item.text}</div>
+              {dailyPrices[(dailyStreak - 1)%7].score > 0 && <div className='task-reward'>               
+                <div className='task-reward-text'>
+                  <p>You receive {dailyPrices[(dailyStreak - 1)%7].score}</p>
+                </div>
+                <img className='task-money-icon' src={moneyImg} alt={"money"}/> 
+              </div>}
+              {dailyPrices[(dailyStreak - 1)%7].appleScore > 0 && <div className='task-reward'>                
+                <div className='task-reward-text'>
+                  <p>You receive {dailyPrices[(dailyStreak - 1)%7].appleScore}</p>
+                </div>
+                <img className='task-money-icon' src={appleImg} alt={"money"}/>
+              </div>}
+              <div className='task-dt-popup-buttons'>
+                <div className='task-dt-popup-buttons-inner'>
+                  <div className="item-pricing">
+                    <div className="item-intext-image">
+                      <img src={moneyImg} style={{opacity: 0}} />
+                    </div>
+                    <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}></span>
+                  </div>
+                  <button className='task-dt-popup-button' onClick={handleRegularClaimClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '9px', width: '9px', opacity: 0}} src={tonIcon}/>CLAIM<img style={{height: '9px', width: '9px', opacity: 0}} src={tonIcon}/></button>
+                </div>
+                  <div className='task-dt-popup-buttons-inner'>
+                    <div className="item-pricing">
+                      <div className="item-intext-image">
+                        <img src={moneyImg} style={{opacity: 0}} />
+                      </div>
+                      <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>Claim x5</span>
+                    </div>
+                    {!tonConnectUI.connected && <button className='task-dt-popup-button-disabled'  disabled style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon}/>CLAIM</button>}
+                    {tonConnectUI.connected && <button className='task-dt-popup-ton-button' onClick={handleTonClaimClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>CLAIM</button>}
+                  </div>
+              </div>   
             </div>
           </div>
         </div>}

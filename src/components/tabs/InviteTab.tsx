@@ -40,17 +40,17 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
         <div className='invite-page'>
           <div className='invite-dialog'>
             <h2 className='invite-title'>Invite friends</h2>
-            <p className='invite-text'>For each friend that join and unlocks the spinach vegetable, you will get 500 coins</p>
+            <p className='invite-text'>For each friend that join and unlocks the spinach vegetable, you will get a chest with random prize</p>
             <button className='invite-btn' onClick={handleInviteClick}>Invite</button>
-            <p className='invite-warning'>Friend list is updated once a day</p>
           </div>
           <div className='friend-list'> 
+            <p className='invite-warning'>Friend list is updated once a day</p>
             <div className='total-friends'>
-              <p className='invite-text'>Completed friends:</p>
+              <p className='invite-text-completed'>Completed friends:</p>
               <p className='invite-text'>{activeFriends}/{totalFriends}</p>
             </div>
             <div className='friend-list-inner'>
-              {friendList.map((item, key) => (
+              {friendList.slice().sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1)).map((item, key) => (
                 <FriendItem name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowChest={setShowChest} setFoundChest={setFoundChest}/>
               ))}
             </div> 
@@ -109,10 +109,9 @@ const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendL
         {!isActive && (<>
           <button className='claim-btn' onClick={onClaimClick}><SlPresent size={20} color="inherit"/></button>
         </>)}
-        {isActive && (<>
-          <CheckCircleOutlineIcon style={{color: 'white'}} />
-          <p style={{fontSize: 'small'}}>Completed</p>
-        </>)}
+        {isActive && (<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+          <CheckCircleOutlineIcon className='invite-text-shadow' />
+        </div>)}
       </div>
     </div>
   );

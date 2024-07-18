@@ -6,6 +6,7 @@ import { CloudStorage } from '../../interfaces/telegramInterfaces'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { pools } from '../../db/pools';
 import { TonConnectButton } from '@tonconnect/ui-react';
+import { FaCartPlus } from "react-icons/fa";
 
 
 
@@ -25,7 +26,7 @@ const PlantTab: React.FC<PlantTabProps> = ({ appleScore, plantScore, setPlantSco
     <div className="App">
       <header className="App-header">
         <div className="plant-top-section">
-          <h1 className="plant-tab-title">Plant Balance</h1>
+          <h1 className="plant-tab-title">$PLANT Balance</h1>
           <div className="plant-tab-balance">
             <p className="plant-tab-balance-text">{plantScore.toFixed(2)}</p>
           </div>
@@ -87,9 +88,9 @@ const PoolItem : React.FC<PoolItemProps> = ({ pool, appleScore, plantScore, setP
                 <img className='main-balance-icon' src={appleImg} alt={"apple"} style={{height: '30px', width: '30px'}} />
               </div>
             </div>
-            {(appleScore >= pool.price && !isPoolOwned(poolStatus, pool.name)) && <button className='pool-btn' onClick={handleJoinClick}>JOIN</button>}
-            {(appleScore < pool.price && !isPoolOwned(poolStatus, pool.name)) && <button className='pool-btn-disabled'>JOIN</button>}
-            {isPoolOwned(poolStatus, pool.name) && <DoneOutlineIcon/>}
+            {(appleScore >= pool.price && !isPoolOwned(poolStatus, pool.name)) && <button className='pool-btn' onClick={handleJoinClick}><FaCartPlus /></button>}
+            {(appleScore < pool.price && !isPoolOwned(poolStatus, pool.name)) && <button className='pool-btn-disabled'><FaCartPlus /></button>}
+            {isPoolOwned(poolStatus, pool.name) && <DoneOutlineIcon style={{paddingRight: '10px'}}/>}
         </div>
     );
 }

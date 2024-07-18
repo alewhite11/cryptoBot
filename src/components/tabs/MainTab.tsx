@@ -223,7 +223,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
 
   const handleUnlockTonClick = () => {
     const numberOfK : number = (2500*(2 ** index))/1000
-    var tonPrice : number = (2500*(2 ** index))*tonPerK
+    var tonPrice : number = numberOfK*tonPerK
 
     if (tonPrice === 0) {
       tonPrice = tonPerK;

@@ -474,8 +474,8 @@ const ShopPopUp: React.FC<ShopPopUpProps> = ({ handlePlantClick, handlePlantTonC
                     {item.cost < 1000 && <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost}</span>}
                     {item.cost >= 1000 && <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost/1000}k</span>}
                   </div>
-                  {score >= item.cost && <button className='shop-popup-button' onClick={handleRegularPlantClicked} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px', opacity: 0}} src={tonIcon}/>PLANT</button>}
-                  {score < item.cost && <button className='shop-popup-button-disabled' disabled style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px', opacity: 0}} src={tonIcon}/>PLANT</button>}
+                  {score >= item.cost && <button className='shop-popup-button' onClick={handleRegularPlantClicked} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '9px', width: '9px', opacity: 0}} src={tonIcon}/>PLANT<img style={{height: '9px', width: '9px', opacity: 0}} src={tonIcon}/></button>}
+                  {score < item.cost && <button className='shop-popup-button-disabled' disabled style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '9px', width: '9px', opacity: 0}} src={tonIcon}/>PLANT<img style={{height: '9px', width: '9px', opacity: 0}} src={tonIcon}/></button>}
                 </div>
                   <div className='shop-popup-buttons-inner'>
                     <div className="item-pricing">

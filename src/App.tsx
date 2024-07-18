@@ -48,6 +48,7 @@ function App() {
   const [plantedVegetables, setPlantedVegetables] = useState<Map<string, number>>(new Map<string, number>())
   const [poolStatus, setPoolStatus] = useState<Map<string, boolean>>(new Map<string, boolean>())
   const [firestoreFriendList, setFirestoreFriendList] = useState<Friend[]>([])
+  const [dailyStreak, setDailyStreak] = useState<number>(0)
 
   //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
@@ -68,7 +69,7 @@ function App() {
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
-    window.Telegram.WebApp.expand();
+    window.Telegram.WebApp.expand()
 
     //window.Telegram.WebApp.enableClosingConfirmation()
 
@@ -99,7 +100,7 @@ function App() {
           getPlantHourlyIncomeCallback(cloudStorage, setPlantHourlyIncome)
           getPoolStatusCallback(cloudStorage, setPoolStatus)
           getScoreCallback(cloudStorage, setScore);
-          getTasksCallback(cloudStorage, setTasks);
+          getTasksCallback(cloudStorage, setTasks, setDailyStreak);
           getClaimableCallback(cloudStorage, setClaimableTasks)
           getPlantedVegetablesCallback(cloudStorage, setPlantedVegetables)
           getFieldsCallback(cloudStorage, setFields, setDataLoaded);
@@ -236,7 +237,7 @@ function App() {
         </div>
       </div>}
       <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-        <MainContent activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
+        <MainContent dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
       </div>
       <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
     </div>
