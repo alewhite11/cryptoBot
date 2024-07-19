@@ -295,12 +295,14 @@ const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key
               <div className='popup-title'>{item.text}</div>
               {dailyPrices[(dailyStreak - 1)%7].score > 0 && <div className='task-reward'>               
                 <div className='task-reward-text'>
+                  <p>Day {dailyStreak}</p>
                   <p>You receive {dailyPrices[(dailyStreak - 1)%7].score}</p>
                 </div>
                 <img className='task-money-icon' src={moneyImg} alt={"money"}/> 
               </div>}
               {dailyPrices[(dailyStreak - 1)%7].appleScore > 0 && <div className='task-reward'>                
                 <div className='task-reward-text'>
+                  <p>Day {dailyStreak}</p>
                   <p>You receive {dailyPrices[(dailyStreak - 1)%7].appleScore}</p>
                 </div>
                 <img className='task-money-icon' src={appleImg} alt={"money"}/>
@@ -320,7 +322,7 @@ const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key
                       <div className="item-intext-image">
                         <img src={moneyImg} style={{opacity: 0}} />
                       </div>
-                      <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>Claim x5</span>
+                      <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>Claim x3</span>
                     </div>
                     {!tonConnectUI.connected && <button className='task-dt-popup-button-disabled'  disabled style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon}/>CLAIM</button>}
                     {tonConnectUI.connected && <button className='task-dt-popup-ton-button' onClick={handleTonClaimClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>CLAIM</button>}

@@ -18,6 +18,7 @@ import { notification } from 'antd';
 import type { NotificationArgsProps } from 'antd';
 import React from 'react';
 import { RiPlantFill } from "react-icons/ri";
+import NumberTicker from './components/utils/NumberTicker';
 
 
 declare global {
@@ -221,7 +222,7 @@ function App() {
             <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
           </div>
           <div className='main-coins'>
-            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{appleScore}</span>
+            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={appleScore} /></span>
             <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
           </div>
         </div>
@@ -231,7 +232,7 @@ function App() {
             <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
           </div>
           <div className='main-coins'>
-            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}>{score}</span>
+            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
             <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
           </div>
         </div>

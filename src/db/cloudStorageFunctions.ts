@@ -255,7 +255,6 @@ export const getTasksCallback = (
 
   cs?.getItem("lastDailyLogin", (error: any, value: string | undefined) => {
     if(error){
-      alert("Error: " + error)
       return;
     }
 

@@ -1233,19 +1233,68 @@ button.next {
 }
 
 .Tutorial-slider {
+  position: relative;
   height: 80%;
   width: 90%;
   border-radius: 1rem;
   background-color: #b10808;
-  border: 2px solid red;
   align-content: center;
   display: block;
 }
 
-.slide {
-  height: min-content;
-  padding-bottom: 50px;
+.tutorial-page-1 {
+  background-image: url(img/tutorial/tutorial1.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; /* Remove quotes from 'cover' */
+  position: absolute;
+  height: calc(var(--tg-viewport-height)*0.7);
+  width: calc(var(--tg-viewport-width)*0.7);
+  display: flex; /* Add flex display to center content */
+  flex-direction: column; /* Set flex direction to column */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
 }
+
+.tutorial-page-2 {
+  background-image: url(img/tutorial/tutorial2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; /* Remove quotes from 'cover' */
+  height: 100%;
+  width: 100%;
+  display: flex; /* Add flex display to center content */
+  flex-direction: column; /* Set flex direction to column */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+}
+
+.tutorial-page-3 {
+  background-image: url(img/tutorial/tutorial3.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; /* Remove quotes from 'cover' */
+  height: 100%;
+  width: 100%;
+  display: flex; /* Add flex display to center content */
+  flex-direction: column; /* Set flex direction to column */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+}
+
+.tutorial-page-4 {
+  background-image: url(img/tutorial/tutorial4.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; /* Remove quotes from 'cover' */
+  height: 100%;
+  width: 100%;
+  display: flex; /* Add flex display to center content */
+  flex-direction: column; /* Set flex direction to column */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+}
+
 
 /* Plant page */
 .plant-top-section {
@@ -1431,4 +1480,119 @@ button.next {
   margin-right: 10px;
   vertical-align: center;
   outline: none;
+}
+
+/* New carusel */
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(img/mainBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0; /* Remove default margin */
+}
+
+.carousel-outer-container {
+  background-image: url(img/woodenBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 90%;
+  height: 80%;
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%; /* Make sure it fills the outer container */
+  overflow: hidden;
+}
+
+.carousel-wrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%; /* Make sure it fills the container */
+}
+
+.carousel-item {
+  min-width: 100%;
+  overflow: hidden;
+  position: relative; /* Added to position the button */
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  object-fit: cover; /* Ensure the image covers the container */
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  color: white;
+  padding: 5px;
+  background: transparent; 
+  font-weight: bold;
+  border: none; 
+  font-size: 60px; 
+  z-index: 10; 
+}
+
+.carousel-button:focus {
+  outline: none;
+}
+
+.carousel-prev-button {
+  left: 5px;
+}
+
+.carousel-next-button {
+  right: 5px;
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+}
+
+.carousel-indicator {
+  width: 10px;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.carousel-indicator.active {
+  background-color: #333;
+}
+
+.last-slide-button {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: 2px solid white;
+  border-radius: 1rem;
+}
+
+.last-slide-button:hover {
+  background-color: #0056b3;
 }
