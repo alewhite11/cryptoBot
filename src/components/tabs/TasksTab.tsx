@@ -153,12 +153,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score,
     event.stopPropagation();
   };
 
-  useEffect(() => {
-    alert("Show chest changed: " + showChest)
-  }, [showChest])
-
   const handleClaimClick = async (event: React.MouseEvent) => {
-    event.stopPropagation();
     setLoading(true);
     var x = getRandomNumber(1,100000)
     var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
@@ -171,9 +166,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score,
         const data = await response.json();
     
         if (data.ok && (data.result.status === 'member' || data.result.status === 'administrator' || data.result.status === 'creator')) {
-          alert("Setting showchast to true")
           setShowChest(true)
-          alert("Show chest updated")
           setScoreCallback(cs, score + foundChest!!.score)
           setScore(score + foundChest!!.score)
           setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
@@ -195,9 +188,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score,
       }
     } else if(item.type === 'walletConnect'){
       if(tonConnectUI.connected === true){
-        alert("Setting showchast to true")
         setShowChest(true)
-        alert("Show chest updated")
         setScoreCallback(cs, score + foundChest!!.score)
         setScore(score + foundChest!!.score)
         setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
@@ -375,10 +366,6 @@ interface ChestItemProps {
 export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, setTaskOpened, foundChest }) => {
   const [imageClicked, setImageClicked] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-
-  useEffect(() => {
-    setTaskOpened(false)
-  }, [])
 
   const videoClicked = () => {
     setShowChest(false);
