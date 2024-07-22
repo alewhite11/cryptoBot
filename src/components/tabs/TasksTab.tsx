@@ -102,7 +102,6 @@ const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, 
   return (
     <>
     {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
-    {!showChest && 
     <div className="task-item"  onClick={handleTaskClick}>
       <div className="task-image">
         <img src={`${item.image}`} alt={"task"} />
@@ -118,7 +117,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, 
       <div className='task-image'>
         <DoneOutlineIcon style={{paddingRight: '10px'}}/>
       </div>}
-    </div>}
+    </div>
     {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp setShowChest={setShowChest}  setFoundChest={setFoundChest} setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
     {(taskOpened && tasks[item.id] !== true && item.type === 'dailyTask') && <DailyTaskPopUp dailyStreak={dailyStreak} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} />}
     </>
