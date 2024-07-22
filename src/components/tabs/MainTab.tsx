@@ -180,7 +180,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       updatedFields[index] = newField
       setFields(updatedFields)
 
-      setTimeRemaining(0)
+      setTimeRemaining(Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
   
       const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
       const newScore = score + plantedVegetable!!.reward

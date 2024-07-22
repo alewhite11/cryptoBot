@@ -22,6 +22,7 @@ import { dailyPrices } from '../../db/dailyClaimPrices'
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
 interface TasksTabProps {
+  setCurrentPage: (page: number) => void;
   score: number;
   setScore: (score: number) => void;
   appleScore: number;
@@ -34,7 +35,7 @@ interface TasksTabProps {
   dailyStreak: number
 }
 
-const TasksTab: React.FC<TasksTabProps> = ({ dailyStreak, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TasksTab: React.FC<TasksTabProps> = ({ setCurrentPage, dailyStreak, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [activeTab, setActiveTab] = useState(0);
   return (
     <div className="App">
@@ -52,7 +53,7 @@ const TasksTab: React.FC<TasksTabProps> = ({ dailyStreak, score, setScore, apple
             {activeTab === 0 && (
               <>
                 {dailyTasks.map((item, index) => (
-                  <TaskItem dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
+                  <TaskItem setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              
               </>
             )}
@@ -74,6 +75,7 @@ const TasksTab: React.FC<TasksTabProps> = ({ dailyStreak, score, setScore, apple
 };
 
 interface TaskItemProps {
+  setCurrentPage: (page: number) => void;
   item: Task;
   key: number;
   score: number;
@@ -88,7 +90,7 @@ interface TaskItemProps {
   dailyStreak: number;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [taskOpened, setTaskOpened] = useState<boolean>(false)
   
   const handleTaskClick = () => {
@@ -113,7 +115,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ dailyStreak, item, key, score, setS
         <DoneOutlineIcon style={{paddingRight: '10px'}}/>
       </div>}
     </div>
-    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
     {(taskOpened && tasks[item.id] !== true && item.type === 'dailyTask') && <DailyTaskPopUp dailyStreak={dailyStreak} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} />}
 
     </>
@@ -121,6 +123,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ dailyStreak, item, key, score, setS
 };
 
 interface TaskPopUpProps {
+  setCurrentPage: (page: number) => void;
   item: Task;
   key: number;
   score: number;
@@ -135,11 +138,12 @@ interface TaskPopUpProps {
   setClaimableTasks: (tasks: boolean[]) => void;
 }
 
-const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
+const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
   const [showChest, setShowChest] = useState(false)
   const [foundChest, setFoundChest] = useState<Chest>(chests[0])
+  const [tonConnectUI, setOptions] = useTonConnectUI();
 
   const handleOverlayClick = () => {
     setTaskOpened(false);
@@ -149,7 +153,12 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
     event.stopPropagation();
   };
 
-  const handleClaimClick = async () => {
+  useEffect(() => {
+    alert("Show chest changed: " + showChest)
+  }, [showChest])
+
+  const handleClaimClick = async (event: React.MouseEvent) => {
+    event.stopPropagation();
     setLoading(true);
     var x = getRandomNumber(1,100000)
     var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
@@ -162,7 +171,9 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
         const data = await response.json();
     
         if (data.ok && (data.result.status === 'member' || data.result.status === 'administrator' || data.result.status === 'creator')) {
+          alert("Setting showchast to true")
           setShowChest(true)
+          alert("Show chest updated")
           setScoreCallback(cs, score + foundChest!!.score)
           setScore(score + foundChest!!.score)
           setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
@@ -171,7 +182,6 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
           updatedTasks[item.id] = true
           setTasksCallback(cs, updatedTasks)
           setTasks(updatedTasks)
-          setTaskOpened(false)
           setLoading(false)
         } else {
           setLoading(false)
@@ -183,6 +193,24 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
         setErrorClaiming(true)
         return false;
       }
+    } else if(item.type === 'walletConnect'){
+      if(tonConnectUI.connected === true){
+        alert("Setting showchast to true")
+        setShowChest(true)
+        alert("Show chest updated")
+        setScoreCallback(cs, score + foundChest!!.score)
+        setScore(score + foundChest!!.score)
+        setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
+        setAppleScore(appleScore + foundChest!!.appleScore)
+        const updatedTasks = [...tasks];
+        updatedTasks[item.id] = true
+        setTasksCallback(cs, updatedTasks)
+        setTasks(updatedTasks)
+        setLoading(false)
+      } else {
+        setLoading(false)
+        setErrorClaiming(true)
+      }
     }
   }
 
@@ -191,7 +219,11 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ item, key, score, setScore, apple
     updatedClaimableTasks[item.id] = true
     setClaimableCallback(cs, updatedClaimableTasks)
     setClaimableTasks(updatedClaimableTasks)
-    window.location.href = item.link
+    if(item.type === 'telegram'){
+      window.location.href = item.link
+    }else if(item.type === 'walletConnect'){
+      setCurrentPage(2)
+    }
   };
 
   return (
@@ -287,8 +319,7 @@ const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key
 
   return (
     <>  
-        {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
-        {!showChest && <div className="modal-overlay" onClick={handleOverlayClick} >
+        <div className="modal-overlay" onClick={handleOverlayClick} >
           <div  className="modal-box" onClick={handlePopUpClick}>
             <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
             <div className='popup-content'>
@@ -330,7 +361,7 @@ const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key
               </div>   
             </div>
           </div>
-        </div>}
+        </div>
     </>
   );
 }
@@ -344,6 +375,10 @@ interface ChestItemProps {
 export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, setTaskOpened, foundChest }) => {
   const [imageClicked, setImageClicked] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+
+  useEffect(() => {
+    setTaskOpened(false)
+  }, [])
 
   const videoClicked = () => {
     setShowChest(false);

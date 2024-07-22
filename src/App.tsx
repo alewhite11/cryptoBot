@@ -5,7 +5,7 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getLastAccessDateCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setLastAccessDateCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback } from './db/cloudStorageFunctions';
+import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getLastAccessDateCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setClaimableCallback, setLastAccessDateCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback, setTasksCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
@@ -93,6 +93,8 @@ function App() {
       try {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
+          setTasksCallback(cloudStorage, [])  //Reset task state
+          setClaimableCallback(cloudStorage, []) //Reset claimable state
           getRegisteredCallback(cloudStorage, setRegistered)
           getFriendListCallback(cloudStorage,  window.Telegram.WebApp.initDataUnsafe.user.id, setFirestoreFriendList)
           getAppleScoreCallback(cloudStorage, setAppleScore)
@@ -163,12 +165,15 @@ function App() {
     if(lastAccessDate !== undefined){
       var actualDate : Date = new Date()
       setLastAccessDateCallback(cloudStorage, actualDate)
-      var elapsed = actualDate.getTime() - lastAccessDate.getTime();
+      var elapsed : number = actualDate.getTime() - lastAccessDate.getTime();
       elapsed = elapsed / (1000 * 60 * 60); // Convert milliseconds to hours
       elapsed = Math.min(elapsed, 4); // Ensure elapsed is at most 4 hours
       if(!alreadyOpenedRef.current && (plantHourlyIncome*elapsed) > 0){
         openNotification('topRight', (plantHourlyIncome*elapsed))
         alreadyOpenedRef.current = true; // Update ref
+      }
+      if (typeof elapsed !== 'number' || isNaN(elapsed) || elapsed < 0) {
+        elapsed = 0
       }
       var newPlantScore = plantScore + (plantHourlyIncome*elapsed)
       setPlantScore(newPlantScore)

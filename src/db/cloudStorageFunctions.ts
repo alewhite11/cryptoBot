@@ -232,7 +232,7 @@ export const setTasksCallback = (cs: CloudStorage | null, tasks: boolean[]): voi
 }
 
 //Retrieve tasks from the db
-export const getTasksCallback = (
+/*export const getTasksCallback = (
   cs: CloudStorage | null,
   setTasks: React.Dispatch<React.SetStateAction<boolean[]>>,
   setDailyStreak: React.Dispatch<React.SetStateAction<number>>
@@ -251,7 +251,7 @@ export const getTasksCallback = (
            nextDay.getDate() === date2.getDate();
   }
 
-  var dailyLoginTask : boolean = true
+  var dailyLoginTask : boolean = false
 
   cs?.getItem("lastDailyLogin", (error: any, value: string | undefined) => {
     if(error){
@@ -262,12 +262,15 @@ export const getTasksCallback = (
       var lastDailyLoginDate : Date = new Date(value) //Contained last Claimed daily login date
       var currentDate : Date = new Date()
 
+      alert("Last daily claim: " + lastDailyLoginDate + ", current date: " + currentDate)
+
       if (isSameDay(lastDailyLoginDate, currentDate)){
         //Set daily login to true, already completed
         dailyLoginTask = true
+        alert("Is same date")
       }else{
+        alert("Not the same date")
         //Not same day
-        dailyLoginTask = false //Set daily login to false, to be completed
         if(isNextDay(lastDailyLoginDate, currentDate)){
           //Increase streak
           cs?.getItem("dailyLoginStreak", (error: any, value: string | undefined) => {
@@ -277,18 +280,16 @@ export const getTasksCallback = (
 
             if (value !== undefined && !isNaN(parseInt(value, 10))) {
               // Update state
-              var dailyStreak = parseInt(value, 10) + 1
+              var dailyStreak = parseInt(value, 10)
+              alert("Is next date, new streak: "+ dailyStreak)
               setDailyStreak(dailyStreak);
 
-              cs?.setItem("dailyLoginStreak", dailyStreak.toString(), (error: any, stored: boolean) => {
-                if(error){
-                    return;
-                }
-              });
             }else{
               //Restart streak
               var dailyStreak = 1
               setDailyStreak(dailyStreak);
+
+              alert("not same date, new streak: " + dailyStreak)
 
               cs?.setItem("dailyLoginStreak", dailyStreak.toString(), (error: any, stored: boolean) => {
                 if(error){
@@ -301,6 +302,8 @@ export const getTasksCallback = (
           //Restart streak
           var dailyStreak = 1
           setDailyStreak(dailyStreak);
+
+          alert("First date, streak set to: " + dailyStreak)
 
           cs?.setItem("dailyLoginStreak", dailyStreak.toString(), (error: any, stored: boolean) => {
             if(error){
@@ -335,6 +338,8 @@ export const getTasksCallback = (
             const parsedTasks: boolean[] = JSON.parse(value);
             parsedTasks[1] = dailyLoginTask //Set dailyTask status
 
+            alert("Task with id 1 equals to: " + parsedTasks[1])
+
             // Update state with fetched booleans
             setTasks(parsedTasks);
         } catch (parseError) {
@@ -346,18 +351,143 @@ export const getTasksCallback = (
       setTasks([])
     }
   });
+};*/
+
+export const getTasksCallback = (
+  cs: CloudStorage | null,
+  setTasks: React.Dispatch<React.SetStateAction<boolean[]>>,
+  setDailyStreak: React.Dispatch<React.SetStateAction<number>>
+): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  function isNextDay(date1: Date, date2: Date): boolean {
+    const nextDay = new Date(date1);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    return nextDay.getFullYear() === date2.getFullYear() &&
+           nextDay.getMonth() === date2.getMonth() &&
+           nextDay.getDate() === date2.getDate();
+  }
+
+  function getItemAsync(key: string): Promise<string | undefined> {
+    return new Promise((resolve, reject) => {
+      cs?.getItem(key, (error: any, value: string | undefined) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(value);
+        }
+      });
+    });
+  }
+
+  function setItemAsync(key: string, value: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      cs?.setItem(key, value, (error: any, stored: boolean) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  let dailyLoginTask = false;
+
+  getItemAsync("lastDailyLogin")
+    .then((value) => {
+      if (value) {
+        const lastDailyLoginDate = new Date(value);
+        const currentDate = new Date();
+
+        if (isSameDay(lastDailyLoginDate, currentDate)) {
+          dailyLoginTask = true;
+          return Promise.resolve();
+        } else {
+          if (isNextDay(lastDailyLoginDate, currentDate)) {
+            return getItemAsync("dailyLoginStreak")
+              .then((streakValue) => {
+                let dailyStreak = 1;
+                if (streakValue !== undefined && !isNaN(parseInt(streakValue, 10))) {
+                  dailyStreak = parseInt(streakValue, 10);
+                }
+                setDailyStreak(dailyStreak);
+                return setItemAsync("dailyLoginStreak", dailyStreak.toString());
+              });
+          } else {
+            const dailyStreak = 1;
+            setDailyStreak(dailyStreak);
+            return setItemAsync("dailyLoginStreak", dailyStreak.toString());
+          }
+        }
+      } else {
+        dailyLoginTask = false;
+        const dailyStreak = 1;
+        setDailyStreak(dailyStreak);
+        return setItemAsync("dailyLoginStreak", dailyStreak.toString());
+      }
+    })
+    .then(() => {
+      return getItemAsync("tasks");
+    })
+    .then((value) => {
+      if (value) {
+        try {
+          const parsedTasks: boolean[] = JSON.parse(value);
+          parsedTasks[1] = dailyLoginTask;
+          setTasks(parsedTasks);
+        } catch (parseError) {
+          console.error("Error parsing fields JSON:", parseError);
+        }
+      } else {
+        setTasks([]);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      // Handle error (e.g., show error message)
+    });
 };
+
 
 export const setLastDailyClaimCallback = (cs: CloudStorage | null, lastDailyClaim: Date): void => {
   if (!isCloudStorageAvailable(cs)) {
     return;
   }
-
   cs?.setItem("lastDailyLogin", lastDailyClaim.toISOString(), (error: any, stored: boolean) => {
     if(error){
         return;
     }
-});
+  });
+
+  cs?.getItem("dailyLoginStreak", (error: any, value: string | undefined) => {
+    if(error){
+      return;
+    }
+
+    if (value !== undefined && !isNaN(parseInt(value, 10))) {
+      // Update state
+      var dailyStreak = parseInt(value, 10) + 1
+
+      cs?.setItem("dailyLoginStreak", dailyStreak.toString(), (error: any, stored: boolean) => {
+        if(error){
+          return;
+        }
+      });
+    }else{
+      //Restart streak
+      var dailyStreak = 1
+
+      cs?.setItem("dailyLoginStreak", dailyStreak.toString(), (error: any, stored: boolean) => {
+        if(error){
+          return;
+        }
+      });
+    }
+  })
 }
 
 //Save tasks data into db
@@ -381,9 +511,6 @@ export const getClaimableCallback = (
   if (!isCloudStorageAvailable(cs)) {
       return;
   }
-
-  //setClaimableTasks([])
-  //cs?.setItem("claimTask", JSON.stringify([]))
 
   cs?.getItem("claimTask", (error: any, value: string | undefined) => {
       if (error) {

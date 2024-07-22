@@ -219,8 +219,8 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
           {item.reward >= 1000 && <span className="item-reward" style={{ fontFamily: 'Jura, sans-serif' }}>{item.reward/1000}k</span>}
         </div>
       </div>
-      {isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && <button className="item-button" onClick={() => {setShopPopupOpened(true)}}>Plant</button>}
-      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && <button className="item-button-disabled" disabled>Plant</button>}
+      {(isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) || index === 0) && <button className="item-button" onClick={() => {setShopPopupOpened(true)}}>Plant</button>}
+      {!isVegetablePlantedEnough(plantedVegetables, index > 0 ? vegetables[index - 1].name : item.name) && index !== 0 && <button className="item-button-disabled" disabled>Plant</button>}
     </div>
     {shopPopupOpened && <ShopPopUp item={item} handlePlantClick={handlePlantClick} handlePlantTonClick={handlePlantTonClick} setShopPopupOpened={setShopPopupOpened} score={score} errorPlanting={errorPlanting} setErrorPlanting={setErrorPlanting}/>}
     </>
