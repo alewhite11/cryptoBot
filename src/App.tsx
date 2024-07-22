@@ -93,8 +93,6 @@ function App() {
       try {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
-          setTasksCallback(cloudStorage, [])  //Reset task state
-          setClaimableCallback(cloudStorage, []) //Reset claimable state
           getRegisteredCallback(cloudStorage, setRegistered)
           getFriendListCallback(cloudStorage,  window.Telegram.WebApp.initDataUnsafe.user.id, setFirestoreFriendList)
           getAppleScoreCallback(cloudStorage, setAppleScore)

@@ -92,6 +92,8 @@ interface TaskItemProps {
 
 const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [taskOpened, setTaskOpened] = useState<boolean>(false)
+  const [showChest, setShowChest] = useState(false)
+  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
   
   const handleTaskClick = () => {
     setTaskOpened(true)
@@ -99,6 +101,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, 
 
   return (
     <>
+    {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
+    {!showChest && 
     <div className="task-item"  onClick={handleTaskClick}>
       <div className="task-image">
         <img src={`${item.image}`} alt={"task"} />
@@ -114,10 +118,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, 
       <div className='task-image'>
         <DoneOutlineIcon style={{paddingRight: '10px'}}/>
       </div>}
-    </div>
-    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    </div>}
+    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp setShowChest={setShowChest}  setFoundChest={setFoundChest} setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
     {(taskOpened && tasks[item.id] !== true && item.type === 'dailyTask') && <DailyTaskPopUp dailyStreak={dailyStreak} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} />}
-
     </>
   );
 };
@@ -136,13 +139,13 @@ interface TaskPopUpProps {
   setTasks: (tasks: boolean[]) => void;
   claimableTasks: boolean[];
   setClaimableTasks: (tasks: boolean[]) => void;
+  setShowChest: (show: boolean) => void;
+  setFoundChest: (chest: Chest) => void;
 }
 
-const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
+const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
-  const [showChest, setShowChest] = useState(false)
-  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
   const handleOverlayClick = () => {
@@ -219,8 +222,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score,
 
   return (
     <>  
-        {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
-        {!showChest && <div className="modal-overlay" onClick={handleOverlayClick} >
+        <div className="modal-overlay" onClick={handleOverlayClick} >
           <div  className="modal-box" onClick={handlePopUpClick}>
             <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
             <div className='popup-content'>
@@ -240,7 +242,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setCurrentPage, item, key, score,
               {errorClaiming && <p style={{color: 'red', fontWeight: 'bold'}}>Task not completed, please retry!</p>}
             </div>
           </div>
-        </div>}
+        </div>
     </>
   );
 }
