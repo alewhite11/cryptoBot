@@ -226,10 +226,9 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
             <button className="main-popup-close-button" onClick={handleOverlayClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
             <div className='popup-content'>
               <div className='popup-title'>{item.text}</div>
-              <div className='task-reward'>
-                <img className='task-money-icon' src={moneyImg} alt={"money"}/>                
+              <div className='task-reward'>               
                 <div className='task-reward-text'>
-                  <p>You receive {item.revenue}</p>
+                  <p>You will receive a chest containing one random prize!</p>
                 </div>
               </div>
               <div className='task-warning'>

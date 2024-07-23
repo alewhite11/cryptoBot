@@ -27,7 +27,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
   const [foundChest, setFoundChest] = useState<Chest>(chests[0])
 
   const handleInviteClick = () => {
-    window.location.href = 'https://t.me/share/url?url=https://t.me/cryptopvtmagbot/CryptoPvtMag?startapp=' + window.Telegram.WebApp.initDataUnsafe.user.id
+    window.location.href = 'https://t.me/share/url?url=https://t.me/plant_token_bot/Plant?startapp=' + window.Telegram.WebApp.initDataUnsafe.user.id
   };
 
   return (
