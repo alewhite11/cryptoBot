@@ -105,9 +105,9 @@ function App() {
           getClaimableCallback(cloudStorage, setClaimableTasks)
           getPlantedVegetablesCallback(cloudStorage, setPlantedVegetables)
           getFieldsCallback(cloudStorage, setFields, setDataLoaded);
-          loadAssets(() => {
+          /*loadAssets(() => {
             setImagesLoaded(true);
-          })
+          })*/
         };
     
         fetchData();

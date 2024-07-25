@@ -29,7 +29,6 @@ import tomatoGif from './../../gif/tomato.gif'
 import asparagusGif from './../../gif/asparagus.gif'
 import courgetteGif from './../../gif/courgette.gif'
 import spinachGif from './../../gif/spinach.gif'
-import appleGif from './../../gif/apple.gif'
 import tonIcon from './../../img/invitePage/ton.png'
 import { handleTransaction } from '../../db/transactions';
 import { useTonConnectUI } from '@tonconnect/ui-react';
@@ -52,7 +51,7 @@ const vegetableImages: { [key: string]: string } = {
 
 const vegetableGifs: { [key: string]: string } = {
   Tomato: tomatoGif,
-  Apple: appleGif,
+  Apple: appleImg,
   Asparagus: asparagusGif,
   Carrot: carrotGif,
   Cherry: cherryImg,

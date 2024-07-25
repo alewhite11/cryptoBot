@@ -40,7 +40,6 @@ import woodenBarShopImg from './../img/shopItems/woodenBar.png'
 import arrowTaskImg from './../img/taskPage/arrow.png'
 import bachecaBgTaskImg from './../img/taskPage/bachecaBg.png'
 import telegramTaskImg from './../img/taskPage/telegram.png'
-import appleGif from './../gif/apple.gif'
 import asparagusGif from './../gif/asparagus.gif'
 import carrotGif from './../gif/carrot.gif'
 import courgetteGif from './../gif/courgette.gif'
@@ -68,7 +67,7 @@ export async function loadAssets(callback: () => void): Promise<void> {
     carrotShopImg, cherryShopImg, courgetteShopImg, dollarShopImg, hourglassShopImg,
     lettuceShopImg, orangeShopImg, pearShopImg, pepperShopImg, radishShopImg,
     spinachShopImg, tabButtonsShopImg, tomatoShopImg, woodenBarShopImg,
-    arrowTaskImg, bachecaBgTaskImg, telegramTaskImg, appleGif, asparagusGif,
+    arrowTaskImg, bachecaBgTaskImg, telegramTaskImg, asparagusGif,
     carrotGif, courgetteGif, pepperGif, radishGif, saladGif, spinachGif, tomatoGif
   ];
 

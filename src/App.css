@@ -1218,84 +1218,6 @@ button.next {
   object-fit: cover;
 }
 
-/* Initial tutorial */
-.Tutorial-component {
-  background-image: url(img/mainBg.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; /* Remove quotes from 'cover' */
-  height: 100vh;
-  width: 100%;
-  display: flex; /* Add flex display to center content */
-  flex-direction: column; /* Set flex direction to column */
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Center text */
-}
-
-.Tutorial-slider {
-  position: relative;
-  height: 80%;
-  width: 90%;
-  border-radius: 1rem;
-  background-color: #b10808;
-  align-content: center;
-  display: block;
-}
-
-.tutorial-page-1 {
-  background-image: url(img/tutorial/tutorial1.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; /* Remove quotes from 'cover' */
-  position: absolute;
-  height: calc(var(--tg-viewport-height)*0.7);
-  width: calc(var(--tg-viewport-width)*0.7);
-  display: flex; /* Add flex display to center content */
-  flex-direction: column; /* Set flex direction to column */
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Center text */
-}
-
-.tutorial-page-2 {
-  background-image: url(img/tutorial/tutorial2.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; /* Remove quotes from 'cover' */
-  height: 100%;
-  width: 100%;
-  display: flex; /* Add flex display to center content */
-  flex-direction: column; /* Set flex direction to column */
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Center text */
-}
-
-.tutorial-page-3 {
-  background-image: url(img/tutorial/tutorial3.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; /* Remove quotes from 'cover' */
-  height: 100%;
-  width: 100%;
-  display: flex; /* Add flex display to center content */
-  flex-direction: column; /* Set flex direction to column */
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Center text */
-}
-
-.tutorial-page-4 {
-  background-image: url(img/tutorial/tutorial4.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; /* Remove quotes from 'cover' */
-  height: 100%;
-  width: 100%;
-  display: flex; /* Add flex display to center content */
-  flex-direction: column; /* Set flex direction to column */
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Center text */
-}
-
-
 /* Plant page */
 .plant-top-section {
   background-image: url(img/plantPage/betullaBg.jpg);
@@ -1482,7 +1404,7 @@ button.next {
   outline: none;
 }
 
-/* New carusel */
+/* Tutorial page */
 .center-container {
   display: flex;
   justify-content: center;
