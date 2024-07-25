@@ -38,7 +38,34 @@ const InitialTutorial: React.FC<TutorialProps> = ({ setRegistered }) => {
             className="carousel-wrapper"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
-            {images.map((image, index) => (
+            <div className="carousel-item" key={0}>
+              <p style={{color: 'white', textAlign: 'left', fontSize: '25px', fontWeight: 'bold', paddingTop: '30px', paddingLeft: '20px'}}>Welcome to PLANT, a community-driven project</p>
+              <div className='carousel-back-item-part'>
+                <div className='carousel-back-item-text'>
+                  <p>Choose your plant in the shop and claim when ready</p>
+                </div>
+                <img className="carousel-back-item-image" src={t1} alt={`Slide`} />
+              </div>
+            </div>
+            <div className="carousel-item" key={1}>
+              <p style={{color: 'white', textAlign: 'left', fontSize: '25px', fontWeight: 'bold', paddingTop: '30px', paddingLeft: '20px'}}>Earn coins to expand your land and purchase more profitable plants</p>
+              <img style={{alignSelf: 'end', width: '50%', padding: '10px'}} src={t2} alt={`Slide`} />
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+                <p style={{flex: '20%', textAlign: 'right', color: 'black', fontWeight: 'bold', fontSize: '20px'}}>TIP:</p>
+                <p style={{flex: '80%', paddingLeft: '10px',color: 'white', fontSize: '20px'}}>Log in every day and use the TASK section: this will speed up your progress</p>
+              </div>    
+            </div>
+            <div className="carousel-item" key={2}>
+              <p style={{color: 'white', textAlign: 'left', fontSize: '25px', fontWeight: 'bold', paddingTop: '30px', paddingLeft: '20px'}}>The more you plant, the more apples you get</p>
+              <img style={{alignSelf: 'start', width: '50%', padding: '10px'}} src={t3} alt={`Slide`} />
+              <p style={{color: 'white', textAlign: 'left', fontSize: '20px', fontWeight: 'bold', paddingLeft: '20px'}}>You can purchase tools with apples and earn $PLANT tokens passively</p>
+            </div>
+            <div className="carousel-item" key={3}>
+              <p style={{color: 'white', textAlign: 'left', fontSize: '25px', fontWeight: 'bold', paddingTop: '30px', paddingLeft: '20px'}}>PLANT wants to make an impact in the real world. Partecipate in surveys and guide the evolution of the project</p>
+              <img style={{alignSelf: 'center', width: '30%', padding: '10px'}} src={t4} alt={`Slide`} />
+              <p style={{color: 'white', textAlign: 'left', fontSize: '20px', paddingLeft: '20px'}}>Don't forget to invite your friends! #BUILD</p>
+            </div>
+            {/*images.map((image, index) => (
               <div className="carousel-item" key={index}>
                 <img className="carousel-image" src={image} alt={`Slide ${index}`} />
                 {index === images.length - 1 && (
@@ -47,7 +74,7 @@ const InitialTutorial: React.FC<TutorialProps> = ({ setRegistered }) => {
                   </button>
                 )}
               </div>
-            ))}
+            ))*/}
           </div>
           {/* Conditionally render Previous button */}
           {currentIndex > 0 && (
