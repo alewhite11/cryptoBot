@@ -10,14 +10,15 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { setAppleScoreCallback, setClaimableCallback, setLastDailyClaimCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
 import CircularProgress from '@mui/material/CircularProgress';
 import chestImg from './../../img/chests/closed_Chest.jpg'
-import chestVid from './../../video/chest_opening/Apple.mp4'
+import chestOpening from './../../video/chest_opening/generalChestOpening.mp4'
 import { chests } from '../../db/chests';
 import { Chest } from '../../interfaces/Chest';
 import tonIcon from './../../img/invitePage/ton.png'
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { dailyCheckIn } from '../../db/tonCosts';
 import { handleTransaction } from '../../db/transactions';
-import { dailyPrices } from '../../db/dailyClaimPrices'
+import { dailyPrices } from '../../db/dailyClaimPrices';
+import { Button, Input, Space } from 'antd';
 
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
@@ -36,7 +37,6 @@ interface TasksTabProps {
 }
 
 const TasksTab: React.FC<TasksTabProps> = ({ setCurrentPage, dailyStreak, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
-  const [activeTab, setActiveTab] = useState(0);
   return (
     <div className="App">
       <header className="App-header">
@@ -44,29 +44,10 @@ const TasksTab: React.FC<TasksTabProps> = ({ setCurrentPage, dailyStreak, score,
         <div style={{marginTop: '65px'}}></div> 
         {/*<h1 className='title'>Tasks:</h1>*/}
         <div className='bacheca'>
-          <div className="tab-buttons">
-            <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Daily</button>
-            <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>One time</button>
-            <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>Combo</button>
-          </div>
           <div className="task-items">
-            {activeTab === 0 && (
-              <>
-                {dailyTasks.map((item, index) => (
+            {dailyTasks.map((item, index) => (
                   <TaskItem setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              
-              </>
-            )}
-            {activeTab === 1 && (
-              <>
-              
-              </>
-            )}
-            {activeTab === 2 && (
-              <>
-              
-              </>
-            )}
           </div>
         </div>
       </header>
@@ -146,6 +127,8 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
   const [tonConnectUI, setOptions] = useTonConnectUI();
+  const [secretValue, setSecretValue] = useState('');
+  const [wrongSecret, setWrongSecret] = useState(false)
 
   const handleOverlayClick = () => {
     setTaskOpened(false);
@@ -204,6 +187,24 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
         setLoading(false)
         setErrorClaiming(true)
       }
+    } else if(item.type === 'youtube'){
+      if(secretValue === item.channelId){
+        //User inserted right secret value
+        setShowChest(true)
+        setScoreCallback(cs, score + foundChest!!.score)
+        setScore(score + foundChest!!.score)
+        setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
+        setAppleScore(appleScore + foundChest!!.appleScore)
+        const updatedTasks = [...tasks];
+        updatedTasks[item.id] = true
+        setTasksCallback(cs, updatedTasks)
+        setTasks(updatedTasks)
+        setLoading(false)
+      }else{
+        //Wrong secret
+        setLoading(false)
+        setWrongSecret(true)
+      }
     }
   }
 
@@ -213,9 +214,11 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
     setClaimableCallback(cs, updatedClaimableTasks)
     setClaimableTasks(updatedClaimableTasks)
     if(item.type === 'telegram'){
-      window.location.href = item.link
+      window.Telegram.WebApp.openTelegramLink(item.link)
     }else if(item.type === 'walletConnect'){
       setCurrentPage(2)
+    }else if(item.type === 'youtube'){
+      window.Telegram.WebApp.openLink(item.link)
     }
   };
 
@@ -235,9 +238,17 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
                 <p>NOTE: if you cheat, you will be charged double!!</p>
               </div>
               <button className='main-taskpopup-button' onClick={handleGoClick}>GO</button>
-              {claimableTasks[item.id] !== true && <button className='main-taskpopup-button-disabled' onClick={handleClaimClick} disabled>CLAIM</button>}
-              {claimableTasks[item.id] === true && <button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</button>}
+              {item.type === 'youtube' && <>
+                <Space direction="horizontal">
+                  <Input placeholder="Enter the secret word" value={secretValue} onChange={(e) => {setSecretValue(e.target.value);}} />
+                  {claimableTasks[item.id] !== true && <Button className='main-taskpopup-button-disabled'>Claim</Button>}
+                  {claimableTasks[item.id] === true && <Button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</Button>}
+                </Space>
+              </>}
+              {item.type !== 'youtube' && claimableTasks[item.id] !== true && <button className='main-taskpopup-button-disabled' onClick={handleClaimClick} disabled>CLAIM</button>}
+              {item.type !== 'youtube' && claimableTasks[item.id] === true && <button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</button>}
               {errorClaiming && <p style={{color: 'red', fontWeight: 'bold'}}>Task not completed, please retry!</p>}
+              {wrongSecret && <p style={{color: 'red', fontWeight: 'bold'}}>Wrong secret, please retry!</p>}
             </div>
           </div>
         </div>
@@ -366,6 +377,7 @@ interface ChestItemProps {
 export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, setTaskOpened, foundChest }) => {
   const [imageClicked, setImageClicked] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
 
   const videoClicked = () => {
     setShowChest(false);
@@ -374,19 +386,24 @@ export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, setTaskOpene
 
   return (
     <div className='chest-container'>
-      {!imageClicked && (
+      {!imageClicked &&(
         <div className='chest-img'>
-          <img className='chest-img' src={foundChest.image} alt="chest" onClick={() => setImageClicked(true)}/>
+          <img className='chest-img' src={chestImg} alt="chest" onClick={() => setImageClicked(true)}/>
         </div>
       )}
-      {imageClicked && !videoLoaded && (
+      {imageClicked && !videoLoaded &&(
         <div className='chest-img'>
-          <img className='chest-img' src={foundChest.image} alt="chest" />
+          <img className='chest-img' style={{zIndex: '10003'}} src={chestImg} alt="chest" />
         </div>
       )}
-      {imageClicked && (
+      {imageClicked && !videoEnded &&(
         <div className='chest-vid'>
-          <video className='chest-video' src={foundChest.video} onClick={videoClicked} onCanPlay={() => setVideoLoaded(true)} autoPlay muted style={{ display: videoLoaded ? 'block' : 'none' }}/>
+          <video className='chest-video' style={{zIndex: '10002'}} src={chestOpening} onCanPlay={() => setVideoLoaded(true)} onEnded={() => setVideoEnded(true)} autoPlay muted/>
+        </div>
+      )}
+      {imageClicked &&(
+        <div className='chest-img'>
+          <img className='chest-img' style={{zIndex: '10000'}} src={foundChest.image} onClick={videoClicked} alt="chest" />
         </div>
       )}
     </div>

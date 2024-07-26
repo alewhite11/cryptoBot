@@ -9,6 +9,8 @@ import { chests } from '../../db/chests';
 import { CircularProgress } from '@mui/material';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import { setAppleScoreCallback, setScoreCallback, updateFriendListCallback } from '../../db/cloudStorageFunctions';
+import chestImg from './../../img/chests/closed_Chest.jpg'
+import chestOpening from './../../video/chest_opening/generalChestOpening.mp4'
 
 interface InviteTabProps {
   friendList : Friend[];
@@ -125,6 +127,8 @@ interface ChestItemProps {
 export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, foundChest }) => {
   const [imageClicked, setImageClicked] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+
 
   const videoClicked = () => {
     setShowChest(false);
@@ -132,19 +136,24 @@ export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, foundChest }
 
   return (
     <div className='chest-container'>
-      {!imageClicked && (
+      {!imageClicked &&(
         <div className='chest-img'>
-          <img className='chest-img' src={foundChest.image} alt="chest" onClick={() => setImageClicked(true)}/>
+          <img className='chest-img' src={chestImg} alt="chest" onClick={() => setImageClicked(true)}/>
         </div>
       )}
-      {imageClicked && !videoLoaded && (
+      {imageClicked && !videoLoaded &&(
         <div className='chest-img'>
-          <img className='chest-img' src={foundChest.image} alt="chest" />
+          <img className='chest-img' style={{zIndex: '10003'}} src={chestImg} alt="chest" />
         </div>
       )}
-      {imageClicked && (
+      {imageClicked && !videoEnded &&(
         <div className='chest-vid'>
-          <video className='chest-video' src={foundChest.video} onClick={videoClicked} onCanPlay={() => setVideoLoaded(true)} autoPlay muted style={{ display: videoLoaded ? 'block' : 'none' }}/>
+          <video className='chest-video' style={{zIndex: '10002'}} src={chestOpening} onCanPlay={() => setVideoLoaded(true)} onEnded={() => setVideoEnded(true)} autoPlay muted/>
+        </div>
+      )}
+      {imageClicked &&(
+        <div className='chest-img'>
+          <img className='chest-img' style={{zIndex: '10000'}} src={foundChest.image} onClick={videoClicked} alt="chest" />
         </div>
       )}
     </div>

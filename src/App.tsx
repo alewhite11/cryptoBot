@@ -73,6 +73,7 @@ function App() {
     window.Telegram.WebApp.expand()
 
     //window.Telegram.WebApp.enableClosingConfirmation()
+    window.Telegram.WebApp.disableVerticalSwipes()
 
     const webappinit: WebAppInitData = window.Telegram.WebApp.initDataUnsafe;
     const u: WebAppUser | undefined = webappinit.user;

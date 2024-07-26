@@ -4,5 +4,4 @@ export interface Chest {
     minProb: number;
     maxProb: number;
     image: string;
-    video: string;
 }
