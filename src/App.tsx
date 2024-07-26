@@ -19,6 +19,7 @@ import type { NotificationArgsProps } from 'antd';
 import React from 'react';
 import { RiPlantFill } from "react-icons/ri";
 import NumberTicker from './components/utils/NumberTicker';
+import DesktopPage from './components/DesktopPage';
 
 
 declare global {
@@ -214,7 +215,9 @@ function App() {
   };
 
   return (
-    <Context.Provider value={contextValue}>
+    <>
+    {window.Telegram.WebApp.platform === 'tdesktop' && <DesktopPage />}
+    {window.Telegram.WebApp.platform !== 'tdesktop' && <Context.Provider value={contextValue}>
       {contextHolder}
     {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
     {!loading && (registered === 2) &&
@@ -250,7 +253,8 @@ function App() {
     {loading &&
     <LoadingPage />
     }
-    </Context.Provider>
+    </Context.Provider>}
+    </>
   );
 }
 
