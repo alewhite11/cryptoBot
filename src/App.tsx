@@ -216,8 +216,8 @@ function App() {
 
   return (
     <>
-    {window.Telegram.WebApp.platform === 'tdesktop' && <DesktopPage />}
-    {window.Telegram.WebApp.platform !== 'tdesktop' && <Context.Provider value={contextValue}>
+    {!(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <DesktopPage />}
+    {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <Context.Provider value={contextValue}>
       {contextHolder}
     {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
     {!loading && (registered === 2) &&

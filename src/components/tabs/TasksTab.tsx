@@ -45,7 +45,17 @@ const TasksTab: React.FC<TasksTabProps> = ({ setCurrentPage, dailyStreak, score,
         {/*<h1 className='title'>Tasks:</h1>*/}
         <div className='bacheca'>
           <div className="task-items">
-            {dailyTasks.map((item, index) => (
+            {dailyTasks.slice().sort((a, b) => {
+              const aTask = tasks[a.id];
+              const bTask = tasks[b.id];
+      
+              // If `tasks[a.id]` is false and `tasks[b.id]` is true, place `a` before `b`
+              if (aTask === false && bTask === true) return -1;
+              // If `tasks[a.id]` is true and `tasks[b.id]` is false, place `b` before `a`
+              if (aTask === true && bTask === false) return 1;
+              // If both are the same, maintain original order
+              return 0;
+            }).map((item, index) => (
                   <TaskItem setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              
           </div>
@@ -129,6 +139,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
   const [tonConnectUI, setOptions] = useTonConnectUI();
   const [secretValue, setSecretValue] = useState('');
   const [wrongSecret, setWrongSecret] = useState(false)
+  const [claimed, setClaimed] = useState(false) //Used to make users double claim
 
   const handleOverlayClick = () => {
     setTaskOpened(false);
@@ -205,6 +216,23 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
         setLoading(false)
         setWrongSecret(true)
       }
+    } else if(item.type === 'openAndClaim'){
+      if(!claimed){
+        setClaimed(true)
+        setLoading(false)
+        setErrorClaiming(true)
+      }else{
+        setShowChest(true)
+        setScoreCallback(cs, score + foundChest!!.score)
+        setScore(score + foundChest!!.score)
+        setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
+        setAppleScore(appleScore + foundChest!!.appleScore)
+        const updatedTasks = [...tasks];
+        updatedTasks[item.id] = true
+        setTasksCallback(cs, updatedTasks)
+        setTasks(updatedTasks)
+        setLoading(false)
+      }
     }
   }
 
@@ -218,6 +246,8 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
     }else if(item.type === 'walletConnect'){
       setCurrentPage(2)
     }else if(item.type === 'youtube'){
+      window.Telegram.WebApp.openLink(item.link)
+    }else if(item.type === 'openAndClaim'){
       window.Telegram.WebApp.openLink(item.link)
     }
   };

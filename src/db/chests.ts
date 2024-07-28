@@ -29,3 +29,10 @@ export const chests : Chest[] = [
     {score: 0, appleScore: 3, minProb: 95500, maxProb: 99999, image: Apples3Img},
     {score: 0, appleScore: 50, minProb: 100000, maxProb: 100000, image: Apples50Img},
   ];
+
+export const inviteChests : Chest[] = [
+  {score: 0, appleScore: 1, minProb: 1, maxProb: 5000, image: AppleImg},
+  {score: 0, appleScore: 2, minProb: 5001, maxProb: 8000, image: Apples2Img},
+  {score: 0, appleScore: 3, minProb: 8001, maxProb: 9999, image: Apples3Img},
+  {score: 0, appleScore: 50, minProb: 10000, maxProb: 10000, image: Apples50Img},
+];

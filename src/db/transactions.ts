@@ -1,6 +1,6 @@
 import { TonConnectUI } from "@tonconnect/ui-react";
 
-const plantAddress = "UQD5Ow14GKssj8fAiq2NbyTNIftXfqq15D0S6Nf0QU15sUnQ"; 
+const plantAddress = "UQBudNvlUkEK9KEQ7g-vwvFVaKMx1eFsoWCnk4JBRF8ICl02"; 
 
 export const handleTransaction = async (tonConnectUI: TonConnectUI, amount: string, onSuccess: () => void) => {
     const transaction = {

@@ -5,7 +5,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Friend } from './../../interfaces/Friend'
 import { SlPresent } from "react-icons/sl";
 import { Chest } from '../../interfaces/Chest';
-import { chests } from '../../db/chests';
+import { inviteChests } from '../../db/chests';
 import { CircularProgress } from '@mui/material';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import { setAppleScoreCallback, setScoreCallback, updateFriendListCallback } from '../../db/cloudStorageFunctions';
@@ -26,7 +26,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
   const totalFriends = friendList.length;
   const activeFriends = friendList.filter(f => f.isActive).length;
   const [showChest, setShowChest] = useState(false)
-  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
+  const [foundChest, setFoundChest] = useState<Chest>(inviteChests[0])
 
   const handleInviteClick = () => {
     window.location.href = 'https://t.me/share/url?url=https://t.me/plant_token_bot/Plant?startapp=' + window.Telegram.WebApp.initDataUnsafe.user.id
@@ -84,8 +84,8 @@ const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendL
 
   const onClaimClick = () => {
     updateFriendListCallback(cs, userId)
-    var x = getRandomNumber(1,100000)
-    var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
+    var x = getRandomNumber(1,10000)
+    var foundChest = inviteChests.find(chest => x >= chest.minProb && x <= chest.maxProb);
     setFoundChest(foundChest!!)
     setShowChest(true)
     setScoreCallback(cs, score + foundChest!!.score)
@@ -109,7 +109,7 @@ const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendL
       </div>
       <div className='friend-status'>
         {!isActive && (<>
-          <button className='claim-btn' onClick={onClaimClick}><SlPresent size={20} color="inherit"/></button>
+          <button className='claim-btn' style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} onClick={onClaimClick}><SlPresent size={20} color="inherit"/></button>
         </>)}
         {isActive && (<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
           <CheckCircleOutlineIcon className='invite-text-shadow' />
