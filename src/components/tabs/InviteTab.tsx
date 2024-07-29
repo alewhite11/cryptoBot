@@ -42,7 +42,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
         <div className='invite-page'>
           <div className='invite-dialog'>
             <h2 className='invite-title'>Invite friends</h2>
-            <p className='invite-text'>For each friend that join and unlocks the spinach vegetable, you will get a chest with random prize</p>
+            <p className='invite-text'>For each friend that join and unlocks the spinach vegetable, you will get a chest with random apple prize</p>
             <button className='invite-btn' onClick={handleInviteClick}>Invite</button>
           </div>
           <div className='friend-list'> 

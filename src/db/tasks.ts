@@ -3,6 +3,7 @@ import telegramImg from './../img/taskPage/telegram.png'
 import walletImg from './../img/taskPage/wallet.png'
 import dailyClaimImg from './../img/taskPage/dailyClaim.png'
 import youtubeImg from './../img/taskPage/youtube.png'
+import instagramImg from './../img/taskPage/instagram.png'
 
 /*
   IN YOUTUBE TASK THE CHANNELID FIELD IS USED TO STORE THE SECRET WORD
@@ -13,5 +14,5 @@ export const dailyTasks : Task[] = [
   {title: 'Daily Task',text: 'Daily Task', image: dailyClaimImg, link: '', channelId: '', type: 'dailyTask', id: 1},
   {title: 'Connect Wallet', text: 'Connect the wallet to the mini app', image: walletImg, link: '', channelId: '', type: 'walletConnect', id: 2},
   {title: 'Plant token channel',text: 'Join our youtube channel in which all updates will be shared', image: youtubeImg, link: 'https://www.youtube.com/@PlantToken', channelId: '', type: 'openAndClaim', id: 3},
-  {title: 'Plant token page',text: 'Follow our intagram page in which all updates will be shared', image: youtubeImg, link: 'https://www.instagram.com/planttoken?igsh=Zm04Y2UzeHFjZnFh', channelId: '', type: 'openAndClaim', id: 4}
+  {title: 'Plant token page',text: 'Follow our intagram page in which all updates will be shared', image: instagramImg, link: 'https://www.instagram.com/planttoken?igsh=Zm04Y2UzeHFjZnFh', channelId: '', type: 'openAndClaim', id: 4}
 ];
