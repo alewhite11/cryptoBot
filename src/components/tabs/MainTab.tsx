@@ -17,7 +17,7 @@ import radishImg from './../../img/mainPage/radish.png'
 import saladImg from './../../img/mainPage/salad.png'
 import spinachImg from './../../img/mainPage/spinach.png'
 import { Field } from '../../interfaces/Field';
-import { setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
+import { setAppleScoreCallback, setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import arrowLeft from './../../img/mainPage/arrowLeft.png'
 import arrowRight from './../../img/mainPage/arrowRight.png'
@@ -109,7 +109,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
                 <div key={index} className="slider-item">
-                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened}/>}
+                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened}/>}
                 </div>
               ))}
             </div>
@@ -134,13 +134,15 @@ interface FieldItemProps {
   index: number;
   score: number;
   setScore: (score: number) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
   cs: CloudStorage | null;
   setSelectedField: (field: Field) => void;
   setSelectedCallback: (callback: () => void) => void;
   setMainPopupOpened: (opened: boolean) => void;
 }
 
-const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
+const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, appleScore, setAppleScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
   const initialTime = Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
   const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
   const [tonConnectUI, setOptions] = useTonConnectUI();
@@ -169,6 +171,12 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
   const handleClaimClick = () => {
     if(plants.some(plant => plant.name === fields[index].vegetable)){
       //This plant has not to be removed from the field
+      if(fields[index].vegetable === 'Apple'){
+        //Increase apple score by 1
+        const newAppleScore = appleScore + 1
+        setScore(newAppleScore)
+        setAppleScoreCallback(cs, newAppleScore)
+      }
       const newField: Field = {
         vegetable: fields[index].vegetable,
         plantedAt: new Date(), // This initializes plantedAt with the current date and time
@@ -184,6 +192,8 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
       const newScore = score + plantedVegetable!!.reward
       setScore(newScore)
+
+
 
       setFieldsCallback(cs, updatedFields)
       setScoreCallback(cs, newScore)
