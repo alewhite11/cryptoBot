@@ -744,7 +744,7 @@ button.next {
   width: 90%;
   margin-bottom: 5px;
   padding-bottom: 5px;
-  height: calc(var(--tg-viewport-height)*0.56);
+  height: calc(var(--tg-viewport-height)*0.7);
   overflow-y: auto;
 }
 

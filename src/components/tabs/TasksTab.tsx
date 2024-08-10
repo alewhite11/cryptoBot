@@ -7,7 +7,7 @@ import arrowImg from './../../img/taskPage/arrow.png'
 import moneyImg from './../../img/shopItems/dollar.png'
 import appleImg from './../../img/shopItems/apple.png'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import { setAppleScoreCallback, setClaimableCallback, setLastDailyClaimCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
+import { setAppleScoreCallback, setClaimableCallback, setFieldsCallback, setLastDailyClaimCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
 import CircularProgress from '@mui/material/CircularProgress';
 import chestImg from './../../img/chests/closed_Chest.jpg'
 import chestOpening from './../../video/chest_opening/generalChestOpening.mp4'
@@ -19,6 +19,8 @@ import { dailyCheckIn } from '../../db/tonCosts';
 import { handleTransaction } from '../../db/transactions';
 import { dailyPrices } from '../../db/dailyClaimPrices';
 import { Button, Input, Space } from 'antd';
+import { Field } from '../../interfaces/Field';
+import { Friend } from '../../interfaces/Friend';
 
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
@@ -33,10 +35,14 @@ interface TasksTabProps {
   setTasks: (tasks: boolean[]) => void;
   claimableTasks: boolean[];
   setClaimableTasks: (tasks: boolean[]) => void;
-  dailyStreak: number
+  dailyStreak: number,
+  fields: Field[];
+  setFields: (fields: Field[]) => void;
+  setActiveField: (field: number) => void;
+  friendList : Friend[];
 }
 
-const TasksTab: React.FC<TasksTabProps> = ({ setCurrentPage, dailyStreak, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TasksTab: React.FC<TasksTabProps> = ({ friendList, setActiveField, fields, setFields, setCurrentPage, dailyStreak, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   return (
     <div className="App">
       <header className="App-header">
@@ -56,7 +62,7 @@ const TasksTab: React.FC<TasksTabProps> = ({ setCurrentPage, dailyStreak, score,
               // If both are the same, maintain original order
               return 0;
             }).map((item, index) => (
-                  <TaskItem setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
+                  <TaskItem friendList={friendList} setActiveField={setActiveField} setFields={setFields} fields={fields} setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              
           </div>
         </div>
@@ -79,9 +85,13 @@ interface TaskItemProps {
   claimableTasks: boolean[];
   setClaimableTasks: (tasks: boolean[]) => void;
   dailyStreak: number;
+  fields: Field[];
+  setFields: (fields: Field[]) => void;
+  setActiveField: (field: number) => void;
+  friendList : Friend[];
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ friendList, setActiveField, fields, setFields, setCurrentPage, dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [taskOpened, setTaskOpened] = useState<boolean>(false)
   const [showChest, setShowChest] = useState(false)
   const [foundChest, setFoundChest] = useState<Chest>(chests[0])
@@ -109,7 +119,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ setCurrentPage, dailyStreak, item, 
         <DoneOutlineIcon style={{paddingRight: '10px'}}/>
       </div>}
     </div>
-    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp setShowChest={setShowChest}  setFoundChest={setFoundChest} setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp friendList={friendList} setActiveField={setActiveField} setFields={setFields} fields={fields} setShowChest={setShowChest}  setFoundChest={setFoundChest} setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
     {(taskOpened && tasks[item.id] !== true && item.type === 'dailyTask') && <DailyTaskPopUp dailyStreak={dailyStreak} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} />}
     </>
   );
@@ -131,15 +141,22 @@ interface TaskPopUpProps {
   setClaimableTasks: (tasks: boolean[]) => void;
   setShowChest: (show: boolean) => void;
   setFoundChest: (chest: Chest) => void;
+  fields: Field[];
+  setFields: (fields: Field[]) => void;
+  setActiveField: (field: number) => void;
+  friendList : Friend[];
+
 }
 
-const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
+const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, fields, setFields, setShowChest, setFoundChest, setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
   const [tonConnectUI, setOptions] = useTonConnectUI();
   const [secretValue, setSecretValue] = useState('');
   const [wrongSecret, setWrongSecret] = useState(false)
   const [claimed, setClaimed] = useState(false) //Used to make users double claim
+  const [errorPlanting, setErrorPlanting] = useState(false)
+  const [errorNoFriendInivted, setErrorNoFriendInvited] = useState(false)
 
   const handleOverlayClick = () => {
     setTaskOpened(false);
@@ -233,6 +250,48 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
         setTasks(updatedTasks)
         setLoading(false)
       }
+    } else if(item.type === 'justClaim'){
+      if(item.id === 5){
+        //Get the 5k coins
+        setScoreCallback(cs, score + 5000)
+        setScore(score + 5000)
+        const updatedTasks = [...tasks];
+        updatedTasks[item.id] = true
+        setTasksCallback(cs, updatedTasks)
+        setTasks(updatedTasks)
+        setLoading(false)
+      }else if(item.id === 6){
+        //Get free apple tree
+        if(friendList.length === 0){
+          setErrorNoFriendInvited(true)
+        }else{
+          const newField : Field = {vegetable: 'Apple', plantedAt: new Date(), duration: 60*60*8}
+          const updatedFields = [...fields];
+
+          // Replace or modify the element at the specified index (key)
+          var changed = -1
+          updatedFields.forEach((field, index) => {
+            if(field.vegetable === "" && changed === -1){
+              updatedFields[index] = newField;
+              changed = index
+            }
+          });
+
+          if(changed != -1){
+            setFields(updatedFields)
+            setFieldsCallback(cs, updatedFields)
+            setCurrentPage(0) //move to fields
+            setActiveField(changed)
+            const updatedTasks = [...tasks];
+            updatedTasks[item.id] = true
+            setTasksCallback(cs, updatedTasks)
+            setTasks(updatedTasks)
+            setLoading(false)
+          }else{
+            setErrorPlanting(true)
+          }
+        }
+      }
     }
   }
 
@@ -264,10 +323,10 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
                   <p>You will receive a chest containing one random prize!</p>
                 </div>
               </div>
-              <div className='task-warning'>
+              {item.type !== 'justClaim' && <div className='task-warning'>
                 <p>NOTE: if you cheat, you will be charged double!!</p>
-              </div>
-              <button className='main-taskpopup-button' onClick={handleGoClick}>GO</button>
+              </div>}
+              {item.type !== 'justClaim' && <button className='main-taskpopup-button' onClick={handleGoClick}>GO</button>}
               {item.type === 'youtube' && <>
                 <Space direction="horizontal">
                   <Input placeholder="Enter the secret word" value={secretValue} onChange={(e) => {setSecretValue(e.target.value);}} />
@@ -275,10 +334,12 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ setShowChest, setFoundChest, setC
                   {claimableTasks[item.id] === true && <Button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</Button>}
                 </Space>
               </>}
-              {item.type !== 'youtube' && claimableTasks[item.id] !== true && <button className='main-taskpopup-button-disabled' onClick={handleClaimClick} disabled>CLAIM</button>}
-              {item.type !== 'youtube' && claimableTasks[item.id] === true && <button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</button>}
+              {item.type !== 'youtube' && claimableTasks[item.id] !== true && item.type !== 'justClaim' && <button className='main-taskpopup-button-disabled' onClick={handleClaimClick} disabled>CLAIM</button>}
+              {item.type !== 'youtube' && (claimableTasks[item.id] === true || item.type === 'justClaim') && <button className='main-taskpopup-button' onClick={handleClaimClick}>{loading ? <CircularProgress size={20} color="inherit" /> : "CLAIM"}</button>}
               {errorClaiming && <p style={{color: 'red', fontWeight: 'bold'}}>Task not completed, please retry!</p>}
               {wrongSecret && <p style={{color: 'red', fontWeight: 'bold'}}>Wrong secret, please retry!</p>}
+              {errorPlanting && <p style={{color: 'red', fontWeight: 'bold'}}>No empty pot available!</p>}
+              {errorNoFriendInivted && <p style={{color: 'red', fontWeight: 'bold'}}>No friends invited yet!</p>}
             </div>
           </div>
         </div>
