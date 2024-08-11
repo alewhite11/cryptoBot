@@ -264,6 +264,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
         //Get free apple tree
         if(friendList.length === 0){
           setErrorNoFriendInvited(true)
+          setLoading(false)
         }else{
           const newField : Field = {vegetable: 'Apple', plantedAt: new Date(), duration: 60*60*8}
           const updatedFields = [...fields];
@@ -289,6 +290,7 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
             setLoading(false)
           }else{
             setErrorPlanting(true)
+            setLoading(false)
           }
         }
       }
@@ -319,9 +321,9 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
             <div className='popup-content'>
               <div className='popup-title'>{item.text}</div>
               <div className='task-reward'>               
-                <div className='task-reward-text'>
+                {item.type !== 'justClaim' && <div className='task-reward-text'>
                   <p>You will receive a chest containing one random prize!</p>
-                </div>
+                </div>}
               </div>
               {item.type !== 'justClaim' && <div className='task-warning'>
                 <p>NOTE: if you cheat, you will be charged double!!</p>

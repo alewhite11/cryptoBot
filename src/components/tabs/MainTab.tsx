@@ -174,7 +174,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
       if(fields[index].vegetable === 'Apple'){
         //Increase apple score by 1
         const newAppleScore = appleScore + 1
-        setScore(newAppleScore)
+        setAppleScore(newAppleScore)
         setAppleScoreCallback(cs, newAppleScore)
       }
       const newField: Field = {
