@@ -55,12 +55,7 @@ const TasksTab: React.FC<TasksTabProps> = ({ friendList, setActiveField, fields,
               const aTask = tasks[a.id];
               const bTask = tasks[b.id];
       
-              // If `tasks[a.id]` is false and `tasks[b.id]` is true, place `a` before `b`
-              if (aTask === false && bTask === true) return -1;
-              // If `tasks[a.id]` is true and `tasks[b.id]` is false, place `b` before `a`
-              if (aTask === true && bTask === false) return 1;
-              // If both are the same, maintain original order
-              return 0;
+              return (aTask === bTask)? 0 : aTask? 1 : -1;
             }).map((item, index) => (
                   <TaskItem friendList={friendList} setActiveField={setActiveField} setFields={setFields} fields={fields} setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} item={item} key={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>
                 ))}              

@@ -976,6 +976,21 @@ button.next {
     1px 1px 0 #000;
 }
 
+.Loading-tip {
+  position: absolute;
+  bottom: 10px;
+  width: 90%; 
+  text-align: center;
+  color: white;
+  font-size: large;
+  font-weight: bold;
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
 .Custom-spinner {
   width: 100px;  /* Adjust size as needed */
   height: 100px; /* Adjust size as needed */

@@ -283,7 +283,8 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
     updatedFields[index] = newField
     updatedFields.push(newLockedField)    
     setFields(updatedFields)
-    setFieldsCallback(cs, updatedFields)    
+    setFieldsCallback(cs, updatedFields)  
+    setMainPopupOpened(false)  
   }
 
   return(
@@ -307,7 +308,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
         {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && !containsPlantName(fields[index].vegetable) && tonConnectUI.connected && <button className='main-plant-button-ton' onClick={handleClaimTonClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Claim</button>}
         {(timeRemaining > 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && !containsPlantName(fields[index].vegetable) && !tonConnectUI.connected && <button className='main-plant-button-disabled' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} disabled><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Claim</button>}
         {(timeRemaining == 0 && fields[index].vegetable != "" && fields[index].vegetable != "locked") && <button className='main-plant-button' onClick={handleClaimClick}>Claim</button>}
-        {(fields[index].vegetable == "locked" && score >= (2500*(2 ** index))) && <button className='main-plant-button' onClick={handleUnlockClick}>Unlock</button>}
+        {(fields[index].vegetable == "locked" && score >= (2500*(2 ** index))) && <button className='main-plant-button' onClick={() => {setSelectedCallback(() => handleUnlockClick); setSelectedField(fields[index]); setMainPopupOpened(true)}}>Unlock</button>}
         {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && tonConnectUI.connected && <button className='main-plant-button-ton' onClick={handleUnlockTonClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Unlock</button>}
         {(fields[index].vegetable == "locked" && score < (2500*(2 ** index))) && !tonConnectUI.connected && <button className='main-plant-button-disabled'  disabled style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Unlock</button>}
         {containsPlantName(fields[index].vegetable) && timeRemaining > 0 &&  <><button className='main-remove-button' onClick={() => {setSelectedCallback(() => handleRemoveClick); setSelectedField(fields[index]); setMainPopupOpened(true)}}>Remove</button>
@@ -342,7 +343,7 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
       <div className="main-modal-overlay" onClick={handleOverlayClick} >
         <div  className="main-modal-box" onClick={handlePopUpClick}>
           <button className="main-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
-          <div className='main-popup-content'>
+          {item.vegetable !== 'locked' && <div className='main-popup-content'>
             <div className='main-popup-title'>Warning</div>
             <div className='shop-reward-text'>
               <p>This action is not reversible, you will definetively remove the {item.vegetable} plant. Do you confirm the action?</p>
@@ -351,7 +352,17 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
               <button className='main-popup-remove-button' onClick={handleRemoveClick}>Remove</button>
               <button className='main-popup-plant-button' onClick={handleCancelClick}>Cancel</button>
             </div>
-          </div>           
+          </div>}  
+          {item.vegetable === 'locked' && <div className='main-popup-content'>
+            <div className='main-popup-title'>Confirm</div>
+            <div className='shop-reward-text'>
+              <p>Are you sure to purchase this item? The action cannot be undone.</p>
+            </div>
+            <div className='main-popup-buttons'>
+              <button className='main-popup-plant-button' onClick={handleRemoveClick}>Confirm</button>
+              <button className='main-popup-remove-button' onClick={handleCancelClick}>Cancel</button>
+            </div>
+          </div>}         
         </div>
       </div>
     </>
