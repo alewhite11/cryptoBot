@@ -31,4 +31,5 @@ export const dailyTasks : Task[] = [
   {title: 'Plant token page',text: 'Follow our tiktok page in which all updates will be shared', image: tiktokImg, link: 'https://www.tiktok.com/@plant_token?_t=8opZQsTuCRN&_r=1', channelId: '', type: 'openAndClaim', id: 16},
   {title: 'Like on Tiktok post',text: 'Like our tiktok post, it will take just a second!', image: tiktokImg, link: 'https://vm.tiktok.com/ZGec2eCS5/', channelId: '', type: 'openAndClaim', id: 17},
   {title: 'Like on Tiktok post',text: 'Like our tiktok post, it will take just a second!', image: tiktokImg, link: 'https://vm.tiktok.com/ZGecY3Pff/', channelId: '', type: 'openAndClaim', id: 18},
+  //{title: 'Test',text: 'Test', image: tiktokImg, link: '', channelId: '', type: 'justClaim', id: 100000000},
 ];

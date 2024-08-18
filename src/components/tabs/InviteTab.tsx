@@ -4,13 +4,15 @@ import QueryBuilderIcon from '@mui/icons-material/QueryBuilder'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Friend } from './../../interfaces/Friend'
 import { SlPresent } from "react-icons/sl";
-import { Chest } from '../../interfaces/Chest';
-import { inviteChests } from '../../db/chests';
+import { ScratchCardContent } from '../../interfaces/ScratchCardContent';
+import { inviteScratchcards } from '../../db/scratchcards';
 import { CircularProgress } from '@mui/material';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import { setAppleScoreCallback, setScoreCallback, updateFriendListCallback } from '../../db/cloudStorageFunctions';
-import chestImg from './../../img/chests/closed_Chest.jpg'
-import chestOpening from './../../video/chest_opening/generalChestOpening.mp4'
+import { ScratchCard } from '../utils/ScratchCard';
+import scratchCardImg from './../../img/scratchcard/cardToScratch.jpg'
+import moneyImg from './../../img/shopItems/dollar.png'
+import appleImg from './../../img/shopItems/apple.png'
 
 interface InviteTabProps {
   friendList : Friend[];
@@ -25,17 +27,17 @@ interface InviteTabProps {
 const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore }) => {
   const totalFriends = friendList.length;
   const activeFriends = friendList.filter(f => f.isActive).length;
-  const [showChest, setShowChest] = useState(false)
-  const [foundChest, setFoundChest] = useState<Chest>(inviteChests[0])
-
+  const [showScratchcard, setShowScratchcard] = useState(false)
+  const [foundScratchcard, setFoundScratchcard] = useState<ScratchCardContent>(inviteScratchcards[0])
+  
   const handleInviteClick = () => {
     window.location.href = 'https://t.me/share/url?url=https://t.me/plant_token_bot/Plant?startapp=' + window.Telegram.WebApp.initDataUnsafe.user.id
   };
 
   return (
     <>
-    {showChest && <ChestItem setShowChest={setShowChest} foundChest={foundChest}/>}
-    {!showChest && <div className="App">
+    {showScratchcard && <ScratchCardItem setShowScratchcard={setShowScratchcard} foundScratchcard={foundScratchcard}/>}
+    {!showScratchcard && <div className="App">
       <header className="App-header">
         {/* Used to avoid content under the top bar */}
         <div style={{marginTop: '65px'}}></div>
@@ -53,7 +55,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
             </div>
             <div className='friend-list-inner'>
               {friendList.slice().sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1)).map((item, key) => (
-                <FriendItem name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowChest={setShowChest} setFoundChest={setFoundChest}/>
+                <FriendItem name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowScratchcard={setShowScratchcard} setFoundScratchcard={setFoundScratchcard}/>
               ))}
             </div> 
           </div>
@@ -75,19 +77,19 @@ interface FriendItemProps {
   setScore: (score: number) => void;
   appleScore: number;
   setAppleScore: (score: number) => void;
-  setShowChest: (val : boolean) => void;
-  setFoundChest: (val: Chest) => void;
+  setShowScratchcard: (show: boolean) => void;
+  setFoundScratchcard: (scratchcard: ScratchCardContent) => void;
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore, setShowChest, setFoundChest }) => {
+const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore, setShowScratchcard, setFoundScratchcard }) => {
   
 
   const onClaimClick = () => {
     updateFriendListCallback(cs, userId)
     var x = getRandomNumber(1,10000)
-    var foundChest = inviteChests.find(chest => x >= chest.minProb && x <= chest.maxProb);
-    setFoundChest(foundChest!!)
-    setShowChest(true)
+    var foundChest = inviteScratchcards.find(card => x >= card.minProb && x <= card.maxProb);
+    setFoundScratchcard(foundChest!!)
+    setShowScratchcard(true)
     setScoreCallback(cs, score + foundChest!!.score)
     setScore(score + foundChest!!.score)
     setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
@@ -119,44 +121,32 @@ const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendL
   );
 }
 
-interface ChestItemProps {
-  setShowChest: (operator: boolean) => void;
-  foundChest: Chest;
+interface ScratchCardItemProps {
+  setShowScratchcard: (operator: boolean) => void;
+  foundScratchcard: ScratchCardContent;
 }
 
-export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, foundChest }) => {
-  const [imageClicked, setImageClicked] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoEnded, setVideoEnded] = useState(false);
+const ScratchCardItem: React.FC<ScratchCardItemProps> = ({ setShowScratchcard, foundScratchcard }) => {
 
-
-  const videoClicked = () => {
-    setShowChest(false);
-  };
-
-  return (
-    <div className='chest-container'>
-      {!imageClicked &&(
-        <div className='chest-img'>
-          <img className='chest-img' src={chestImg} alt="chest" onClick={() => setImageClicked(true)}/>
-        </div>
-      )}
-      {imageClicked && !videoLoaded &&(
-        <div className='chest-img'>
-          <img className='chest-img' style={{zIndex: '10003'}} src={chestImg} alt="chest" />
-        </div>
-      )}
-      {imageClicked && !videoEnded &&(
-        <div className='chest-vid'>
-          <video className='chest-video' style={{zIndex: '10002'}} src={chestOpening} onCanPlay={() => setVideoLoaded(true)} onEnded={() => setVideoEnded(true)} autoPlay muted/>
-        </div>
-      )}
-      {imageClicked &&(
-        <div className='chest-img'>
-          <img className='chest-img' style={{zIndex: '10000'}} src={foundChest.image} onClick={videoClicked} alt="chest" />
-        </div>
-      )}
-    </div>
+  return(
+  <div className='scratchcard-container'>
+      <ScratchCard
+        imageSrc={scratchCardImg}
+        data={foundScratchcard.score > 0 ? 
+          <div className='scratch-prize'>
+            <p className='scratch-text'>You won {foundScratchcard.score} </p>
+            <img className='task-money-icon' src={moneyImg} alt={"money"}/>
+          </div> 
+          :  
+          <div className='scratch-prize'>
+            <p className='scratch-text'>You won {foundScratchcard.appleScore} </p>
+            <img className='task-money-icon' src={appleImg} alt={"apple"}/>
+          </div>}       
+        handleCoverScratched={() => {
+          setShowScratchcard(false);
+        }}
+      />
+  </div>
   );
 };
 

@@ -9,10 +9,8 @@ import appleImg from './../../img/shopItems/apple.png'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { setAppleScoreCallback, setClaimableCallback, setFieldsCallback, setLastDailyClaimCallback, setScoreCallback, setTasksCallback } from '../../db/cloudStorageFunctions';
 import CircularProgress from '@mui/material/CircularProgress';
-import chestImg from './../../img/chests/closed_Chest.jpg'
-import chestOpening from './../../video/chest_opening/generalChestOpening.mp4'
-import { chests } from '../../db/chests';
-import { Chest } from '../../interfaces/Chest';
+import { scratchcards } from '../../db/scratchcards';
+import { ScratchCardContent } from '../../interfaces/ScratchCardContent';
 import tonIcon from './../../img/invitePage/ton.png'
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { dailyCheckIn } from '../../db/tonCosts';
@@ -21,7 +19,8 @@ import { dailyPrices } from '../../db/dailyClaimPrices';
 import { Button, Input, Space } from 'antd';
 import { Field } from '../../interfaces/Field';
 import { Friend } from '../../interfaces/Friend';
-
+import { ScratchCard } from '../utils/ScratchCard';
+import scratchCardImg from './../../img/scratchcard/cardToScratch.jpg'
 var checkChannelMembershipUrl : string = 'https://api.telegram.org/bot6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok'
 
 interface TasksTabProps {
@@ -88,8 +87,8 @@ interface TaskItemProps {
 
 const TaskItem: React.FC<TaskItemProps> = ({ friendList, setActiveField, fields, setFields, setCurrentPage, dailyStreak, item, key, score, setScore, appleScore, setAppleScore, cs, tasks, setTasks, claimableTasks, setClaimableTasks }) => {
   const [taskOpened, setTaskOpened] = useState<boolean>(false)
-  const [showChest, setShowChest] = useState(false)
-  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
+  const [showScratchcard, setShowScratchcard] = useState(false)
+  const [foundScratchcard, setFoundScratchcard] = useState<ScratchCardContent>(scratchcards[0])
   
   const handleTaskClick = () => {
     setTaskOpened(true)
@@ -97,7 +96,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ friendList, setActiveField, fields,
 
   return (
     <>
-    {showChest && <ChestItem setShowChest={setShowChest} setTaskOpened={setTaskOpened} foundChest={foundChest}/>}
+    {showScratchcard && <ScratchCardItem setShowScratchcard={setShowScratchcard} setTaskOpened={setTaskOpened} foundScratchcard={foundScratchcard}/>}
     <div className="task-item"  onClick={handleTaskClick}>
       <div className="task-image">
         <img src={`${item.image}`} alt={"task"} />
@@ -114,7 +113,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ friendList, setActiveField, fields,
         <DoneOutlineIcon style={{paddingRight: '10px'}}/>
       </div>}
     </div>
-    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp friendList={friendList} setActiveField={setActiveField} setFields={setFields} fields={fields} setShowChest={setShowChest}  setFoundChest={setFoundChest} setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
+    {(taskOpened && tasks[item.id] !== true && item.type !== 'dailyTask') && <TaskPopUp friendList={friendList} setActiveField={setActiveField} setFields={setFields} fields={fields} setShowScratchcard={setShowScratchcard}  setFoundScratchcard={setFoundScratchcard} setCurrentPage={setCurrentPage} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
     {(taskOpened && tasks[item.id] !== true && item.type === 'dailyTask') && <DailyTaskPopUp dailyStreak={dailyStreak} item={item} key={key} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setTaskOpened={setTaskOpened} tasks={tasks} setTasks={setTasks} />}
     </>
   );
@@ -134,8 +133,8 @@ interface TaskPopUpProps {
   setTasks: (tasks: boolean[]) => void;
   claimableTasks: boolean[];
   setClaimableTasks: (tasks: boolean[]) => void;
-  setShowChest: (show: boolean) => void;
-  setFoundChest: (chest: Chest) => void;
+  setShowScratchcard: (show: boolean) => void;
+  setFoundScratchcard: (scratchcard: ScratchCardContent) => void;
   fields: Field[];
   setFields: (fields: Field[]) => void;
   setActiveField: (field: number) => void;
@@ -143,7 +142,7 @@ interface TaskPopUpProps {
 
 }
 
-const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, fields, setFields, setShowChest, setFoundChest, setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
+const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, fields, setFields, setShowScratchcard, setFoundScratchcard, setCurrentPage, item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks,claimableTasks, setClaimableTasks }) => {
   const [loading, setLoading] = useState(false);
   const [errorClaiming, setErrorClaiming] = useState(false)
   const [tonConnectUI, setOptions] = useTonConnectUI();
@@ -164,8 +163,8 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
   const handleClaimClick = async (event: React.MouseEvent) => {
     setLoading(true);
     var x = getRandomNumber(1,100000)
-    var foundChest = chests.find(chest => x >= chest.minProb && x <= chest.maxProb);
-    setFoundChest(foundChest!!)
+    var foundScratchcard = scratchcards.find(scratchcard => x >= scratchcard.minProb && x <= scratchcard.maxProb);
+    setFoundScratchcard(foundScratchcard!!)
     if(item.type === 'telegram'){
       const endpoint = `${checkChannelMembershipUrl}/getChatMember?chat_id=${item.channelId}&user_id=${window.Telegram.WebApp.initDataUnsafe.user.id}`;
 
@@ -174,11 +173,11 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
         const data = await response.json();
     
         if (data.ok && (data.result.status === 'member' || data.result.status === 'administrator' || data.result.status === 'creator')) {
-          setShowChest(true)
-          setScoreCallback(cs, score + foundChest!!.score)
-          setScore(score + foundChest!!.score)
-          setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
-          setAppleScore(appleScore + foundChest!!.appleScore)
+          setShowScratchcard(true)
+          setScoreCallback(cs, score + foundScratchcard!!.score)
+          setScore(score + foundScratchcard!!.score)
+          setAppleScoreCallback(cs, appleScore + foundScratchcard!!.appleScore)
+          setAppleScore(appleScore + foundScratchcard!!.appleScore)
           const updatedTasks = [...tasks];
           updatedTasks[item.id] = true
           setTasksCallback(cs, updatedTasks)
@@ -196,11 +195,11 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
       }
     } else if(item.type === 'walletConnect'){
       if(tonConnectUI.connected === true){
-        setShowChest(true)
-        setScoreCallback(cs, score + foundChest!!.score)
-        setScore(score + foundChest!!.score)
-        setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
-        setAppleScore(appleScore + foundChest!!.appleScore)
+        setShowScratchcard(true)
+        setScoreCallback(cs, score + foundScratchcard!!.score)
+        setScore(score + foundScratchcard!!.score)
+        setAppleScoreCallback(cs, appleScore + foundScratchcard!!.appleScore)
+        setAppleScore(appleScore + foundScratchcard!!.appleScore)
         const updatedTasks = [...tasks];
         updatedTasks[item.id] = true
         setTasksCallback(cs, updatedTasks)
@@ -213,11 +212,11 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
     } else if(item.type === 'youtube'){
       if(secretValue === item.channelId){
         //User inserted right secret value
-        setShowChest(true)
-        setScoreCallback(cs, score + foundChest!!.score)
-        setScore(score + foundChest!!.score)
-        setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
-        setAppleScore(appleScore + foundChest!!.appleScore)
+        setShowScratchcard(true)
+        setScoreCallback(cs, score + foundScratchcard!!.score)
+        setScore(score + foundScratchcard!!.score)
+        setAppleScoreCallback(cs, appleScore + foundScratchcard!!.appleScore)
+        setAppleScore(appleScore + foundScratchcard!!.appleScore)
         const updatedTasks = [...tasks];
         updatedTasks[item.id] = true
         setTasksCallback(cs, updatedTasks)
@@ -234,11 +233,11 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
         setLoading(false)
         setErrorClaiming(true)
       }else{
-        setShowChest(true)
-        setScoreCallback(cs, score + foundChest!!.score)
-        setScore(score + foundChest!!.score)
-        setAppleScoreCallback(cs, appleScore + foundChest!!.appleScore)
-        setAppleScore(appleScore + foundChest!!.appleScore)
+        setShowScratchcard(true)
+        setScoreCallback(cs, score + foundScratchcard!!.score)
+        setScore(score + foundScratchcard!!.score)
+        setAppleScoreCallback(cs, appleScore + foundScratchcard!!.appleScore)
+        setAppleScore(appleScore + foundScratchcard!!.appleScore)
         const updatedTasks = [...tasks];
         updatedTasks[item.id] = true
         setTasksCallback(cs, updatedTasks)
@@ -288,6 +287,14 @@ const TaskPopUp: React.FC<TaskPopUpProps> = ({ friendList, setActiveField, field
             setLoading(false)
           }
         }
+      } else{
+        //This is only for the test task
+        setShowScratchcard(true)
+        setScoreCallback(cs, score + foundScratchcard!!.score)
+        setScore(score + foundScratchcard!!.score)
+        setAppleScoreCallback(cs, appleScore + foundScratchcard!!.appleScore)
+        setAppleScore(appleScore + foundScratchcard!!.appleScore)
+        setLoading(false)
       }
     }
   }
@@ -359,8 +366,6 @@ interface DailyTaskPopUpProps {
 }
 
 const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key, score, setScore, appleScore, setAppleScore, cs, setTaskOpened, tasks, setTasks }) => {
-  const [showChest, setShowChest] = useState(false)
-  const [foundChest, setFoundChest] = useState<Chest>(chests[0])
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
   const handleOverlayClick = () => {
@@ -456,45 +461,37 @@ const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key
   );
 }
 
-interface ChestItemProps {
-  setShowChest: (operator: boolean) => void;
+interface ScratchCardItemProps {
+  setShowScratchcard: (operator: boolean) => void;
   setTaskOpened: (operator: boolean) => void;
-  foundChest: Chest;
+  foundScratchcard: ScratchCardContent;
 }
 
-export const ChestItem: React.FC<ChestItemProps> = ({ setShowChest, setTaskOpened, foundChest }) => {
-  const [imageClicked, setImageClicked] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoEnded, setVideoEnded] = useState(false);
+const ScratchCardItem: React.FC<ScratchCardItemProps> = ({ setShowScratchcard, setTaskOpened, foundScratchcard }) => {
 
-  const videoClicked = () => {
-    setShowChest(false);
-    setTaskOpened(false);
-  };
+  useEffect(() => {
+    setTaskOpened(false)
+  }, [])
 
-  return (
-    <div className='chest-container'>
-      {!imageClicked &&(
-        <div className='chest-img'>
-          <img className='chest-img' src={chestImg} alt="chest" onClick={() => setImageClicked(true)}/>
-        </div>
-      )}
-      {imageClicked && !videoLoaded &&(
-        <div className='chest-img'>
-          <img className='chest-img' style={{zIndex: '10003'}} src={chestImg} alt="chest" />
-        </div>
-      )}
-      {imageClicked && !videoEnded &&(
-        <div className='chest-vid'>
-          <video className='chest-video' style={{zIndex: '10002'}} src={chestOpening} onCanPlay={() => setVideoLoaded(true)} onEnded={() => setVideoEnded(true)} autoPlay muted/>
-        </div>
-      )}
-      {imageClicked &&(
-        <div className='chest-img'>
-          <img className='chest-img' style={{zIndex: '10000'}} src={foundChest.image} onClick={videoClicked} alt="chest" />
-        </div>
-      )}
-    </div>
+  return(
+  <div className='scratchcard-container'>
+      <ScratchCard
+        imageSrc={scratchCardImg}
+        data={foundScratchcard.score > 0 ? 
+          <div className='scratch-prize'>
+            <p className='scratch-text'>You won {foundScratchcard.score}</p>
+            <img className='task-money-icon' src={moneyImg} alt={"money"}/>
+          </div> 
+          :  
+          <div className='scratch-prize'>
+            <p className='scratch-text'>You won {foundScratchcard.appleScore}</p>
+            <img className='task-money-icon' src={appleImg} alt={"apple"}/>
+          </div>}
+        handleCoverScratched={() => {
+          setShowScratchcard(false);
+        }}
+      />
+  </div>
   );
 };
 
