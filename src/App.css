@@ -8,6 +8,18 @@
 .App {
   text-align: center;
   width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.App-plant {
+  text-align: center;
+  width: 100%;
 }
 
 .min-height-css {
@@ -52,6 +64,7 @@
   justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: white;
+  height: calc(100% + 1px);
   min-height: var(--tg-viewport-height);
   overflow-y: auto;
 }
@@ -1610,17 +1623,20 @@ button.next {
 
 /* Scratch card opening screen */
 .scratchcard-container {
-  z-index: 10000;
-  width: 100%;
-  height: 100%;
-  position: absolute;
+  position: fixed; /* Fixes the element in place */
   top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%; 
+  z-index: 10000;
   display: flex;
   justify-content: center;
   align-items: center;
   background-image: url(img/scratchcard/scratchBg.jpg);
   background-repeat: no-repeat;
   background-size: cover; 
+  overflow: hidden;
+  touch-action: none;
 }
 
 .scratch-prize {

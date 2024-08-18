@@ -23,7 +23,7 @@ interface PlantTabProps {
 
 const PlantTab: React.FC<PlantTabProps> = ({ appleScore, plantScore, setPlantScore, poolStatus, setPoolStatus, plantHourlyIncome, setPlantHourlyIncome, cs }) => {
   return(
-    <div className="App">
+    <div className="App-plant">
       <header className="App-header">
         <div className="plant-top-section">
           <h1 className="plant-tab-title">$PLANT Balance</h1>

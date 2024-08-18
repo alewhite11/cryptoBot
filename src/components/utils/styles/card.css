@@ -5,6 +5,7 @@
     height: 100%;
     width: 100%;
     position: relative;
+    z-index: 10001;
   }
   
   .base,
@@ -45,6 +46,7 @@
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    z-index: 10001;
     position: absolute; /* Important for stacking */
   }
   

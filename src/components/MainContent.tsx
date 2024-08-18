@@ -45,7 +45,7 @@ const MainContent: React.FC<MainContentProps> = ({ dailyStreak, activeTab, setAc
   const [activeField, setActiveField] = useState(0)  //for the slider
 
   return (
-    <div className="App" >
+    <div>
       {page === 0 && <MainTab score={score} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} activeField={activeField} setActiveField={setActiveField} cs={cs}/>}
       {page === 1 && <ShopTab activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>}
       {page === 2 && <PlantTab appleScore={appleScore} plantScore={plantScore} setPlantScore={setPlantScore} poolStatus={poolStatus} setPoolStatus={setPoolStatus} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} cs={cs}/>}
