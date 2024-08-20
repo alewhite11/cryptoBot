@@ -839,6 +839,13 @@ button.next {
   align-items: center;
 }
 
+.task-reward-amount {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .task-money-icon {
   width: 30px;
   height: 30px;

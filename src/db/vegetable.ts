@@ -17,8 +17,8 @@ export const vegetables : Plant[] = [
     { name: 'Lettuce', time: '5 min', cost: 60, reward: 120, image: lettuceImg, duration: 60*5  },
     { name: 'Spinach', time: '10 min', cost: 100, reward: 200, image: spinachImg, duration: 60*10  },
     { name: 'Carrot', time: '15 min', cost: 120, reward: 240, image: carrotImg, duration: 60*15  },
-    { name: 'Tomato', time: '20 min', cost: 160, reward: 320, image: tomatoImg, duration: 60*20  },
-    { name: 'Courgette', time: '30 min', cost: 200, reward: 400, image: courgetteImg, duration: 60*30  },
+    { name: 'Tomato', time: '30 min', cost: 160, reward: 320, image: tomatoImg, duration: 60*30  },
+    { name: 'Courgette', time: '45 min', cost: 200, reward: 400, image: courgetteImg, duration: 60*45 },
     { name: 'Pepper', time: '1 hr', cost: 300, reward: 600, image: pepperImg, duration: 60*60  },
     { name: 'Asparagus', time: '4 hr', cost: 1000, reward: 2000, image: asparagusImg, duration: 60*60*4  }
 ];

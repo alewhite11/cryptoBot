@@ -422,16 +422,20 @@ const DailyTaskPopUp: React.FC<DailyTaskPopUpProps> = ({ dailyStreak,  item, key
               {dailyPrices[(dailyStreak - 1)%7].score > 0 && <div className='task-reward'>               
                 <div className='task-reward-text'>
                   <p>Day {dailyStreak}</p>
-                  <p>You receive {dailyPrices[(dailyStreak - 1)%7].score}</p>
-                </div>
-                <img className='task-money-icon' src={moneyImg} alt={"money"}/> 
+                  <div className='task-reward-amount'>
+                    <p>You receive {dailyPrices[(dailyStreak - 1)%7].score}</p>
+                    <img className='task-money-icon' src={moneyImg} alt={"money"}/>
+                  </div>
+                </div> 
               </div>}
               {dailyPrices[(dailyStreak - 1)%7].appleScore > 0 && <div className='task-reward'>                
                 <div className='task-reward-text'>
                   <p>Day {dailyStreak}</p>
-                  <p>You receive {dailyPrices[(dailyStreak - 1)%7].appleScore}</p>
+                  <div className='task-reward-amount'>
+                    <p>You receive {dailyPrices[(dailyStreak - 1)%7].appleScore}</p>
+                    <img className='task-money-icon' src={appleImg} alt={"money"}/>
+                  </div>
                 </div>
-                <img className='task-money-icon' src={appleImg} alt={"money"}/>
               </div>}
               <div className='task-dt-popup-buttons'>
                 <div className='task-dt-popup-buttons-inner'>
