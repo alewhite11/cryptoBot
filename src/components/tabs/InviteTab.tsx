@@ -50,7 +50,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
           <div className='friend-list'> 
             <p className='invite-warning'>Friend list is updated once a day</p>
             <div className='total-friends'>
-              <p className='invite-text-completed'>Completed friends:</p>
+              <p className='invite-text-completed'>Claimed friends:</p>
               <p className='invite-text'>{activeFriends}/{totalFriends}</p>
             </div>
             <div className='friend-list-inner'>
