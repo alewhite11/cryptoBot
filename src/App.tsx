@@ -20,6 +20,7 @@ import React from 'react';
 import { RiPlantFill } from "react-icons/ri";
 import NumberTicker from './components/utils/NumberTicker';
 import DesktopPage from './components/DesktopPage';
+import RestartBotPage from './components/RestartBotPage';
 
 
 declare global {
@@ -107,9 +108,7 @@ function App() {
           getClaimableCallback(cloudStorage, setClaimableTasks)
           getPlantedVegetablesCallback(cloudStorage, setPlantedVegetables)
           getFieldsCallback(cloudStorage, setFields, setDataLoaded);
-          /*loadAssets(() => {
-            setImagesLoaded(true);
-          })*/
+
         };
     
         fetchData();
@@ -214,48 +213,56 @@ function App() {
     setActiveTab(2) //Apple shop tab
   };
 
-  return (
-    <>
-    {!(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <DesktopPage />}
-    {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <Context.Provider value={contextValue}>
-      {contextHolder}
-    {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
-    {!loading && (registered === 2) &&
-    <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
-      {currentPage !== 2 && <div className='App-common-header'>
-        <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
-          <div className='main-balance'>
-            <img className='main-balance-icon' src={appleImg} alt={"apple"} />
-            <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+  if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990){
+    return (
+      <>
+        <RestartBotPage />
+      </>
+    )
+  }else{
+    return (
+      <>
+      {!(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <DesktopPage />}
+      {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <Context.Provider value={contextValue}>
+        {contextHolder}
+      {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
+      {!loading && (registered === 2) &&
+      <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
+        {currentPage !== 2 && <div className='App-common-header'>
+          <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
+            <div className='main-balance'>
+              <img className='main-balance-icon' src={appleImg} alt={"apple"} />
+              <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+            </div>
+            <div className='main-coins'>
+              <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={appleScore} /></span>
+              <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
+            </div>
           </div>
-          <div className='main-coins'>
-            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={appleScore} /></span>
-            <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
+          <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
+            <div className='main-balance' style={{alignItems: 'flex-start'}}>
+              <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
+              <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+            </div>
+            <div className='main-coins'>
+              <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
+              <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
+            </div>
           </div>
+        </div>}
+        <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
+          <MainContent dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
         </div>
-        <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
-          <div className='main-balance' style={{alignItems: 'flex-start'}}>
-            <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
-            <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
-          </div>
-          <div className='main-coins'>
-            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
-            <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
-          </div>
-        </div>
-      </div>}
-      <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-        <MainContent dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
+        <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
       </div>
-      <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
-    </div>
-    }   
-    {loading &&
-    <LoadingPage />
-    }
-    </Context.Provider>}
-    </>
-  );
+      }   
+      {loading &&
+      <LoadingPage />
+      }
+      </Context.Provider>}
+      </>
+    );
+  }
 }
 
 export default App;
