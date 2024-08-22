@@ -163,6 +163,24 @@ body, html {
   overflow: hidden; 
 }
 
+.main-items-collection {
+  position: fixed;
+  top: 65px;
+  left: 10px;
+}
+
+.main-pass {
+  position: fixed;
+  top: 65px;
+  right: 10px;
+}
+
+.collection-pass-icons {
+  height: 40px;
+  width: 40px;
+}
+
+
 .slider {
   overflow: hidden;
   min-width: 100%;

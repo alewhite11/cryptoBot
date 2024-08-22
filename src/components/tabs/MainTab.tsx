@@ -99,6 +99,17 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
     <div className="App">
       <header className="App-header-main">
         <div className='main-field'>
+          <div className='main-items-collection'>
+            <button onClick={() => {alert('clicked')}}>
+              <img src={arrowLeft} alt="arrow" className='collection-pass-icons'/>
+            </button>
+          </div>
+          <div className='main-pass'>
+            <button onClick={() => {alert('clicked')}}>
+              <img src={arrowLeft} alt="arrow" className='collection-pass-icons'/>
+            </button>
+          </div>
+
           <div className="slider">
             {activeField !== 0 && <button className="prev" onClick={goToPrevField}>
               <img src={arrowLeft} alt="arrow" style={{width: '40px', height: '40px'}}/>
