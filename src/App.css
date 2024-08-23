@@ -464,6 +464,115 @@ button.next {
   font-weight: bold;
 }
 
+.pass-modal-overlay {
+  z-index: 9999;
+  min-width: 100%;
+  min-height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pass-modal-box {
+  display: block;
+  background-image: url(img/woodenBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 60%;
+  height: fit-content;
+  padding: 1rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.pass-popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 2rem 1rem 1rem 1rem;
+}
+
+.pass-popup-title {
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  font-family: 'Jura', sans-serif;
+}
+
+
+
+.pass-popup-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: bottom;
+}
+
+.pass-popup-button {
+  background-color: #4CAF50;
+  color: white;
+  font-size: small;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  flex: 20%;
+  outline: none;
+}
+
+.pass-popup-remove-button {
+  background-color: #b10808;
+  align-self: bottom;
+  color: white;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  vertical-align: center;
+  outline: none;
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
+.pass-popup-plant-button {
+  background-color: #4CAF50;
+  align-self: bottom;
+  color: white;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  outline: none;
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
+.pass-popup-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+}
+
 /* SHOP PAGE */
 .bacheca {
   background-image: url(img/taskPage/bachecaBg.png);

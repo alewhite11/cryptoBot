@@ -78,6 +78,7 @@ interface MainTabProps {
 
 const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFields, setScore, appleScore, setAppleScore, activeField, setActiveField, cs }) => {
   const [mainPopupOpened, setMainPopupOpened] = useState<boolean>(false);
+  const [passPopupOpened, setPassPopupOpened] = useState<boolean>(false);
   const [selectedCallback, setSelectedCallback] = useState<() => void>(() => {});
   const [selectedField, setSelectedField] = useState<Field>({
     vegetable: "",
@@ -105,11 +106,10 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             </button>
           </div>
           <div className='main-pass'>
-            <button onClick={() => {alert('clicked')}}>
+            <button onClick={() => {setPassPopupOpened(true)}}>
               <img src={arrowLeft} alt="arrow" className='collection-pass-icons'/>
             </button>
           </div>
-
           <div className="slider">
             {activeField !== 0 && <button className="prev" onClick={goToPrevField}>
               <img src={arrowLeft} alt="arrow" style={{width: '40px', height: '40px'}}/>
@@ -120,7 +120,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
                 <div key={index} className="slider-item">
-                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened}/>}
+                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened} />}
                 </div>
               ))}
             </div>
@@ -133,6 +133,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
           </div>
         </div>
         {mainPopupOpened && <MainPopUp item={selectedField} handleRemoveClick={selectedCallback} setMainPopupOpened={setMainPopupOpened} />}
+        {passPopupOpened && <PassPopUp  setPassPopupOpened={setPassPopupOpened} />}
       </header>
     </div>
   );
@@ -374,6 +375,46 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
               <button className='main-popup-remove-button' onClick={handleCancelClick}>Cancel</button>
             </div>
           </div>}         
+        </div>
+      </div>
+    </>
+  );
+}
+
+interface PassPopUpProps {
+  setPassPopupOpened: (opened: boolean) => void;
+}
+
+const PassPopUp: React.FC<PassPopUpProps> = ({ setPassPopupOpened }) => {
+  const handleOverlayClick = () => {
+    setPassPopupOpened(false)
+  };
+
+  const handleCancelClick = () => {
+    setPassPopupOpened(false)
+  }
+
+  const handlePopUpClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+  };
+
+  return (
+    <>
+      <div className="pass-modal-overlay" onClick={handleOverlayClick} >
+        <div  className="pass-modal-box" onClick={handlePopUpClick}>
+          <button className="pass-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
+          
+          <div className='pass-popup-content'>
+            <img className='main-balance-icon' src={appleImg} alt={"apple"} style={{height: '50px', width: '40px'}} />
+            <div className='pass-popup-title'>Plant Pass</div>
+            <div className='shop-reward-text'>
+              <p>List of advantages</p>
+            </div>
+            <div className='pass-popup-buttons'>
+              <button className='pass-popup-plant-button' >Confirm</button>
+              <button className='pass-popup-remove-button' onClick={handleCancelClick}>Cancel</button>
+            </div>
+          </div>       
         </div>
       </div>
     </>
