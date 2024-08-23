@@ -482,7 +482,7 @@ button.next {
   background-image: url(img/woodenBg.jpg);
   background-repeat: no-repeat;
   background-size: cover;
-  width: 60%;
+  width: 80%;
   height: fit-content;
   padding: 1rem;
   border-radius: 1rem;
@@ -523,43 +523,6 @@ button.next {
   vertical-align: center;
   flex: 20%;
   outline: none;
-}
-
-.pass-popup-remove-button {
-  background-color: #b10808;
-  align-self: bottom;
-  color: white;
-  font-size: medium;
-  font-weight: bold; 
-  font-family: 'Jura', sans-serif;
-  border-radius: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  vertical-align: center;
-  outline: none;
-  text-shadow: 
-    -1px -1px 0 #000,  
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
-}
-
-.pass-popup-plant-button {
-  background-color: #4CAF50;
-  align-self: bottom;
-  color: white;
-  font-size: medium;
-  font-weight: bold; 
-  font-family: 'Jura', sans-serif;
-  border-radius: 10px;
-  margin: 10px;
-  vertical-align: center;
-  outline: none;
-  text-shadow: 
-    -1px -1px 0 #000,  
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
 }
 
 .pass-popup-close-button {

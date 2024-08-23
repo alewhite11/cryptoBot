@@ -386,6 +386,8 @@ interface PassPopUpProps {
 }
 
 const PassPopUp: React.FC<PassPopUpProps> = ({ setPassPopupOpened }) => {
+  const [tonConnectUI, setOptions] = useTonConnectUI();
+
   const handleOverlayClick = () => {
     setPassPopupOpened(false)
   };
@@ -405,14 +407,16 @@ const PassPopUp: React.FC<PassPopUpProps> = ({ setPassPopupOpened }) => {
           <button className="pass-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
           
           <div className='pass-popup-content'>
-            <img className='main-balance-icon' src={appleImg} alt={"apple"} style={{height: '50px', width: '40px'}} />
+            <img className='main-balance-icon' src={appleImg} alt={"apple"} style={{height: '100px', width: '80px'}} />
             <div className='pass-popup-title'>Plant Pass</div>
             <div className='shop-reward-text'>
-              <p>List of advantages</p>
+              <p>-Get exclusive season item</p>
+              <p>-Claim plant rewards 2x faster</p>
+              <p>-Unlock a new pot for free</p>
             </div>
             <div className='pass-popup-buttons'>
-              <button className='pass-popup-plant-button' >Confirm</button>
-              <button className='pass-popup-remove-button' onClick={handleCancelClick}>Cancel</button>
+              {tonConnectUI.connected && <button className='main-plant-button-ton' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Get pass</button>}
+              {!tonConnectUI.connected && <button className='main-plant-button-disabled' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} disabled><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Get pass</button>}
             </div>
           </div>       
         </div>
