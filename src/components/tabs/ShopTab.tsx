@@ -33,9 +33,11 @@ interface ShopTabProps {
   setActiveTab: (val: number) => void;
   addClicked: boolean;
   setAddClicked: (val: boolean) => void;
+  passStatus: boolean;
+
 }
 
-const ShopTab: React.FC<ShopTabProps> = ({ activeTab, setActiveTab, addClicked, setAddClicked, score, setScore, appleScore, setAppleScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
+const ShopTab: React.FC<ShopTabProps> = ({ passStatus, activeTab, setActiveTab, addClicked, setAddClicked, score, setScore, appleScore, setAppleScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
   useEffect(() => {
     if(addClicked){
       setAddClicked(false)
@@ -60,14 +62,14 @@ const ShopTab: React.FC<ShopTabProps> = ({ activeTab, setActiveTab, addClicked, 
             {activeTab === 0 && (
               <>
                 {vegetables.map((item, index) => (
-                  <PlantItem item={item} key={index}index={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
+                  <PlantItem passStatus={passStatus} item={item} key={index}index={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
                 ))}
               </>
             )}
             {activeTab === 1 && (
               <>
                 {plants.map((item, index) => (
-                  <PlantItemTree item={item} key={index} index={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
+                  <PlantItemTree passStatus={passStatus} item={item} key={index} index={index} score={score} setScore={setScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>
                 ))}
               </>
             )}
@@ -100,9 +102,10 @@ interface PlantItemProps {
   setActiveField: (field: number) => void;
   plantedVegetables: Map<string, number>;
   setPlantedVegetables: (plantedVegetable: Map<string, number>) => void;
+  passStatus: boolean;
 }
 
-const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
+const PlantItem: React.FC<PlantItemProps> = ({ passStatus, item, key, index, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
   const [shopPopupOpened, setShopPopupOpened] = useState<boolean>(false)
   const [errorPlanting, setErrorPlanting] = useState(false)
 
@@ -202,7 +205,8 @@ const PlantItem: React.FC<PlantItemProps> = ({ item, key, index, score, setScore
             <div className="item-intext-image">
               <img src={hourglassImg} alt={item.name} />
             </div>
-            <span className="item-time" style={{ fontFamily: 'Jura, sans-serif' }}>{item.time}</span>
+            {!passStatus && <span className="item-time" style={{ fontFamily: 'Jura, sans-serif' }}>{item.time}</span>}
+            {passStatus && <span className="item-time" style={{ fontFamily: 'Jura, sans-serif' }}><del style={{ textDecoration: 'line-through', textDecorationColor: 'red' }}>{item.time}</del></span>}
           </div>
         </div>
         <div className="item-pricing">
@@ -242,9 +246,10 @@ interface PlantItemTreeProps {
   setActiveField: (field: number) => void;
   plantedVegetables: Map<string, number>;
   setPlantedVegetables: (plantedVegetable: Map<string, number>) => void;
+  passStatus: boolean;
 }
 
-const PlantItemTree: React.FC<PlantItemTreeProps> = ({ item, key, index, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
+const PlantItemTree: React.FC<PlantItemTreeProps> = ({ passStatus, item, key, index, score, setScore, setCurrentPage, fields, setFields, cs, activeField, setActiveField, plantedVegetables, setPlantedVegetables }) => {
   const [shopPopupOpened, setShopPopupOpened] = useState<boolean>(false)
   const [errorPlanting, setErrorPlanting] = useState(false)
 
@@ -341,7 +346,8 @@ const PlantItemTree: React.FC<PlantItemTreeProps> = ({ item, key, index, score, 
             <div className="item-intext-image">
               <img src={hourglassImg} alt={item.name} />
             </div>
-            <span className="item-time" style={{ fontFamily: 'Jura, sans-serif' }}>{item.time}</span>
+            {!passStatus && <span className="item-time" style={{ fontFamily: 'Jura, sans-serif' }}>{item.time}</span>}
+            {passStatus && <span className="item-time" style={{ fontFamily: 'Jura, sans-serif' }}><del style={{ textDecoration: 'line-through', textDecorationColor: 'red' }}>{item.time}</del></span>}
           </div>
         </div>
         <div className="item-pricing">

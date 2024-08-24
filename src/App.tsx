@@ -5,7 +5,7 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getLastAccessDateCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setClaimableCallback, setLastAccessDateCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback, setTasksCallback } from './db/cloudStorageFunctions';
+import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getItemsCallback, getLastAccessDateCallback, getPassStatusCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setClaimableCallback, setItemsCallback, setLastAccessDateCallback, setPassStatusCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback, setTasksCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
@@ -52,6 +52,8 @@ function App() {
   const [poolStatus, setPoolStatus] = useState<Map<string, boolean>>(new Map<string, boolean>())
   const [firestoreFriendList, setFirestoreFriendList] = useState<Friend[]>([])
   const [dailyStreak, setDailyStreak] = useState<number>(0)
+  const [passStatus, setPassStatus] = useState<boolean>(false)
+  const [items, setItems] = useState<boolean[]>([])
 
   //Used to understand which of the two tasks finishes before (3s timeout or data loading)
   const [dataLoaded, setDataLoaded] = useState(false); //Set to true when data loaded
@@ -96,6 +98,7 @@ function App() {
       try {
         const fetchData = () => {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
+          getPassStatusCallback(cloudStorage, setPassStatus)
           getRegisteredCallback(cloudStorage, setRegistered)
           getFriendListCallback(cloudStorage,  window.Telegram.WebApp.initDataUnsafe.user.id, setFirestoreFriendList)
           getAppleScoreCallback(cloudStorage, setAppleScore)
@@ -108,7 +111,7 @@ function App() {
           getClaimableCallback(cloudStorage, setClaimableTasks)
           getPlantedVegetablesCallback(cloudStorage, setPlantedVegetables)
           getFieldsCallback(cloudStorage, setFields, setDataLoaded);
-
+          getItemsCallback(cloudStorage, setItems)
         };
     
         fetchData();
@@ -213,7 +216,7 @@ function App() {
     setActiveTab(2) //Apple shop tab
   };
 
-  if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990){
+  if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990 && window.Telegram.WebApp.initDataUnsafe.user.id !== 179037979){
     return (
       <>
         <RestartBotPage />
@@ -251,7 +254,7 @@ function App() {
           </div>
         </div>}
         <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-          <MainContent dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome}/>
+          <MainContent items={items} setItems={setItems} dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} passStatus={passStatus} setPassStatus={setPassStatus}/>
         </div>
         <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
       </div>

@@ -4,6 +4,7 @@ import { Friend } from '../interfaces/Friend';
 import { getUsersReferredBy, updateUser } from './firebaseConfig';
 import { Pool } from '../interfaces/Pool';
 import { isSameDay } from 'date-fns';
+import { plantPassBeginningDate, plantPassEndDate } from './tonCosts';
 
   // Check if CloudStorage is available
   const isCloudStorageAvailable = (cs: CloudStorage | null): boolean => {
@@ -320,6 +321,7 @@ export const getTasksCallback = (
           setTasks(parsedTasks);
         } catch (parseError) {
           console.error("Error parsing fields JSON:", parseError);
+          setTasks([]);
         }
       } else {
         setTasks([]);
@@ -670,3 +672,93 @@ export const getLastAccessDateCallback = (cs: CloudStorage | null, setLastAccess
     }
 });
 }
+
+//Retrieve pass status from db
+export const getPassStatusCallback = (cs: CloudStorage | null, setPassStatus: React.Dispatch<React.SetStateAction<boolean>>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.getItem("plantPass", (error, value) => {
+    if (error) {
+      return;
+    }
+
+    if (value !== undefined) {
+      try {
+        var passDate : Date = new Date(value)
+        if(passDate > plantPassBeginningDate && passDate < plantPassEndDate){
+          //Pass is valid
+          setPassStatus(true)
+        }else{
+          setPassStatus(false)
+        }
+      } catch (e) {
+          // Handle JSON parse error
+          setPassStatus(false)
+      }
+  } else {
+    setPassStatus(false)
+  }
+  });
+};
+
+//Save plant pass data into db
+export const setPassStatusCallback = (cs: CloudStorage | null, plantPassStatus: boolean): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  if(plantPassStatus === true){
+    cs?.setItem("plantPass", new Date().toISOString(), (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+    });
+  }else{
+    cs?.setItem("plantPass", '', (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+    });
+  }
+}
+
+//Save items data into db
+export const setItemsCallback = (cs: CloudStorage | null, items: boolean[]): void => {
+  if (!isCloudStorageAvailable(cs)) {
+      return;
+  }
+
+  cs?.setItem("items", JSON.stringify(items), (error: any, stored: boolean) => {
+      if(error){
+          return;
+      }
+  });
+}
+
+ //Retrieve items from db
+ export const getItemsCallback = (cs: CloudStorage | null, setItems: React.Dispatch<React.SetStateAction<boolean[]>>): void => {
+  if (!isCloudStorageAvailable(cs)) {
+    return;
+  }
+
+  cs?.getItem("items", (error, value) => {
+    if (error) {
+      return;
+    }
+
+    if (value) {
+      try {
+        const parsedItems: boolean[] = JSON.parse(value);
+
+        setItems(parsedItems);
+      } catch (parseError) {
+        console.error("Error parsing fields JSON:", parseError);
+        setItems([])
+      }
+    } else {
+      setItems([]);
+    }
+  });
+};

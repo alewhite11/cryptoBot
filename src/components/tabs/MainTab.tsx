@@ -17,7 +17,7 @@ import radishImg from './../../img/mainPage/radish.png'
 import saladImg from './../../img/mainPage/salad.png'
 import spinachImg from './../../img/mainPage/spinach.png'
 import { Field } from '../../interfaces/Field';
-import { setAppleScoreCallback, setFieldsCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
+import { setAppleScoreCallback, setFieldsCallback, setItemsCallback, setPassStatusCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
 import arrowLeft from './../../img/mainPage/arrowLeft.png'
 import arrowRight from './../../img/mainPage/arrowRight.png'
@@ -32,7 +32,11 @@ import spinachGif from './../../gif/spinach.gif'
 import tonIcon from './../../img/invitePage/ton.png'
 import { handleTransaction } from '../../db/transactions';
 import { useTonConnectUI } from '@tonconnect/ui-react';
-import { tonPerK, tonPerMinute } from '../../db/tonCosts';
+import { plantPassTonPrice, tonPerK, tonPerMinute } from '../../db/tonCosts';
+import trophySectionImg from './../../img/plantPass/trophySection.png'
+import passSectionImg from './../../img/plantPass/passSection.png'
+import { Col, Row } from 'antd';
+import { trophies } from '../../db/trophies';
 
 
 const vegetableImages: { [key: string]: string } = {
@@ -74,11 +78,16 @@ interface MainTabProps {
   activeField: number;
   setActiveField: (field: number) => void;
   cs: CloudStorage | null; 
+  passStatus: boolean;
+  setPassStatus: (val: boolean) => void;
+  items: boolean[];
+  setItems: (tasks: boolean[]) => void;
 }
 
-const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFields, setScore, appleScore, setAppleScore, activeField, setActiveField, cs }) => {
+const MainTab: React.FC<MainTabProps> = ({ items, setItems, passStatus, setPassStatus, score, setCurrentPage, fields, setFields, setScore, appleScore, setAppleScore, activeField, setActiveField, cs }) => {
   const [mainPopupOpened, setMainPopupOpened] = useState<boolean>(false);
   const [passPopupOpened, setPassPopupOpened] = useState<boolean>(false);
+  const [collectionPopupOpened, setCollectionPopupOpened] = useState<boolean>(false)
   const [selectedCallback, setSelectedCallback] = useState<() => void>(() => {});
   const [selectedField, setSelectedField] = useState<Field>({
     vegetable: "",
@@ -101,13 +110,13 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
       <header className="App-header-main">
         <div className='main-field'>
           <div className='main-items-collection'>
-            <button onClick={() => {alert('clicked')}}>
-              <img src={arrowLeft} alt="arrow" className='collection-pass-icons'/>
+            <button onClick={() => {setCollectionPopupOpened(true)}} className='main-pass-buttons'>
+              <img src={trophySectionImg} alt="trophy" className='collection-pass-icons'/>
             </button>
           </div>
           <div className='main-pass'>
-            <button onClick={() => {setPassPopupOpened(true)}}>
-              <img src={arrowLeft} alt="arrow" className='collection-pass-icons'/>
+            <button onClick={() => {setPassPopupOpened(true)}} className='main-pass-buttons'>
+              <img src={passSectionImg} alt="pass" className='collection-pass-icons'/>
             </button>
           </div>
           <div className="slider">
@@ -120,7 +129,7 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             <div className="slider-items" style={{ transform: `translateX(-${activeField * 100}%)` }}>
               {fields.map((item, index) => (
                 <div key={index} className="slider-item">
-                  {activeField === index && <FieldElement setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened} />}
+                  {activeField === index && <FieldElement passStatus={passStatus} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} index={index} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} setSelectedField={setSelectedField} setSelectedCallback={setSelectedCallback} setMainPopupOpened={setMainPopupOpened} />}
                 </div>
               ))}
             </div>
@@ -132,8 +141,9 @@ const MainTab: React.FC<MainTabProps> = ({ score, setCurrentPage, fields, setFie
             </button>}
           </div>
         </div>
-        {mainPopupOpened && <MainPopUp item={selectedField} handleRemoveClick={selectedCallback} setMainPopupOpened={setMainPopupOpened} />}
-        {passPopupOpened && <PassPopUp  setPassPopupOpened={setPassPopupOpened} />}
+        {mainPopupOpened && <MainPopUp passStatus={passStatus} item={selectedField} handleRemoveClick={selectedCallback} setMainPopupOpened={setMainPopupOpened} />}
+        {passPopupOpened && <PassPopUp items={items} setItems={setItems} appleScore={appleScore} setAppleScore={setAppleScore} fields={fields} setFields={setFields} passStatus={passStatus} setPassStatus={setPassStatus} setPassPopupOpened={setPassPopupOpened} cs={cs}/>}
+        {collectionPopupOpened && <CollectionPopUp items={items} setCollectionPopupOpened={setCollectionPopupOpened}/>}
       </header>
     </div>
   );
@@ -152,14 +162,24 @@ interface FieldItemProps {
   setSelectedField: (field: Field) => void;
   setSelectedCallback: (callback: () => void) => void;
   setMainPopupOpened: (opened: boolean) => void;
+  passStatus: boolean;
 }
 
-const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFields, index, score, setScore, appleScore, setAppleScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
+const FieldElement: React.FC<FieldItemProps> = ({passStatus, setCurrentPage, fields, setFields, index, score, setScore, appleScore, setAppleScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
   const initialTime = Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
   const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
   const handleRemoveClick = () => {
+    if(passStatus){
+      //25% cashback
+      var actualPlant = plants.find(plant => plant.name === fields[index].vegetable);
+      var cashback = actualPlant!.cost*0.25
+      const newScore = score + cashback
+      setScore(newScore)
+      setScoreCallback(cs, newScore)
+    }
+
     const newField: Field = {
       vegetable: "",
       plantedAt: new Date(), // This initializes plantedAt with the current date and time
@@ -303,7 +323,7 @@ const FieldElement: React.FC<FieldItemProps> = ({setCurrentPage, fields, setFiel
     <div className="countdown-container">
       {fields[index].vegetable !== "locked" && <div className="main-countdown">
         <img src={hourglassImg} alt="hourglass" />
-        <span className="main-time"><CountdownTimer timeRemaining={timeRemaining} setTimeRemaining={setTimeRemaining}/></span>
+        <span className="main-time"><CountdownTimer passStatus={passStatus} timeRemaining={timeRemaining} setTimeRemaining={setTimeRemaining}/></span>
       </div>}
       {fields[index].vegetable === "locked" && <div className="main-countdown">
         <img src={moneyImg} alt="money" />
@@ -335,9 +355,10 @@ interface MainPopUpProps {
   setMainPopupOpened: (opened: boolean) => void;
   item: Field;
   handleRemoveClick : () => void;
+  passStatus: boolean;
 }
 
-const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleRemoveClick }) => {
+const MainPopUp: React.FC<MainPopUpProps> = ({ passStatus, setMainPopupOpened, item, handleRemoveClick }) => {
   const handleOverlayClick = () => {
     setMainPopupOpened(false)
   };
@@ -359,6 +380,7 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
             <div className='main-popup-title'>Warning</div>
             <div className='shop-reward-text'>
               <p>This action is not reversible, you will definetively remove the {item.vegetable} plant. Do you confirm the action?</p>
+              {passStatus && <p>You will get {plants.find(plant => plant.name === item.vegetable)!.cost*0.25} coins back for premium membership</p>}
             </div>
             <div className='main-popup-buttons'>
               <button className='main-popup-remove-button' onClick={handleRemoveClick}>Remove</button>
@@ -383,9 +405,18 @@ const MainPopUp: React.FC<MainPopUpProps> = ({ setMainPopupOpened, item, handleR
 
 interface PassPopUpProps {
   setPassPopupOpened: (opened: boolean) => void;
+  cs: CloudStorage | null; 
+  passStatus: boolean;
+  setPassStatus: (val: boolean) => void;
+  fields: Field[];
+  setFields: (fields: Field[]) => void;
+  appleScore: number;
+  setAppleScore: (score: number) => void;
+  setItems: (tasks: boolean[]) => void;
+  items: boolean[];
 }
 
-const PassPopUp: React.FC<PassPopUpProps> = ({ setPassPopupOpened }) => {
+const PassPopUp: React.FC<PassPopUpProps> = ({ items, setItems, appleScore, setAppleScore, fields, setFields, passStatus, setPassStatus, setPassPopupOpened, cs }) => {
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
   const handleOverlayClick = () => {
@@ -400,25 +431,140 @@ const PassPopUp: React.FC<PassPopUpProps> = ({ setPassPopupOpened }) => {
     event.stopPropagation()
   };
 
+  const handlePlantPassUpgrade = () => {
+    //Unlock a new field
+    const newField: Field = {
+      vegetable: "",
+      plantedAt: new Date(), 
+      duration: 0
+    };
+
+    const newLockedField: Field = {
+      vegetable: "locked",
+      plantedAt: new Date(), 
+      duration: 0
+    };
+
+    const updatedFields = [...fields];
+    updatedFields[fields.length - 1] = newField
+    updatedFields.push(newLockedField)    
+    setFields(updatedFields)
+    setFieldsCallback(cs, updatedFields)
+
+    //Give 50 apples
+    var newAppleScore = appleScore + 50
+    setAppleScore(newAppleScore)
+
+    //Unlock the item
+    const updatedItems = [...items]
+    updatedItems[trophies.length - 1] = true
+    setItems(updatedItems)
+    
+    setPassStatus(true)
+    setPassPopupOpened(false)
+
+    setAppleScoreCallback(cs, newAppleScore)
+    setPassStatusCallback(cs, true)
+    setItemsCallback(cs, updatedItems)
+  }
+
+  const handlePlantPassClick = () => {
+    handleTransaction(tonConnectUI, Math.floor(plantPassTonPrice*1000000000).toString(), handlePlantPassUpgrade)
+  }
+
   return (
     <>
       <div className="pass-modal-overlay" onClick={handleOverlayClick} >
         <div  className="pass-modal-box" onClick={handlePopUpClick}>
           <button className="pass-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
           
-          <div className='pass-popup-content'>
-            <img className='main-balance-icon' src={appleImg} alt={"apple"} style={{height: '100px', width: '80px'}} />
+          {!passStatus && <div className='pass-popup-content'>
+            <img className='main-balance-icon' src={trophies[trophies.length - 1].unlocked} alt={"apple"} style={{height: '100px', width: '80px'}} />
             <div className='pass-popup-title'>Plant Pass</div>
             <div className='shop-reward-text'>
               <p>-Get exclusive season item</p>
               <p>-Claim plant rewards 2x faster</p>
+              <p>-Get 25% of cashback when removing a plant</p>
               <p>-Unlock a new pot for free</p>
+              <p>-50 apples</p>
             </div>
             <div className='pass-popup-buttons'>
-              {tonConnectUI.connected && <button className='main-plant-button-ton' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Get pass</button>}
+              {tonConnectUI.connected && <button className='main-plant-button-ton' onClick={handlePlantPassClick} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Get pass</button>}
               {!tonConnectUI.connected && <button className='main-plant-button-disabled' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} disabled><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Get pass</button>}
             </div>
-          </div>       
+          </div>}   
+          {passStatus && <div className='pass-popup-content'>
+            <div className='pass-popup-title'>Congratulations</div>
+            <img className='main-balance-icon' src={trophies[trophies.length - 1].unlocked} alt={"apple"} style={{height: '200px', width: '160px', padding: '10px'}} />
+            <div className='pass-popup-title'>You are already a premium member! Thank you!</div>
+          </div>}      
+        </div>
+      </div>
+    </>
+  );
+}
+
+interface CollectionPopUpProps {
+  setCollectionPopupOpened: (opened: boolean) => void;
+  items: boolean[];
+}
+
+const CollectionPopUp: React.FC<CollectionPopUpProps> = ({ items, setCollectionPopupOpened }) => {
+  const handleOverlayClick = () => {
+    setCollectionPopupOpened(false)
+  };
+
+  const handleCancelClick = () => {
+    setCollectionPopupOpened(false)
+  }
+
+  const handlePopUpClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+  };
+
+  const rows = [];
+  const colCount = 3
+  let globalIndex = 0; // Initialize the global index
+
+  for (let i = 0; i < trophies.length; i += colCount) {
+    rows.push(
+      <Row key={i} gutter={[8, 16]}>
+        {trophies.slice(i, i + colCount).map((trophy, index) => {
+          const itemIndex = globalIndex++; // Use and increment global index
+          
+          return (
+            <Col key={index} span={24 / colCount}>
+              <div style={{ padding: '10px', textAlign: 'center' }}>
+                {items[itemIndex] === true ? (
+                  <>
+                    <img src={trophy.unlocked} alt="Trophy" style={{ maxWidth: '100%', height: 'auto' }} />
+                    <div>{trophy.name}</div>
+                  </>
+                ) : (
+                  <>
+                    <img src={trophy.locked} alt="Trophy" style={{ maxWidth: '100%', height: 'auto' }} />
+                    <div>Locked</div>
+                  </>
+                )}
+              </div>
+            </Col>
+          );
+        })}
+      </Row>
+    );
+  }
+
+  return (
+    <>
+      <div className="collection-modal-overlay" onClick={handleOverlayClick} >
+        <div  className="collection-modal-box" onClick={handlePopUpClick}>
+          <button className="collection-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button> 
+          <div className='collection-popup-content'>
+            <div className='collection-popup-title' style={{paddingBottom: '20px'}}>Item collection</div>
+            <div>
+              {rows}
+            </div>
+          </div>        
         </div>
       </div>
     </>
@@ -428,9 +574,10 @@ const PassPopUp: React.FC<PassPopUpProps> = ({ setPassPopupOpened }) => {
 interface TimerProps {
   timeRemaining: number;
   setTimeRemaining: (time: number | ((prevTime: number) => number)) => void;
+  passStatus: boolean;
 }
 
-const CountdownTimer: React.FC<TimerProps> = ({ timeRemaining, setTimeRemaining }) => {
+const CountdownTimer: React.FC<TimerProps> = ({ passStatus, timeRemaining, setTimeRemaining }) => {
   useEffect(() => {
     const timerInterval = setInterval(() => {
       setTimeRemaining((prevTime: number) => {
@@ -439,7 +586,7 @@ const CountdownTimer: React.FC<TimerProps> = ({ timeRemaining, setTimeRemaining 
           console.log('Countdown complete!');
           return 0;
         } else {
-          return prevTime - 1;
+          return prevTime - (passStatus ? 2 : 1);
         }
       });
     }, 1000);

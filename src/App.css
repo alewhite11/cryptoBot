@@ -175,9 +175,21 @@ body, html {
   right: 10px;
 }
 
+.main-pass-buttons {
+  padding: 0;         /* Remove default padding */
+  border: none;       /* Remove default border */
+  background: none;   /* Remove default background */
+  width: 80px;        /* Ensure the button has the same width as the image */
+  height: 80px;       /* Ensure the button has the same height as the image */
+  display: flex;      /* Flexbox to center content if needed */
+  align-items: center;/* Center image vertically */
+  justify-content: center; /* Center image horizontally */
+}
+
 .collection-pass-icons {
-  height: 40px;
-  width: 40px;
+  width: 100%;        /* Make the image fill the button */
+  height: 100%;       /* Make the image fill the button */
+  object-fit: cover;
 }
 
 
@@ -500,11 +512,9 @@ button.next {
 .pass-popup-title {
   color: white;
   font-weight: bold;
-  font-size: large;
+  font-size: xx-large;
   font-family: 'Jura', sans-serif;
 }
-
-
 
 .pass-popup-buttons {
   display: flex;
@@ -513,19 +523,58 @@ button.next {
   align-self: bottom;
 }
 
-.pass-popup-button {
-  background-color: #4CAF50;
-  color: white;
-  font-size: small;
+.pass-popup-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  background: none;
   border: none;
-  border-radius: 10px;
-  margin: 10px;
-  vertical-align: center;
-  flex: 20%;
-  outline: none;
+  color: white;
+  font-weight: bold;
 }
 
-.pass-popup-close-button {
+.collection-modal-overlay {
+  z-index: 9999;
+  min-width: 100%;
+  min-height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collection-modal-box {
+  display: block;
+  background-image: url(img/woodenBg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 90%;
+  height: fit-content;
+  padding: 1rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.collection-popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 2rem 1rem 1rem 1rem;
+}
+
+.collection-popup-title {
+  color: white;
+  font-weight: bold;
+  font-size: xx-large;
+  font-family: 'Jura', sans-serif;
+}
+
+.collection-popup-close-button {
   position: absolute;
   top: 0;
   right: 0;
