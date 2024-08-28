@@ -37,6 +37,7 @@ import trophySectionImg from './../../img/plantPass/trophySection.png'
 import passSectionImg from './../../img/plantPass/passSection.png'
 import { Col, Row } from 'antd';
 import { trophies } from '../../db/trophies';
+import { updateUserToPremium } from '../../db/firebaseConfig';
 
 
 const vegetableImages: { [key: string]: string } = {
@@ -432,6 +433,8 @@ const PassPopUp: React.FC<PassPopUpProps> = ({ items, setItems, appleScore, setA
   };
 
   const handlePlantPassUpgrade = () => {
+    updateUserToPremium(String(window.Telegram.WebApp.initDataUnsafe.user.id))
+    
     //Unlock a new field
     const newField: Field = {
       vegetable: "",

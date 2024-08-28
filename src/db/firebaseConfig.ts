@@ -49,9 +49,27 @@ export const updateUser = async (userId: string) => {
     await updateDoc(userRef, {
       isActive: true
     });
+
     return true;
   } catch (error) {
     console.error("Error activating user: ", error);
+    return false;
+  }
+};
+
+export const updateUserToPremium = async (userId: string) => {
+  try {
+    // Create a reference to the document with the provided userId
+    const userRef = doc(db, "users", userId);
+    
+    // Update the isActive field to true
+    await updateDoc(userRef, {
+      septemberPass: true
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error updating user: ", error);
     return false;
   }
 };
@@ -72,7 +90,8 @@ export const getUsersReferredBy = async (userId: number) => {
       id: doc.id,
       isActive: doc.data().isActive,
       name: doc.data().name,
-      referredBy: doc.data().referredBy
+      referredBy: doc.data().referredBy, 
+      septemberPass: doc.data().septemberPass
     }));
     return referredUsers;
   } catch (error) {

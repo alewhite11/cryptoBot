@@ -55,7 +55,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
             </div>
             <div className='friend-list-inner'>
               {friendList.slice().sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1)).map((item, key) => (
-                <FriendItem name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowScratchcard={setShowScratchcard} setFoundScratchcard={setFoundScratchcard}/>
+                <FriendItem item={item} name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowScratchcard={setShowScratchcard} setFoundScratchcard={setFoundScratchcard}/>
               ))}
             </div> 
           </div>
@@ -67,6 +67,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
 };
 
 interface FriendItemProps {
+  item: Friend;
   name: string;
   isActive: boolean;
   userId: string;
@@ -81,8 +82,7 @@ interface FriendItemProps {
   setFoundScratchcard: (scratchcard: ScratchCardContent) => void;
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ name, isActive, userId, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore, setShowScratchcard, setFoundScratchcard }) => {
-  
+const FriendItem: React.FC<FriendItemProps> = ({ item, name, isActive, userId, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore, setShowScratchcard, setFoundScratchcard }) => { 
 
   const onClaimClick = () => {
     updateFriendListCallback(cs, userId)

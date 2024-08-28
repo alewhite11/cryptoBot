@@ -21,6 +21,7 @@ import { RiPlantFill } from "react-icons/ri";
 import NumberTicker from './components/utils/NumberTicker';
 import DesktopPage from './components/DesktopPage';
 import RestartBotPage from './components/RestartBotPage';
+import tonImg from './img/invitePage/ton.png'
 
 
 declare global {
@@ -41,6 +42,7 @@ function App() {
   const [registered, setRegistered] = useState(0) //Used to see if it was the first access
 
   //Application data states
+  const [tonScore, setTonScore] = useState(0)
   const [score, setScore] = useState(0);
   const [appleScore, setAppleScore] = useState(0)
   const [plantScore, setPlantScore] = useState(0)
@@ -100,7 +102,7 @@ function App() {
           if (!cloudStorage) return; // Ensure cloudStorage is initialized
           getPassStatusCallback(cloudStorage, setPassStatus)
           getRegisteredCallback(cloudStorage, setRegistered)
-          getFriendListCallback(cloudStorage,  window.Telegram.WebApp.initDataUnsafe.user.id, setFirestoreFriendList)
+          getFriendListCallback(cloudStorage,  window.Telegram.WebApp.initDataUnsafe.user.id, setFirestoreFriendList, setTonScore)
           getAppleScoreCallback(cloudStorage, setAppleScore)
           getPlantScoreCallback(cloudStorage, setPlantScore)
           getLastAccessDateCallback(cloudStorage, setLastAccessDate)
@@ -230,9 +232,9 @@ function App() {
         {contextHolder}
       {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
       {!loading && (registered === 2) &&
-      <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)' }}>
+      <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)'}}>
         {currentPage !== 2 && <div className='App-common-header'>
-          <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
+          {currentPage !== 4 && <><div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
             <div className='main-balance'>
               <img className='main-balance-icon' src={appleImg} alt={"apple"} />
               <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
@@ -251,7 +253,18 @@ function App() {
               <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
               <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
             </div>
-          </div>
+          </div></>}
+          {currentPage === 4 &&
+            <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+              <div className='main-balance' style={{alignItems: 'flex-start', width: '50%'}}>
+                <img className='main-balance-icon' src={tonImg} alt={"coin"} style={{ backgroundColor: '#0089CD', borderRadius: '50%' }}/>
+                <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+              </div>
+              <div className='main-coins' style={{width: '50%'}}>
+                <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={Number(tonScore.toFixed(1))} /></span>
+              </div>
+            </div>
+          }
         </div>}
         <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
           <MainContent items={items} setItems={setItems} dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} passStatus={passStatus} setPassStatus={setPassStatus}/>

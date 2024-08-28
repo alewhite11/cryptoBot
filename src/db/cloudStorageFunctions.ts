@@ -418,7 +418,7 @@ export const getClaimableCallback = (
 };
 
 //Get friend list
-export const getFriendListCallback = async (cs : CloudStorage | null, telegramId : number, setFreindList : (friends : Friend[]) => void) : Promise<void> => {
+export const getFriendListCallback = async (cs : CloudStorage | null, telegramId : number, setFreindList : (friends : Friend[]) => void, setTonScore: (tonScore: number) => void) : Promise<void> => {
   if (!isCloudStorageAvailable(cs)) {
     return;
   }
@@ -440,7 +440,13 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
             try {
                 // Parse JSON string to array of boolean objects
                 const parsedFriendList: Friend[] = JSON.parse(friendList);
-  
+                var tonScore = 0
+                parsedFriendList.forEach(user => {
+                  if(user.septemberPass === true){
+                    tonScore += 0.1
+                  }
+                });
+                setTonScore(tonScore)
                 // Update state with fetched booleans
                 setFreindList(parsedFriendList);
             } catch (parseError) {
@@ -457,11 +463,16 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
         });
       }else{
         //More than 24h ago
+        var tonScore = 0
         var friendListFS : Friend[] = []
         var friends = await getUsersReferredBy(telegramId)
         friends.forEach(user => {
-          friendListFS.push({id: user.id, name : user.name, isActive: user.isActive})
+          if(user.septemberPass === true){
+            tonScore += 0.1
+          }
+          friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass })
         });
+        setTonScore(tonScore)
         setFreindList(friendListFS)
         cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
           if(error){
@@ -475,12 +486,17 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
         });
       } 
     }else{
+      var tonScore = 0
       var friendListFS : Friend[] = []
       var friends = await getUsersReferredBy(telegramId)
       friends.forEach(user => {
-        friendListFS.push({id: user.id, name : user.name, isActive: user.isActive})
+        if(user.septemberPass === true){
+          tonScore += 0.1
+        }
+        friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass })
       });
       setFreindList(friendListFS)
+      setTonScore(tonScore)
       cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
         if(error){
             return;
