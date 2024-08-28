@@ -153,6 +153,32 @@ body, html {
   flex: 80%;
 }
 
+.main-send-button {
+  background-color: #0089CD;
+  align-self: bottom;
+  color: white;
+  font-size: small;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  outline: none;
+}
+
+.main-send-button-disabled {
+  background-color: #535653;
+  align-self: bottom;
+  color: white;
+  font-size: small;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  outline: none;
+}
+
 .main-field {
   flex: 60%;
   margin-top: 20px;

@@ -446,7 +446,20 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
                     tonScore += 0.1
                   }
                 });
-                setTonScore(tonScore)
+                cs?.getItem("withdrawedTONs", (error, value) => {
+                  if (error) {
+                    return;
+                  }
+              
+                  if (value !== undefined && !isNaN(parseFloat(value))) {
+                    //Not first withdraw, increment and save
+                    var previousValue = parseFloat(value)
+                    var newScore = tonScore - previousValue
+                    setTonScore(newScore)
+                  }else{
+                    setTonScore(tonScore)
+                  }
+                });
                 // Update state with fetched booleans
                 setFreindList(parsedFriendList);
             } catch (parseError) {
@@ -472,7 +485,20 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
           }
           friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass })
         });
-        setTonScore(tonScore)
+        cs?.getItem("withdrawedTONs", (error, value) => {
+          if (error) {
+            return;
+          }
+      
+          if (value !== undefined && !isNaN(parseFloat(value))) {
+            //Not first withdraw, increment and save
+            var previousValue = parseFloat(value)
+            var newScore = tonScore - previousValue
+            setTonScore(newScore)
+          }else{
+            setTonScore(tonScore)
+          }
+        });
         setFreindList(friendListFS)
         cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
           if(error){
@@ -496,7 +522,21 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
         friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass })
       });
       setFreindList(friendListFS)
-      setTonScore(tonScore)
+      cs?.getItem("withdrawedTONs", (error, value) => {
+        if (error) {
+          return;
+        }
+    
+        if (value !== undefined && !isNaN(parseFloat(value))) {
+          //Not first withdraw, increment and save
+          var previousValue = parseFloat(value)
+          var newScore = tonScore - previousValue
+          setTonScore(newScore)
+        }else{
+          setTonScore(tonScore)
+        }
+      });
+      
       cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
         if(error){
             return;
@@ -775,6 +815,35 @@ export const setItemsCallback = (cs: CloudStorage | null, items: boolean[]): voi
       }
     } else {
       setItems([]);
+    }
+  });
+};
+
+export const incrementWithdrawedTONs = (cs: CloudStorage, newWithdrawAmount: number) : void => {
+  if(!isCloudStorageAvailable(cs)){
+    return;
+  }
+
+  cs?.getItem("withdrawedTONs", (error, value) => {
+    if (error) {
+      return;
+    }
+
+    if (value !== undefined && !isNaN(parseFloat(value))) {
+      //Not first withdraw, increment and save
+      var previousValue = parseFloat(value)
+      var newValue = previousValue + newWithdrawAmount
+      cs?.setItem("withdrawedTONs", newWithdrawAmount.toString(), (error: any, stored: boolean) => {
+        if(error){
+            return;
+        }
+      });
+    }else{
+      cs?.setItem("withdrawedTONs", newWithdrawAmount.toString(), (error: any, stored: boolean) => {
+        if(error){
+            return;
+        }
+      });
     }
   });
 };

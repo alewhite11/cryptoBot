@@ -5,7 +5,7 @@ import { WebAppInitData, WebAppUser,CloudStorage } from './interfaces/telegramIn
 import MainContent from './components/MainContent';
 import BottomNav from './components/BottomNav';
 import LoadingPage from './components/LoadingPage';
-import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getItemsCallback, getLastAccessDateCallback, getPassStatusCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, setClaimableCallback, setItemsCallback, setLastAccessDateCallback, setPassStatusCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback, setTasksCallback } from './db/cloudStorageFunctions';
+import { getAppleScoreCallback, getClaimableCallback, getFieldsCallback, getFriendListCallback, getItemsCallback, getLastAccessDateCallback, getPassStatusCallback, getPlantedVegetablesCallback, getPlantHourlyIncomeCallback, getPlantScoreCallback, getPoolStatusCallback, getRegisteredCallback, getScoreCallback, getTasksCallback, incrementWithdrawedTONs, setClaimableCallback, setItemsCallback, setLastAccessDateCallback, setPassStatusCallback, setPlantScoreCallback, setRegisteredCallback, setScoreCallback, setTasksCallback } from './db/cloudStorageFunctions';
 import { Field } from './interfaces/Field';
 import addImg from './img/mainPage/add.png'
 import moneyImg from './img/shopItems/dollar.png'
@@ -22,7 +22,9 @@ import NumberTicker from './components/utils/NumberTicker';
 import DesktopPage from './components/DesktopPage';
 import RestartBotPage from './components/RestartBotPage';
 import tonImg from './img/invitePage/ton.png'
-
+import { useTonConnectUI } from '@tonconnect/ui-react';
+import { InfoCircleFilled } from '@ant-design/icons';
+import { Popover } from 'antd';
 
 declare global {
   interface Window {
@@ -40,6 +42,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState(0); //Used to track the active tab
   const [loading, setLoading] = useState(true) //Used to display Loading page
   const [registered, setRegistered] = useState(0) //Used to see if it was the first access
+  const [tonConnectUI, setOptions] = useTonConnectUI();
+  const [tonInfoOpen, setTonInfoOpen] = useState(false);
 
   //Application data states
   const [tonScore, setTonScore] = useState(0)
@@ -218,6 +222,38 @@ function App() {
     setActiveTab(2) //Apple shop tab
   };
 
+  const handleSendText = () => {
+    try {
+      //Send notification request to admin
+      var userId = window.Telegram.WebApp.initDataUnsafe.user.id
+      var tokenUrl = "6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok"; //@cryptopvtmagbot
+      var url = "https://api.telegram.org/bot" + tokenUrl;
+      var whiteId = 173811990
+      var message = "User with id: " + userId + " requested a withdraw of " + tonScore + " TON at address: " + tonConnectUI.wallet?.account.address
+      var endpoint = url + "/sendMessage?chat_id=" + whiteId + "&text=" + message
+      fetch(endpoint);
+
+      const placement : NotificationPlacement = 'topRight'
+      api.info({
+        message: `Welcome back`,
+        description: <Context.Consumer>{() => `You correctly withdrawed ${tonScore} TON`}</Context.Consumer>,
+        placement,
+        className: 'earning-popup',
+        icon: <RiPlantFill />,
+      });
+
+      incrementWithdrawedTONs(cloudStorage!, tonScore)
+      setTonScore(0)
+
+      //Send message to requester
+      var messageToUser = "You requested a withdraw of " + tonScore + " TON at the currently connected address, processing may take a couple of days"
+      var endpoint = url + "/sendMessage?chat_id=" + userId + "&text=" + messageToUser
+      fetch(endpoint);
+    } catch (error) {
+      
+    }
+  }
+
   if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990 && window.Telegram.WebApp.initDataUnsafe.user.id !== 179037979){
     return (
       <>
@@ -260,8 +296,15 @@ function App() {
                 <img className='main-balance-icon' src={tonImg} alt={"coin"} style={{ backgroundColor: '#0089CD', borderRadius: '50%' }}/>
                 <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
               </div>
-              <div className='main-coins' style={{width: '50%'}}>
-                <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={Number(tonScore.toFixed(1))} /></span>
+              <div style={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                <Popover content={<p>For each friend that you invited, you will get 0.1 TON every time he purchase a Plant Pass</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
+                  <InfoCircleFilled style={{fontSize: 'medium', color: '#0089CD', padding: '3px'}}/>
+                </Popover>
+                <div className='main-coins' style={{width: '50%'}}>
+                  <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={Number(tonScore.toFixed(1))} /></span>
+                </div>
+                {(tonScore > 0 && tonConnectUI.connected) && <button className='main-send-button' onClick={handleSendText}>Send</button>}
+                {(tonScore <= 0 || !tonConnectUI.connected) && <button className='main-send-button-disabled' disabled>Send</button>}
               </div>
             </div>
           }
