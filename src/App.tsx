@@ -297,7 +297,7 @@ function App() {
                 <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
               </div>
               <div style={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                <Popover content={<p>For each friend that you invited, you will get 0.1 TON every time he purchase a Plant Pass</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
+                <Popover style={{width: '90%'}} content={<p>You will earn 0.1 TON every time one of your friends buys a Plant Pass</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
                   <InfoCircleFilled style={{fontSize: 'medium', color: '#0089CD', padding: '3px'}}/>
                 </Popover>
                 <div className='main-coins' style={{width: '50%'}}>

@@ -1118,7 +1118,7 @@ button.next {
 
 /* LOADING PAGE */
 .Loading-component {
-  background-image: url(img/loadingBg.jpg);
+  background-image: url(img/plantPass/septemberBg.jpg);
   background-repeat: no-repeat;
   background-size: cover; /* Remove quotes from 'cover' */
   height: 100vh;
@@ -1131,16 +1131,20 @@ button.next {
 }
 
 .Loading-title {
-  color: white;
+  position: absolute;
+  top: 10px;
+  width: 80%; 
+  text-align: center;
+  color: #e3bf0b;
   font-weight: bold;
-  font-size: 4rem; /* Increase the font size */
+  font-size: 2rem; /* Increase the font size */
   text-align: center; /* Center align text */
   margin: 0; /* Remove default margin */
   text-shadow: 
-    -1px -1px 0 #000,  
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
+    -1px -1px 0 #bc9d06,  
+    1px -1px 0 #bc9d06,
+    -1px 1px 0 #bc9d06,
+    1px 1px 0 #bc9d06;
 }
 
 .Loading-content {
@@ -1424,6 +1428,39 @@ button.next {
     1px -1px 0 #000,
     -1px 1px 0 #000,
     1px 1px 0 #000;
+}
+
+.friend-name-premium {
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  font-family: 'Jura', sans-serif;
+  text-align: left;
+  justify-content: flex-start;
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+  animation: colorChange 3s infinite alternate; /* Add animation here */
+}
+
+@keyframes colorChange {
+  0% {
+    color: white; /* Start color */
+  }
+  25% {
+    color: yellow; /* Intermediate color */
+  }
+  50% {
+    color: orange; /* Intermediate color */
+  }
+  75% {
+    color: red; /* Intermediate color */
+  }
+  100% {
+    color: blue; /* End color */
+  }
 }
 
 .friend-image img {

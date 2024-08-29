@@ -54,7 +54,7 @@ const MainContent: React.FC<MainContentProps> = ({ items, setItems, passStatus, 
       {page === 1 && <ShopTab passStatus={passStatus} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setCurrentPage={setCurrentPage} fields={fields} setFields={setFields} cs={cs} activeField={activeField} setActiveField={setActiveField} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables}/>}
       {page === 2 && <PlantTab appleScore={appleScore} plantScore={plantScore} setPlantScore={setPlantScore} poolStatus={poolStatus} setPoolStatus={setPoolStatus} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} cs={cs}/>}
       {page === 3 && <TasksTab friendList={friendList} setActiveField={setActiveField} fields={fields} setFields={setFields} setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
-      {page === 4 && <InviteTab friendList={friendList} setFriendList={setFriendList} cs={cs} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore}/>}
+      {page === 4 && <InviteTab passStatus={passStatus} friendList={friendList} setFriendList={setFriendList} cs={cs} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore}/>}
       {/*page === 5 && <WalletTab user={window.Telegram.WebApp.initDataUnsafe.user}/>*/}
     </div>
   );

@@ -22,9 +22,10 @@ interface InviteTabProps {
   setScore: (score: number) => void;
   appleScore: number;
   setAppleScore: (score: number) => void;
+  passStatus: boolean;
 }
 
-const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore }) => {
+const InviteTab: React.FC<InviteTabProps> = ({ passStatus, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore }) => {
   const totalFriends = friendList.length;
   const activeFriends = friendList.filter(f => f.isActive).length;
   const [showScratchcard, setShowScratchcard] = useState(false)
@@ -55,7 +56,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ friendList, setFriendList, cs, sc
             </div>
             <div className='friend-list-inner'>
               {friendList.slice().sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1)).map((item, key) => (
-                <FriendItem item={item} name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowScratchcard={setShowScratchcard} setFoundScratchcard={setFoundScratchcard}/>
+                <FriendItem passStatus={passStatus} item={item} name={item.name} isActive={item.isActive} userId={item.id} friendList={friendList} setFriendList={setFriendList} cs={cs}score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} setShowScratchcard={setShowScratchcard} setFoundScratchcard={setFoundScratchcard}/>
               ))}
             </div> 
           </div>
@@ -80,9 +81,10 @@ interface FriendItemProps {
   setAppleScore: (score: number) => void;
   setShowScratchcard: (show: boolean) => void;
   setFoundScratchcard: (scratchcard: ScratchCardContent) => void;
+  passStatus: boolean;
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ item, name, isActive, userId, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore, setShowScratchcard, setFoundScratchcard }) => { 
+const FriendItem: React.FC<FriendItemProps> = ({ passStatus, item, name, isActive, userId, friendList, setFriendList, cs, score, setScore, appleScore, setAppleScore, setShowScratchcard, setFoundScratchcard }) => { 
 
   const onClaimClick = () => {
     updateFriendListCallback(cs, userId)
@@ -106,9 +108,12 @@ const FriendItem: React.FC<FriendItemProps> = ({ item, name, isActive, userId, f
       <div className='friend-image'>
         <img src={tokenCoinImg} alt={"friend"}/>
       </div>
-      <div className='friend-name'>
+      {!item.septemberPass && <div className='friend-name'>
         <p>{name}</p>
-      </div>
+      </div>}
+      {item.septemberPass && <div className='friend-name-premium'>
+        <p>{name}</p>
+      </div>}
       <div className='friend-status'>
         {!isActive && (<>
           <button className='claim-btn' style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} onClick={onClaimClick}><SlPresent size={20} color="inherit"/></button>
