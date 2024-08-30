@@ -254,7 +254,7 @@ function App() {
     }
   }
 
-  if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990 && window.Telegram.WebApp.initDataUnsafe.user.id !== 179037979){
+  if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990 && window.Telegram.WebApp.initDataUnsafe.user.id !== 179037979 && window.Telegram.WebApp.initDataUnsafe.user.id !== 195915568){
     return (
       <>
         <RestartBotPage />
