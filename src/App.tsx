@@ -20,7 +20,6 @@ import React from 'react';
 import { RiPlantFill } from "react-icons/ri";
 import NumberTicker from './components/utils/NumberTicker';
 import DesktopPage from './components/DesktopPage';
-import RestartBotPage from './components/RestartBotPage';
 import tonImg from './img/invitePage/ton.png'
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { InfoCircleFilled } from '@ant-design/icons';
@@ -249,74 +248,67 @@ function App() {
     }
   }
 
-  if(window.Telegram.WebApp.initDataUnsafe.user.id !== 173811990 && window.Telegram.WebApp.initDataUnsafe.user.id !== 179037979 && window.Telegram.WebApp.initDataUnsafe.user.id !== 195915568){
-    return (
-      <>
-        <RestartBotPage />
-      </>
-    )
-  }else{
-    return (
-      <>
-      {!(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <DesktopPage />}
-      {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <Context.Provider value={contextValue}>
-        {contextHolder}
-      {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
-      {!loading && (registered === 2) &&
-      <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)'}}>
-        {currentPage !== 2 && <div className='App-common-header'>
-          {currentPage !== 4 && <><div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
-            <div className='main-balance'>
-              <img className='main-balance-icon' src={appleImg} alt={"apple"} />
+  return (
+    <>
+    {!(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <DesktopPage />}
+    {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <Context.Provider value={contextValue}>
+      {contextHolder}
+    {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
+    {!loading && (registered === 2) &&
+    <div className='min-height-css' style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', backgroundImage: 'url(img/mainBg.png)'}}>
+      {currentPage !== 2 && <div className='App-common-header'>
+        {currentPage !== 4 && <><div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: '10px'}}>
+          <div className='main-balance'>
+            <img className='main-balance-icon' src={appleImg} alt={"apple"} />
+            <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+          </div>
+          <div className='main-coins'>
+            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={appleScore} /></span>
+            <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
+          </div>
+        </div>
+        <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
+          <div className='main-balance' style={{alignItems: 'flex-start'}}>
+            <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
+            <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
+          </div>
+          <div className='main-coins'>
+            <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
+            <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
+          </div>
+        </div></>}
+        {currentPage === 4 &&
+          <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <div className='main-balance' style={{alignItems: 'flex-start', width: '50%'}}>
+              <img className='main-balance-icon' src={tonImg} alt={"coin"} style={{ backgroundColor: '#0089CD', borderRadius: '50%' }}/>
               <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
             </div>
-            <div className='main-coins'>
-              <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={appleScore} /></span>
-              <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
+            <div style={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+              <Popover style={{width: '90%'}} content={<p>You will earn 0.1 TON every time one of your friends gets a Plant Pass. You will recognize that because the name of the premium friends will be highlighted in the list.</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
+                <InfoCircleFilled style={{fontSize: 'medium', color: '#0089CD', padding: '3px'}}/>
+              </Popover>
+              <div className='main-coins' style={{width: '50%'}}>
+                <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={Number(tonScore.toFixed(1))} /></span>
+              </div>
+              {(tonScore > 0 && tonConnectUI.connected) && <button className='main-send-button' onClick={handleSendText}>Send</button>}
+              {(tonScore <= 0 || !tonConnectUI.connected) && <button className='main-send-button-disabled' disabled>Send</button>}
             </div>
           </div>
-          <div style={{width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px'}}>
-            <div className='main-balance' style={{alignItems: 'flex-start'}}>
-              <img className='main-balance-icon' src={moneyImg} alt={"coin"} />
-              <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
-            </div>
-            <div className='main-coins'>
-              <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
-              <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
-            </div>
-          </div></>}
-          {currentPage === 4 &&
-            <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-              <div className='main-balance' style={{alignItems: 'flex-start', width: '50%'}}>
-                <img className='main-balance-icon' src={tonImg} alt={"coin"} style={{ backgroundColor: '#0089CD', borderRadius: '50%' }}/>
-                <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
-              </div>
-              <div style={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                <Popover style={{width: '90%'}} content={<p>You will earn 0.1 TON every time one of your friends gets a Plant Pass. You will recognize that because the name of the premium friends will be highlighted in the list.</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
-                  <InfoCircleFilled style={{fontSize: 'medium', color: '#0089CD', padding: '3px'}}/>
-                </Popover>
-                <div className='main-coins' style={{width: '50%'}}>
-                  <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={Number(tonScore.toFixed(1))} /></span>
-                </div>
-                {(tonScore > 0 && tonConnectUI.connected) && <button className='main-send-button' onClick={handleSendText}>Send</button>}
-                {(tonScore <= 0 || !tonConnectUI.connected) && <button className='main-send-button-disabled' disabled>Send</button>}
-              </div>
-            </div>
-          }
-        </div>}
-        <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
-          <MainContent items={items} setItems={setItems} dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} passStatus={passStatus} setPassStatus={setPassStatus}/>
-        </div>
-        <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
+        }
+      </div>}
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%', justifyContent: 'center' }}>
+        <MainContent items={items} setItems={setItems} dailyStreak={dailyStreak} activeTab={activeTab} setActiveTab={setActiveTab} addClicked={addClicked} setAddClicked={setAddClicked} page={currentPage} setCurrentPage={setCurrentPage} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} plantScore={plantScore} setPlantScore={setPlantScore} fields={fields} setFields={setFields} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks} cs={cloudStorage} plantedVegetables={plantedVegetables} setPlantedVegetables={setPlantedVegetables} poolStatus={poolStatus} setPoolStatus={setPoolStatus} friendList={firestoreFriendList} setFriendList={setFirestoreFriendList} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} passStatus={passStatus} setPassStatus={setPassStatus}/>
       </div>
-      }   
-      {loading &&
-      <LoadingPage />
-      }
-      </Context.Provider>}
-      </>
-    );
-  }
+      <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} tasks={tasks}/>
+    </div>
+    }   
+    {loading &&
+    <LoadingPage />
+    }
+    </Context.Provider>}
+    </>
+  );
+
 }
 
 export default App;
