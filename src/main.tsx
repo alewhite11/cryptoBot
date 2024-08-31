@@ -4,7 +4,7 @@ import App from './App.tsx'
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 
 
-const manifestUrl = 'https://planttoken-7e33c.web.app/tonconnect-manifest.json';
+const manifestUrl = 'https://plant-3uf.pages.dev/tonconnect-manifest.json';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <TonConnectUIProvider manifestUrl={manifestUrl}>
