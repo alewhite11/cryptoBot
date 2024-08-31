@@ -226,11 +226,11 @@ function App() {
     try {
       //Send notification request to admin
       var userId = window.Telegram.WebApp.initDataUnsafe.user.id
-      var tokenUrl = "6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok"; //@cryptopvtmagbot
-      var url = "https://api.telegram.org/bot" + tokenUrl;
+      var tokenUrlAdmin = "7527979087:AAHhWJwMtBh7an7ydUMpM4B12pAaN-X32hE" //@RequestPaymentPlantBot
+      var urlAdmin = "https://api.telegram.org/bot" + tokenUrlAdmin;
       var whiteId = 173811990
       var message = "User with id: " + userId + " requested a withdraw of " + tonScore + " TON at address: " + tonConnectUI.wallet?.account.address
-      var endpoint = url + "/sendMessage?chat_id=" + whiteId + "&text=" + message
+      var endpoint = urlAdmin + "/sendMessage?chat_id=" + whiteId + "&text=" + message
       fetch(endpoint);
 
       const placement : NotificationPlacement = 'topRight'
@@ -247,6 +247,8 @@ function App() {
 
       //Send message to requester
       var messageToUser = "You requested a withdraw of " + tonScore + " TON at the currently connected address, processing may take a couple of days"
+      var tokenUrl = "6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok"; //@cryptopvtmagbot
+      var url = "https://api.telegram.org/bot" + tokenUrl;
       var endpoint = url + "/sendMessage?chat_id=" + userId + "&text=" + messageToUser
       fetch(endpoint);
     } catch (error) {
@@ -297,7 +299,7 @@ function App() {
                 <span className='main-balance-text' style={{ fontFamily: 'Jura, sans-serif' }}>Balance:</span>
               </div>
               <div style={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                <Popover style={{width: '90%'}} content={<p>You will earn 0.1 TON every time one of your friends buys a Plant Pass</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
+                <Popover style={{width: '90%'}} content={<p>You will earn 0.1 TON every time one of your friends gets a Plant Pass. You will recognize that because the name of the premium friends will be highlighted in the list.</p>} title="How to earn TON" trigger="click" open={tonInfoOpen} onOpenChange={() => {setTonInfoOpen(!tonInfoOpen)}}>
                   <InfoCircleFilled style={{fontSize: 'medium', color: '#0089CD', padding: '3px'}}/>
                 </Popover>
                 <div className='main-coins' style={{width: '50%'}}>
