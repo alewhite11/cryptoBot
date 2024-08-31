@@ -236,7 +236,7 @@ function App() {
       const placement : NotificationPlacement = 'topRight'
       api.info({
         message: `Welcome back`,
-        description: <Context.Consumer>{() => `You correctly withdrawed ${tonScore} TON`}</Context.Consumer>,
+        description: <Context.Consumer>{() => `You correctly withdrawed ${tonScore} TON, admins will review it and you will receive the transactions in less than 48 hours`}</Context.Consumer>,
         placement,
         className: 'earning-popup',
         icon: <RiPlantFill />,
@@ -244,13 +244,6 @@ function App() {
 
       incrementWithdrawedTONs(cloudStorage!, tonScore)
       setTonScore(0)
-
-      //Send message to requester
-      var messageToUser = "You requested a withdraw of " + tonScore + " TON at the currently connected address, processing may take a couple of days"
-      var tokenUrl = "6902319344:AAG6ntvcf5-_JZiOtNmW0gIfeiSZDgmTZok"; //@cryptopvtmagbot
-      var url = "https://api.telegram.org/bot" + tokenUrl;
-      var endpoint = url + "/sendMessage?chat_id=" + userId + "&text=" + messageToUser
-      fetch(endpoint);
     } catch (error) {
       
     }

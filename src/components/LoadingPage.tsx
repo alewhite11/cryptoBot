@@ -14,14 +14,6 @@ const LoadingPage = () => {
     return(
         <div className="Loading-component">
           <h1 className="Loading-title">GOLDEN APPLE SEASON</h1>
-          {/*<div className="Loading-content">
-            <p>Plant tokens, embrace nature</p>
-            <ClockLoader 
-              loading
-              size={60}
-              color="white"
-            />
-          </div>*/}
           <p className='Loading-tip'>{tips[tipIndex]}</p>
           <progress style={{position: 'absolute', bottom: '5px', width: '90%'}} color='#e3bf0b'/>
         </div>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import MainTab from './tabs/MainTab';
-import WalletTab from './tabs/WalletTab';
 import TasksTab from './tabs/TasksTab';
 import InviteTab from './tabs/InviteTab';
 import ShopTab from './tabs/ShopTab';
@@ -55,7 +54,6 @@ const MainContent: React.FC<MainContentProps> = ({ items, setItems, passStatus, 
       {page === 2 && <PlantTab appleScore={appleScore} plantScore={plantScore} setPlantScore={setPlantScore} poolStatus={poolStatus} setPoolStatus={setPoolStatus} plantHourlyIncome={plantHourlyIncome} setPlantHourlyIncome={setPlantHourlyIncome} cs={cs}/>}
       {page === 3 && <TasksTab friendList={friendList} setActiveField={setActiveField} fields={fields} setFields={setFields} setCurrentPage={setCurrentPage} dailyStreak={dailyStreak} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs} tasks={tasks} setTasks={setTasks} claimableTasks={claimableTasks} setClaimableTasks={setClaimableTasks}/>}
       {page === 4 && <InviteTab passStatus={passStatus} friendList={friendList} setFriendList={setFriendList} cs={cs} score={score} setScore={setScore} appleScore={appleScore} setAppleScore={setAppleScore}/>}
-      {/*page === 5 && <WalletTab user={window.Telegram.WebApp.initDataUnsafe.user}/>*/}
     </div>
   );
 };
