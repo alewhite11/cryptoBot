@@ -13,6 +13,8 @@ import { ScratchCard } from '../utils/ScratchCard';
 import scratchCardImg from './../../img/scratchcard/cardToScratch.jpg'
 import moneyImg from './../../img/shopItems/dollar.png'
 import appleImg from './../../img/shopItems/apple.png'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+
 
 interface InviteTabProps {
   friendList : Friend[];
@@ -30,10 +32,34 @@ const InviteTab: React.FC<InviteTabProps> = ({ passStatus, friendList, setFriend
   const activeFriends = friendList.filter(f => f.isActive).length;
   const [showScratchcard, setShowScratchcard] = useState(false)
   const [foundScratchcard, setFoundScratchcard] = useState<ScratchCardContent>(inviteScratchcards[0])
+  const [mainPopupOpened, setMainPopupOpened] = useState<boolean>(false);
   
   const handleInviteClick = () => {
     window.location.href = 'https://t.me/share/url?url=https://t.me/plant_token_bot/Plant?startapp=' + window.Telegram.WebApp.initDataUnsafe.user.id
   };
+
+  const handleClaimAllClicked = () => {
+    var friendToCollect : Friend[] = friendList.filter(f => !f.isActive)
+    var newScore = score
+    var newAppleScore = appleScore
+    var updateFriendList = [...friendList]
+    friendToCollect.forEach(friend => {
+      updateFriendListCallback(cs, friend.id)
+      var x = getRandomNumber(1,10000)
+      var foundChest = inviteScratchcards.find(card => x >= card.minProb && x <= card.maxProb);
+      newScore = newScore + foundChest!!.score
+      setScore(newScore)
+      newAppleScore = newAppleScore + foundChest!!.appleScore
+      setAppleScore(newAppleScore)
+      const friendIndex = updateFriendList.findIndex(f => f.id === friend.id);
+      if (friendIndex !== -1) {
+      updateFriendList[friendIndex].isActive = true;
+      }
+    })
+    setFriendList(updateFriendList)
+    setScoreCallback(cs, newScore)
+    setAppleScoreCallback(cs, newAppleScore)
+  }
 
   return (
     <>
@@ -46,7 +72,11 @@ const InviteTab: React.FC<InviteTabProps> = ({ passStatus, friendList, setFriend
           <div className='invite-dialog'>
             <h2 className='invite-title'>Invite friends</h2>
             <p className='invite-text'>For each friend that join and unlocks the spinach vegetable, you will get a chest with random apple prize</p>
-            <button className='invite-btn' onClick={handleInviteClick}>Invite</button>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+              <button className='invite-btn' onClick={handleInviteClick}>Invite</button>
+              {activeFriends !== totalFriends && <button className='invite-btn' onClick={() => {setMainPopupOpened(true)}}>Claim all</button>}
+              {activeFriends === totalFriends && <button className='invite-btn-disabled' disabled>Claim all</button>}
+            </div>
           </div>
           <div className='friend-list'> 
             <p className='invite-warning'>Friend list is updated once a day</p>
@@ -61,6 +91,7 @@ const InviteTab: React.FC<InviteTabProps> = ({ passStatus, friendList, setFriend
             </div> 
           </div>
         </div> 
+        {mainPopupOpened && <MainPopUp handleClaimAllClicked={handleClaimAllClicked} setMainPopupOpened={setMainPopupOpened} friends={totalFriends-activeFriends}/>}
       </header>
     </div>}
     </>
@@ -157,6 +188,46 @@ const ScratchCardItem: React.FC<ScratchCardItemProps> = ({ setShowScratchcard, f
 
 function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+interface MainPopUpProps {
+  setMainPopupOpened: (opened: boolean) => void;
+  handleClaimAllClicked : () => void;
+  friends: number;
+}
+
+const MainPopUp: React.FC<MainPopUpProps> = ({ handleClaimAllClicked, setMainPopupOpened, friends }) => {
+  const handleOverlayClick = () => {
+    setMainPopupOpened(false)
+  };
+
+  const handleCancelClick = () => {
+    setMainPopupOpened(false)
+  }
+
+  const handlePopUpClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+  };
+
+  return (
+    <>
+      <div className="main-modal-overlay" onClick={handleOverlayClick} >
+        <div  className="main-modal-box" onClick={handlePopUpClick}>
+          <button className="main-popup-close-button" onClick={handleCancelClick}><CloseRoundedIcon style={{height: '25px', width: '25px', borderRadius: '50%', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}/></button>
+          <div className='main-popup-content'>
+            <div className='main-popup-title'>Warning</div>
+            <div className='shop-reward-text'>
+              <p>This action is not reversible, you will not see any scratchcard, but the found resources will be automathically added to your balances. This action is equivalent to open all {friends} remaining scratchcard manually. Do you confirm the action?</p>
+            </div>
+            <div className='main-popup-buttons'>
+              <button className='main-popup-remove-button' onClick={handleCancelClick}>Cancel</button>
+              <button className='main-popup-plant-button' onClick={handleClaimAllClicked}>Confirm</button>
+            </div>
+          </div>     
+        </div>
+      </div>
+    </>
+  );
 }
   
 export default InviteTab;

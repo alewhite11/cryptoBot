@@ -1347,6 +1347,25 @@ button.next {
      1px  1px 0 #000;
 }
 
+.invite-btn-disabled {
+  background-color: #5f5f5d;
+  align-self: bottom;
+  color: white;
+  font-size: medium;
+  font-weight: bold; 
+  font-family: 'Jura', sans-serif;
+  border-radius: 10px;
+  margin: 10px;
+  vertical-align: center;
+  outline: none;
+  border: 2px solid black; 
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
 .claim-btn {
   background-color: #4CAF50;
   color: white;

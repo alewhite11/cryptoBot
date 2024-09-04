@@ -500,14 +500,22 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
           }
         });
         setFreindList(friendListFS)
-        cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
+        cs?.setItem("friendListUpdateDate", JSON.stringify(new Date()), (error: any, stored: boolean) => {
           if(error){
               return;
           }
         });
-        cs?.setItem("friendListUpdateDate", JSON.stringify(new Date()), (error: any, stored: boolean) => {
+        cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
           if(error){
-              return;
+            //Error in setting, too many refs, refresh at each access
+            const date = new Date();
+            date.setFullYear(date.getFullYear() - 10); // Set the date to 10 years ago
+            cs?.setItem("friendListUpdateDate", JSON.stringify(date), (error: any, stored: boolean) => {
+              if(error){
+                return;
+              }
+            });
+            return;
           }
         });
       } 
@@ -536,17 +544,25 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
           setTonScore(tonScore)
         }
       });
-      
-      cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
-        if(error){
-            return;
-        }
-      });
       cs?.setItem("friendListUpdateDate", JSON.stringify(new Date()), (error: any, stored: boolean) => {
         if(error){
             return;
         }
       });
+      cs?.setItem("friendList", JSON.stringify(friendListFS), (error: any, stored: boolean) => {
+        if(error){
+          //Error in setting, too many refs, refresh at each access
+          const date = new Date();
+          date.setFullYear(date.getFullYear() - 10); // Set the date to 10 years ago
+          cs?.setItem("friendListUpdateDate", JSON.stringify(date), (error: any, stored: boolean) => {
+            if(error){
+                return;
+            }
+          });
+          return;
+        }
+      });
+      
     }
   });
 }
