@@ -24,6 +24,7 @@ import tonImg from './img/invitePage/ton.png'
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Popover } from 'antd';
+import TimeErrorPage from './components/TimeErrorPage';
 
 declare global {
   interface Window {
@@ -43,6 +44,7 @@ function App() {
   const [registered, setRegistered] = useState(0) //Used to see if it was the first access
   const [tonConnectUI, setOptions] = useTonConnectUI();
   const [tonInfoOpen, setTonInfoOpen] = useState(false);
+  const [timeError, setTimeError] = useState(false)
 
   //Application data states
   const [tonScore, setTonScore] = useState(0)
@@ -75,7 +77,35 @@ function App() {
   const [activeTab, setActiveTab] = useState(0);
   const [addClicked, setAddClicked] = useState(false)
  
+  useEffect(() => {
+    const checkTimeSync = () => {
+      try {
+        // Convert Unix time to Date object (UTC time)
+        const formOpenTime = new Date(window.Telegram.WebApp.initDataUnsafe.auth_date * 1000); // Unix time is in seconds, Date expects milliseconds
+        
+        // Get current local time
+        const currentTime = new Date(); // This will be in the user's local time zone
+        
+        // Calculate time difference in milliseconds
+        const difference = calculateTimeDifference(formOpenTime, currentTime);
 
+        // Check if the difference is greater than 30 minutes (1800000 milliseconds)
+        if (Math.abs(difference) > 1800000) {
+          setTimeError(true)
+        }
+        
+      } catch (err) {
+        
+      }
+    };
+
+    checkTimeSync();
+  }, []);
+
+  const calculateTimeDifference = (formOpenTime: Date, currentTime: Date): number => {
+    // Calculate difference in milliseconds
+    return currentTime.getTime() - formOpenTime.getTime();
+  };
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
@@ -250,8 +280,9 @@ function App() {
 
   return (
     <>
+    {timeError && <TimeErrorPage />}
     {!(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <DesktopPage />}
-    {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && <Context.Provider value={contextValue}>
+    {(window.Telegram.WebApp.platform === 'android' || window.Telegram.WebApp.platform === 'android_x' || window.Telegram.WebApp.platform === 'ios') && !timeError && <Context.Provider value={contextValue}>
       {contextHolder}
     {!loading && (registered !== 2) && <InitialTutorial setRegistered={setRegistered}/>}
     {!loading && (registered === 2) &&

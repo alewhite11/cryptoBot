@@ -23,7 +23,7 @@ export const dailyTasks : Task[] = [
   {title: 'First 100k users, invite 1 friend bonus', text: 'For the first 100k users, when you invite the first friend you will get an apple tree fro free', image: first100kImg, link: '', channelId: '', type: 'justClaim', id: 6},
   {title: 'Plant token page',text: 'Follow our tiktok page in which all updates will be shared', image: tiktokImg, link: 'https://www.tiktok.com/@plant_token?_t=8opZQsTuCRN&_r=1', channelId: '', type: 'openAndClaim', id: 16},
   {title: 'Like on Instagram post',text: 'Like our intagram post, it will take just a second!', image: instagramImg, link: 'https://www.instagram.com/p/C_eFxA4NK68/?igsh=M3Rva3ViNHdtcTFl', channelId: '', type: 'openAndClaim', id: 27},
-  {title: 'Like our X post',text: 'Like our X post, it will take just a second!', image: xImg, link: 'https://x.com/The_Plant_Token/status/1831082753422746058', channelId: '', type: 'openAndClaim', id: 28},
+  {title: 'Like our X post',text: 'Like our X post, it will take just a second!', image: xImg, link: 'https://x.com/The_Plant_Token/status/1832301714784841795', channelId: '', type: 'openAndClaim', id: 29},
   {title: 'Like on Youtube short',text: 'Like our youtube short, it will take just a second!', image: youtubeImg, link: 'https://youtube.com/shorts/0Eza7S7wzRk?si=kZKh4iIxzEAuBxjU', channelId: '', type: 'openAndClaim', id: 20},
   {title: 'Like on Tiktok post',text: 'Like our tiktok post, it will take just a second!', image: tiktokImg, link: 'https://vm.tiktok.com/ZGe3Pw1yo/', channelId: '', type: 'openAndClaim', id: 21},
   //{title: 'Test',text: 'Test', image: tiktokImg, link: '', channelId: '', type: 'justClaim', id: 100000000},
