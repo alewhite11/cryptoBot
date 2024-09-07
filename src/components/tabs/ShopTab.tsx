@@ -8,13 +8,14 @@ import { Plant } from '../../interfaces/Plant';
 import { Field } from '../../interfaces/Field';
 import { setAppleScoreCallback, setFieldsCallback, setPlantedVegetablesCallback, setScoreCallback } from '../../db/cloudStorageFunctions';
 import { CloudStorage } from '../../interfaces/telegramInterfaces';
-import { vegetables, plants, appleShop } from '../../db/vegetable';
+import { vegetables, plants, appleShop, coinShop } from '../../db/vegetable';
 import LockIcon from '@mui/icons-material/Lock';
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { handleTransaction } from '../../db/transactions';
 import { AppleItem } from '../../interfaces/AppleItem';
 import tonIcon from './../../img/invitePage/ton.png'
 import { tonPerK } from '../../db/tonCosts';
+import { CoinItem } from '../../interfaces/CoinItem';
 
 interface ShopTabProps {
   score: number;
@@ -56,7 +57,7 @@ const ShopTab: React.FC<ShopTabProps> = ({ passStatus, activeTab, setActiveTab, 
           <div className="tab-buttons">
             <button className={activeTab === 0 ? "active-tab" : ""} onClick={() => setActiveTab(0)}>Vegetables</button>
             <button className={activeTab === 1 ? "active-tab" : ""} onClick={() => setActiveTab(1)}>Trees</button>
-            <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>Apples</button>
+            <button className={activeTab === 2 ? "active-tab" : ""} onClick={() => setActiveTab(2)}>A & C</button>
           </div>
           <div className="shop-items">
             {activeTab === 0 && (
@@ -77,6 +78,9 @@ const ShopTab: React.FC<ShopTabProps> = ({ passStatus, activeTab, setActiveTab, 
               <>
                 {appleShop.map((item, index) => (
                   <AppleShopItem item={item} key={index} index={index} appleScore={appleScore} setAppleScore={setAppleScore} cs={cs}/>
+                ))}
+                {coinShop.map((item, index) => (
+                  <CoinShopItem item={item} key={index} index={index} score={score} setScore={setScore} cs={cs}/>
                 ))}
               </>
             )}
@@ -372,7 +376,7 @@ const PlantItemTree: React.FC<PlantItemTreeProps> = ({ passStatus, item, key, in
   );
 };
 
-//Planted vegetables
+//Apple shop items
 interface AppleShopItemProps {
   item: AppleItem;
   key: number;
@@ -389,6 +393,53 @@ const AppleShopItem: React.FC<AppleShopItemProps> = ({ item, key, index, appleSc
     var newAppleScore = appleScore + item.reward
     setAppleScore(newAppleScore)
     setAppleScoreCallback(cs, newAppleScore)
+  }
+
+  const handleTonPlantClicked = () => {
+    handleTransaction(tonConnectUI, Math.floor(item.cost*1000000000).toString(), handleTransactionSuccess)
+  };
+
+  return (
+    <>
+    <div className="shop-item">
+      <div className="item-image">
+        <img src={`${item.image}`} alt={item.name} />
+      </div>
+      <div className="item-details">
+        <div className="item-info">
+          <span className="item-name" style={{ fontFamily: 'Jura, sans-serif' }}>{item.name}</span>
+        </div>
+        <div className="item-pricing">
+          <div className="item-intext-image">
+            <img src={tonIcon} alt={item.name} />
+          </div>
+          <span className="item-cost" style={{ fontFamily: 'Jura, sans-serif' }}>{item.cost} TON</span>
+        </div>
+      </div>
+      {tonConnectUI.connected  && <button className="item-button-ton" onClick={handleTonPlantClicked}style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}><img style={{height: '18px', width: '18px'}} src={tonIcon} alt={"TON"}/>Buy</button>}
+      {!tonConnectUI.connected && <button className="item-button-disabled" disabled>Buy</button>}
+    </div>
+    </>
+  );
+};
+
+//Coin shop items
+interface CoinShopItemProps {
+  item: CoinItem;
+  key: number;
+  index: number;
+  score: number;
+  setScore: (score: number) => void;
+  cs: CloudStorage | null;
+}
+
+const CoinShopItem: React.FC<CoinShopItemProps> = ({ item, key, index, score, setScore, cs }) => {
+  const [tonConnectUI, setOptions] = useTonConnectUI();
+
+  const handleTransactionSuccess = () => {
+    var newScore = score + item.reward
+    setScore(newScore)
+    setScoreCallback(cs, newScore)
   }
 
   const handleTonPlantClicked = () => {

@@ -8,9 +8,11 @@ import carrotImg from './../img/shopItems/carrot.png';
 import asparagusImg from './../img/shopItems/asparagus.png'
 import spinachImg from './../img/shopItems/spinach.png'
 import appleImg from './../img/shopItems/apple.png'
+import moneyImg from './../img/shopItems/dollar.png'
 import pearImg from './../img/shopItems/pear.png'
 import cherryImg from './../img/shopItems/cherry.png'
 import { AppleItem } from "../interfaces/AppleItem";
+import { CoinItem } from "../interfaces/CoinItem";
 
 export const vegetables : Plant[] = [    
     { name: 'Radish', time: '2 min', cost: 20, reward: 40, image: radishImg, duration: 60*2 },
@@ -34,4 +36,11 @@ export const appleShop : AppleItem[] = [
     {name: '10 Apples', cost: 0.15, reward: 10, image: appleImg},
     {name: '20 Apples', cost: 0.30, reward: 20, image: appleImg},
     {name: '40 Apples', cost: 0.50, reward: 40, image: appleImg},
+];
+
+export const coinShop : CoinItem[] = [
+    {name: '10k Coins', cost: 0.08, reward: 10000, image: moneyImg},
+    {name: '25K Coins', cost: 0.18, reward: 25000, image: moneyImg},
+    {name: '75K Coins', cost: 0.50, reward: 75000, image: moneyImg},
+    {name: '150k Coins', cost: 0.90, reward: 150000, image: moneyImg},
 ];

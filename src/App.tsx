@@ -305,7 +305,7 @@ function App() {
           </div>
           <div className='main-coins'>
             <span className='main-coins-text' style={{ fontFamily: 'Jura, sans-serif' }}><NumberTicker value={score} /></span>
-            <img className='main-add-icon' onClick={handleAddClick} src={addImg} alt={"add"} />
+            <img className='main-add-icon' onClick={handleAddAppleClick} src={addImg} alt={"add"} />
           </div>
         </div></>}
         {currentPage === 4 &&
