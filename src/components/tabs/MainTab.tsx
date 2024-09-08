@@ -167,7 +167,8 @@ interface FieldItemProps {
 }
 
 const FieldElement: React.FC<FieldItemProps> = ({passStatus, setCurrentPage, fields, setFields, index, score, setScore, appleScore, setAppleScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
-  const initialTime = Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
+  const initialTime = passStatus ? (Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000))/2)  : Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
+
   const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
@@ -589,7 +590,7 @@ const CountdownTimer: React.FC<TimerProps> = ({ passStatus, timeRemaining, setTi
           console.log('Countdown complete!');
           return 0;
         } else {
-          return prevTime - (passStatus ? 2 : 1);
+          return prevTime - 1;
         }
       });
     }, 1000);

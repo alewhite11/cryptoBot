@@ -849,7 +849,7 @@ export const incrementWithdrawedTONs = (cs: CloudStorage, newWithdrawAmount: num
       //Not first withdraw, increment and save
       var previousValue = parseFloat(value)
       var newValue = previousValue + newWithdrawAmount
-      cs?.setItem("withdrawedTONs", newWithdrawAmount.toString(), (error: any, stored: boolean) => {
+      cs?.setItem("withdrawedTONs", newValue.toString(), (error: any, stored: boolean) => {
         if(error){
             return;
         }
