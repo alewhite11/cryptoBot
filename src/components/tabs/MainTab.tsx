@@ -167,7 +167,7 @@ interface FieldItemProps {
 }
 
 const FieldElement: React.FC<FieldItemProps> = ({passStatus, setCurrentPage, fields, setFields, index, score, setScore, appleScore, setAppleScore, cs, setSelectedField, setSelectedCallback, setMainPopupOpened}) => {
-  const initialTime = passStatus ? (Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000))/2)  : Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
+  const initialTime = passStatus ? (Math.max(0, (fields[index].duration/2) - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000)))  : Math.max(0, fields[index].duration - Math.floor((Date.now() - new Date(fields[index].plantedAt).getTime()) / 1000));
 
   const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
   const [tonConnectUI, setOptions] = useTonConnectUI();
@@ -222,6 +222,7 @@ const FieldElement: React.FC<FieldItemProps> = ({passStatus, setCurrentPage, fie
       setFields(updatedFields)
 
       setTimeRemaining(Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
+      setTimeRemaining(passStatus ? (Math.max(0, (newField.duration/2) - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))  : Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
   
       const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);
       const newScore = score + plantedVegetable!!.reward
