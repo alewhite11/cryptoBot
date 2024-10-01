@@ -221,7 +221,6 @@ const FieldElement: React.FC<FieldItemProps> = ({passStatus, setCurrentPage, fie
       updatedFields[index] = newField
       setFields(updatedFields)
 
-      setTimeRemaining(Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
       setTimeRemaining(passStatus ? (Math.max(0, (newField.duration/2) - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))  : Math.max(0, newField.duration - Math.floor((Date.now() - new Date(newField.plantedAt).getTime()) / 1000)))
   
       const plantedVegetable = plants.find(plant => plant.name === fields[index].vegetable);

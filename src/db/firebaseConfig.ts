@@ -60,7 +60,7 @@ export const updateUserToPremium = async (userId: string) => {
     
     // Update the isActive field to true
     await updateDoc(userRef, {
-      septemberPass: true
+      octoberPass: true
     });
 
     return true;
@@ -87,7 +87,8 @@ export const getUsersReferredBy = async (userId: number) => {
       isActive: doc.data().isActive,
       name: doc.data().name,
       referredBy: doc.data().referredBy, 
-      septemberPass: doc.data().septemberPass
+      septemberPass: doc.data().septemberPass,
+      octoberPass: doc.data().octoberPass
     }));
     return referredUsers;
   } catch (error) {

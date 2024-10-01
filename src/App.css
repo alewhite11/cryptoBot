@@ -1118,7 +1118,7 @@ button.next {
 
 /* LOADING PAGE */
 .Loading-component {
-  background-image: url(img/plantPass/septemberBg.jpg);
+  background-image: url(img/plantPass/octoberBg.jpg);
   background-repeat: no-repeat;
   background-size: cover; /* Remove quotes from 'cover' */
   height: 100vh;
@@ -1135,16 +1135,20 @@ button.next {
   top: 10px;
   width: 80%; 
   text-align: center;
-  color: #e3bf0b;
+  color: #fd559e;
   font-weight: bold;
   font-size: 2rem; /* Increase the font size */
   text-align: center; /* Center align text */
   margin: 0; /* Remove default margin */
   text-shadow: 
-    -1px -1px 0 #bc9d06,  
-    1px -1px 0 #bc9d06,
-    -1px 1px 0 #bc9d06,
-    1px 1px 0 #bc9d06;
+  -2px -2px 0 #ffffff,
+  0 -2px 0 #ffffff,
+  2px -2px 0 #ffffff,
+  -2px 0 0 #ffffff,
+  2px 0 0 #ffffff,
+  -2px 2px 0 #ffffff,
+  0 2px 0 #ffffff,
+  2px 2px 0 #ffffff;
 }
 
 .Loading-content {

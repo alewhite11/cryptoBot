@@ -445,6 +445,9 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
                   if(user.septemberPass === true){
                     tonScore += 0.1
                   }
+                  if(user.octoberPass === true){
+                    tonScore += 0.1
+                  }
                 });
                 cs?.getItem("withdrawedTONs", (error, value) => {
                   if (error) {
@@ -483,7 +486,10 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
           if(user.septemberPass === true){
             tonScore += 0.1
           }
-          friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass })
+          if(user.octoberPass === true){
+            tonScore += 0.1
+          }
+          friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass, octoberPass: user.octoberPass })
         });
         cs?.getItem("withdrawedTONs", (error, value) => {
           if (error) {
@@ -527,7 +533,10 @@ export const getFriendListCallback = async (cs : CloudStorage | null, telegramId
         if(user.septemberPass === true){
           tonScore += 0.1
         }
-        friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass })
+        if(user.octoberPass === true){
+          tonScore += 0.1
+        }
+        friendListFS.push({id: user.id, name : user.name, isActive: user.isActive, septemberPass: user.septemberPass, octoberPass: user.octoberPass })
       });
       setFreindList(friendListFS)
       cs?.getItem("withdrawedTONs", (error, value) => {
